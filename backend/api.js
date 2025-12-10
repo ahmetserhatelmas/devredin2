@@ -1,0 +1,552 @@
+// ============================================
+// FRONTEND - BACKEND ENTEGRASYONU
+// ============================================
+
+// Bu dosyayı HTML dosyalarınıza dahil edin
+// <script src="backend/api.js"></script>
+
+// ============================================
+// CONFIGURATION
+// ============================================
+
+// Supabase credentials - production'da environment variables kullanın
+const SUPABASE_CONFIG = {
+    url: 'https://higrbnrjpwjnypzeodpm.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ3JibnJqcHdqbnlwemVvZHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyNzg5NjUsImV4cCI6MjA4MDg1NDk2NX0.Zg9wGmcwmc3P1PsDMwQtApycxK6unjsdl-u6_msC5Jg'
+}
+
+// Initialize Supabase
+const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
+
+// ============================================
+// AUTH FUNCTIONS
+// ============================================
+
+// Kullanıcı girişi
+async function loginUser(email, password) {
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        })
+
+        if (error) throw error
+
+        console.log('Login successful:', data)
+        return { success: true, data }
+    } catch (error) {
+        console.error('Login error:', error.message)
+        return { success: false, error: error.message }
+    }
+}
+
+// Kullanıcı kaydı
+async function registerUser(email, password, fullName, phone) {
+    try {
+        // Auth ile kullanıcı oluştur (metadata ile)
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: fullName,
+                    phone: phone
+                }
+            }
+        })
+
+        if (authError) throw authError
+
+        console.log('✅ Registration successful:', authData)
+        return { success: true, data: authData }
+    } catch (error) {
+        console.error('❌ Registration error:', error.message)
+        return { success: false, error: error.message }
+    }
+}
+
+// Çıkış yap
+async function logoutUser() {
+    const { error } = await supabase.auth.signOut()
+    if (!error) {
+        window.location.href = 'index.html'
+    }
+}
+
+// Mevcut kullanıcıyı al
+async function getCurrentUser() {
+    const { data: { user } } = await supabase.auth.getUser()
+    return user
+}
+
+// ============================================
+// LISTING FUNCTIONS
+// ============================================
+
+// İlanları yükle (ana sayfa ve listeler için)
+async function loadListings(filters = {}) {
+    try {
+        let query = supabase
+            .from('listings')
+            .select(`
+                *,
+                category:categories!category_id(name, slug, icon),
+                city:cities(name),
+                district:districts(name),
+                images:listing_images(image_url, thumbnail_url, is_primary)
+            `)
+            .eq('status', 'active')
+
+        // Filtreleri uygula
+        if (filters.categoryId) {
+            query = query.eq('category_id', filters.categoryId)
+        }
+
+        if (filters.cityId) {
+            query = query.eq('city_id', filters.cityId)
+        }
+
+        if (filters.search) {
+            query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`)
+        }
+
+        if (filters.minPrice) {
+            query = query.gte('price', filters.minPrice)
+        }
+
+        if (filters.maxPrice) {
+            query = query.lte('price', filters.maxPrice)
+        }
+
+        // Sıralama
+        const sortBy = filters.sortBy || 'created_at'
+        const sortOrder = filters.sortOrder === 'asc' ? true : false
+        query = query.order(sortBy, { ascending: sortOrder })
+
+        // Sayfalama
+        if (filters.limit) {
+            const offset = (filters.page - 1) * filters.limit || 0
+            query = query.range(offset, offset + filters.limit - 1)
+        } else {
+            query = query.limit(20)
+        }
+
+        const { data, error } = await query
+
+        if (error) throw error
+
+        return { success: true, data }
+    } catch (error) {
+        console.error('Error loading listings:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// İlan detayını yükle
+async function loadListingDetail(listingId) {
+    try {
+        const { data, error } = await supabase
+            .from('listings')
+            .select(`
+                *,
+                category:categories!category_id(name, slug, icon),
+                city:cities(name),
+                district:districts(name),
+                images:listing_images(*),
+                user:users(full_name, phone, email)
+            `)
+            .eq('id', listingId)
+            .single()
+
+        if (error) throw error
+
+        // View count artır
+        await supabase.rpc('increment_view_count', { listing_id: listingId })
+
+        return { success: true, data }
+    } catch (error) {
+        console.error('Error loading listing:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// Yeni ilan oluştur
+async function createListing(formData) {
+    try {
+        const user = await getCurrentUser()
+        if (!user) {
+            throw new Error('Giriş yapmalısınız')
+        }
+
+        // Slug oluştur
+        const slug = generateSlug(formData.title)
+
+        const { data, error } = await supabase
+            .from('listings')
+            .insert([
+                {
+                    ...formData,
+                    user_id: user.id,
+                    slug,
+                    status: 'pending' // Admin onayı bekliyor
+                }
+            ])
+            .select()
+            .single()
+
+        if (error) throw error
+
+        console.log('Listing created:', data)
+        return { success: true, data }
+    } catch (error) {
+        console.error('Error creating listing:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// ============================================
+// CATEGORY FUNCTIONS
+// ============================================
+
+// Kategorileri yükle
+async function loadCategories() {
+    try {
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true)
+            .order('display_order')
+
+        if (error) throw error
+
+        return { success: true, data }
+    } catch (error) {
+        console.error('Error loading categories:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// Kategori ile ilan sayısını getir
+async function loadCategoriesWithCount() {
+    try {
+        const { data: categories, error: catError } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('is_active', true)
+            .order('display_order')
+
+        if (catError) throw catError
+
+        // Her kategori için ilan sayısını al
+        const categoriesWithCount = await Promise.all(
+            categories.map(async (cat) => {
+                const { count } = await supabase
+                    .from('listings')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('category_id', cat.id)
+                    .eq('status', 'active')
+
+                return { ...cat, listing_count: count || 0 }
+            })
+        )
+
+        return { success: true, data: categoriesWithCount }
+    } catch (error) {
+        console.error('Error loading categories with count:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// ============================================
+// LOCATION FUNCTIONS
+// ============================================
+
+// Şehirleri yükle
+async function loadCities() {
+    try {
+        const { data, error } = await supabase
+            .from('cities')
+            .select('*')
+            .eq('is_active', true)
+            .order('name')
+
+        if (error) throw error
+
+        return { success: true, data }
+    } catch (error) {
+        console.error('Error loading cities:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// İlçeleri yükle
+async function loadDistricts(cityId) {
+    try {
+        const { data, error } = await supabase
+            .from('districts')
+            .select('*')
+            .eq('city_id', cityId)
+            .eq('is_active', true)
+            .order('name')
+
+        if (error) throw error
+
+        return { success: true, data }
+    } catch (error) {
+        console.error('Error loading districts:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// ============================================
+// FAVORITE FUNCTIONS
+// ============================================
+
+// Favorilere ekle/çıkar (toggle)
+async function toggleFavorite(listingId) {
+    try {
+        const user = await getCurrentUser()
+        if (!user) {
+            alert('Favorilere eklemek için giriş yapmalısınız')
+            window.location.href = 'login.html'
+            return
+        }
+
+        // Önce favori var mı kontrol et
+        const { data: existing } = await supabase
+            .from('favorites')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('listing_id', listingId)
+            .single()
+
+        if (existing) {
+            // Favorilerden çıkar
+            const { error } = await supabase
+                .from('favorites')
+                .delete()
+                .eq('id', existing.id)
+
+            if (error) throw error
+
+            return { success: true, action: 'removed' }
+        } else {
+            // Favorilere ekle
+            const { error } = await supabase
+                .from('favorites')
+                .insert([
+                    {
+                        user_id: user.id,
+                        listing_id: listingId
+                    }
+                ])
+
+            if (error) throw error
+
+            return { success: true, action: 'added' }
+        }
+    } catch (error) {
+        console.error('Error toggling favorite:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// Kullanıcının favori ilanlarını yükle
+async function loadUserFavorites() {
+    try {
+        const user = await getCurrentUser()
+        if (!user) {
+            return { success: true, data: [] }
+        }
+
+        const { data, error } = await supabase
+            .from('favorites')
+            .select(`
+                *,
+                listing:listings(
+                    *,
+                    category:categories!category_id(name),
+                    city:cities(name),
+                    images:listing_images(image_url, is_primary)
+                )
+            `)
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false })
+
+        if (error) throw error
+
+        return { success: true, data }
+    } catch (error) {
+        console.error('Error loading favorites:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// ============================================
+// STATISTICS FUNCTIONS
+// ============================================
+
+// Platform istatistiklerini yükle
+async function loadPlatformStats() {
+    try {
+        // Toplam ilan sayısı
+        const { count: totalListings } = await supabase
+            .from('listings')
+            .select('*', { count: 'exact', head: true })
+
+        // Aktif ilan sayısı
+        const { count: activeListings } = await supabase
+            .from('listings')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'active')
+
+        // Toplam değer ve ortalama
+        const { data: priceData } = await supabase
+            .from('listings')
+            .select('price')
+            .eq('status', 'active')
+
+        const totalValue = priceData.reduce((sum, item) => sum + (item.price || 0), 0)
+        const averageValue = totalValue / (priceData.length || 1)
+
+        return {
+            success: true,
+            data: {
+                total_listings: totalListings || 0,
+                active_listings: activeListings || 0,
+                total_value: totalValue,
+                average_value: averageValue
+            }
+        }
+    } catch (error) {
+        console.error('Error loading stats:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// ============================================
+// IMAGE UPLOAD FUNCTIONS
+// ============================================
+
+// Görsel yükle
+async function uploadListingImage(listingId, file) {
+    try {
+        const user = await getCurrentUser()
+        if (!user) throw new Error('Giriş yapmalısınız')
+
+        // Dosya adı oluştur
+        const fileExt = file.name.split('.').pop()
+        const fileName = `${user.id}/${listingId}/${Date.now()}.${fileExt}`
+
+        // Storage'a yükle
+        const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('listing-images')
+            .upload(fileName, file)
+
+        if (uploadError) throw uploadError
+
+        // Public URL al
+        const { data: { publicUrl } } = supabase.storage
+            .from('listing-images')
+            .getPublicUrl(fileName)
+
+        // Database'e kaydet
+        const { data, error } = await supabase
+            .from('listing_images')
+            .insert([
+                {
+                    listing_id: listingId,
+                    image_url: publicUrl
+                }
+            ])
+            .select()
+            .single()
+
+        if (error) throw error
+
+        return { success: true, data }
+    } catch (error) {
+        console.error('Error uploading image:', error)
+        return { success: false, error: error.message }
+    }
+}
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
+// Slug oluştur
+function generateSlug(text) {
+    const turkishMap = {
+        'ç': 'c', 'Ç': 'C',
+        'ğ': 'g', 'Ğ': 'G',
+        'ı': 'i', 'İ': 'I',
+        'ö': 'o', 'Ö': 'O',
+        'ş': 's', 'Ş': 'S',
+        'ü': 'u', 'Ü': 'U'
+    }
+
+    return text
+        .split('')
+        .map(char => turkishMap[char] || char)
+        .join('')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 200)
+}
+
+// Fiyat formatla
+function formatPrice(price) {
+    if (!price) return '₺0'
+    return new Intl.NumberFormat('tr-TR', {
+        style: 'currency',
+        currency: 'TRY',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(price)
+}
+
+// Tarih formatla
+function formatDate(dateString) {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat('tr-TR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).format(date)
+}
+
+// Göreceli tarih (2 gün önce, 1 hafta önce vb.)
+function timeAgo(dateString) {
+    const date = new Date(dateString)
+    const now = new Date()
+    const seconds = Math.floor((now - date) / 1000)
+
+    const intervals = {
+        yıl: 31536000,
+        ay: 2592000,
+        hafta: 604800,
+        gün: 86400,
+        saat: 3600,
+        dakika: 60
+    }
+
+    for (let [name, value] of Object.entries(intervals)) {
+        const interval = Math.floor(seconds / value)
+        if (interval >= 1) {
+            return `${interval} ${name} önce`
+        }
+    }
+
+    return 'Az önce'
+}
+
+// ============================================
+// CONSOLE LOG
+// ============================================
+
+console.log('✅ Backend API loaded successfully!')
+console.log('📡 Supabase client initialized')
+

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilim - DevredinPlatform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="index.html#about" class="nav-link">Nasıl Çalışır</a></li>
+                    <li><a href="index.html#contact" class="nav-link">İletişim</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <!-- Yükleniyor -->
+                    <div id="navLoading" style="display: flex; gap: 1rem; align-items: center;">
+                        <span style="color: #94a3b8; font-size: 0.9rem;">⏳</span>
+                    </div>
+                    
+                    <!-- Giriş Yapmamış -->
+                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
+                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                    </div>
+                    
+                    <!-- Giriş Yapmış -->
+                    <div id="loggedInButtons" style="display: none; gap: 1rem; align-items: center;">
+                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
+                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
+                    </div>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="profile-info">
+                    <h1 id="profileName">Yükleniyor...</h1>
+                    <p id="profileEmail">email@example.com</p>
+                    <p id="profilePhone">0532 123 45 67</p>
+                </div>
+                <button class="btn btn-outline" onclick="showEditProfile()">Profili Düzenle</button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-content">
+                        <h3 id="totalListings">0</h3>
+                        <p>Toplam İlan</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <h3 id="activeListings">0</h3>
+                        <p>Aktif İlan</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-content">
+                        <h3 id="pendingListings">0</h3>
+                        <p>Bekleyen İlan</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❤️</div>
+                    <div class="stat-content">
+                        <h3 id="favoriteCount">0</h3>
+                        <p>Favori İlan</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="profile-tabs">
+                <button class="profile-tab active" data-tab="my-listings">İlanlarım</button>
+                <button class="profile-tab" data-tab="favorites">Favorilerim</button>
+                <button class="profile-tab" data-tab="settings">Ayarlar</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="profile-content">
+                <!-- My Listings Tab -->
+                <div class="tab-pane active" id="my-listings">
+                    <div class="content-header">
+                        <h2>İlanlarım</h2>
+                        <a href="add-listing.html" class="btn btn-primary">+ Yeni İlan</a>
+                    </div>
+                    
+                    <!-- Filter Buttons -->
+                    <div class="listing-filters">
+                        <button class="filter-btn active" data-status="all">Tümü</button>
+                        <button class="filter-btn" data-status="active">Aktif</button>
+                        <button class="filter-btn" data-status="pending">Bekleyen</button>
+                        <button class="filter-btn" data-status="sold">Satılan</button>
+                    </div>
+
+                    <div id="myListingsGrid" class="profile-listings-grid">
+                        <div class="loading">İlanlar yükleniyor...</div>
+                    </div>
+                </div>
+
+                <!-- Favorites Tab -->
+                <div class="tab-pane" id="favorites">
+                    <div class="content-header">
+                        <h2>Favori İlanlarım</h2>
+                    </div>
+                    
+                    <div id="favoritesGrid" class="profile-listings-grid">
+                        <div class="loading">Favoriler yükleniyor...</div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-pane" id="settings">
+                    <div class="content-header">
+                        <h2>Hesap Ayarları</h2>
+                    </div>
+
+                    <!-- Edit Profile Form -->
+                    <div class="settings-card">
+                        <h3>Profil Bilgileri</h3>
+                        <form id="editProfileForm" class="settings-form">
+                            <div class="form-group">
+                                <label>Ad Soyad</label>
+                                <input type="text" name="full_name" id="editFullName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Telefon</label>
+                                <input type="tel" name="phone" id="editPhone">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Güncelle</button>
+                        </form>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="settings-card">
+                        <h3>Şifre Değiştir</h3>
+                        <form id="changePasswordForm" class="settings-form">
+                            <div class="form-group">
+                                <label>Yeni Şifre</label>
+                                <input type="password" name="new_password" placeholder="En az 6 karakter" required minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label>Yeni Şifre (Tekrar)</label>
+                                <input type="password" name="confirm_password" placeholder="Şifreyi tekrar girin" required minlength="6">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Şifreyi Güncelle</button>
+                        </form>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="settings-card danger-card">
+                        <h3>Tehlikeli Bölge</h3>
+                        <p>Hesabınızı kalıcı olarak silmek isterseniz:</p>
+                        <button class="btn btn-danger" onclick="deleteAccount()">Hesabı Sil</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>devredinplatform</h3>
+                    <p>Türkiye'nin en büyük işletme devir platformu</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Devredin</h4>
+                    <ul>
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Bize Ulaşın</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Backend API -->
+    <script src="backend/api.js"></script>
+    
+    <script src="script.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>
+

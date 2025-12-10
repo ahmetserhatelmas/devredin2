@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni İlan Oluştur - DevredinPlatform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="add-listing.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="add-listing.html" class="nav-link active">İşletmeni Devret</a></li>
+                    <li><a href="index.html#about" class="nav-link">Nasıl Çalışır</a></li>
+                    <li><a href="index.html#contact" class="nav-link">İletişim</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <div id="navLoading" style="display: flex; gap: 1rem; align-items: center;">
+                        <span style="color: #94a3b8; font-size: 0.9rem;">⏳</span>
+                    </div>
+                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
+                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                    </div>
+                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
+                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
+                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Add Listing Section -->
+    <section class="add-listing-section">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb-nav">
+                <a href="index.html">Ana Sayfa</a> - <span>Yeni İlan Başlat</span>
+            </div>
+
+            <!-- Header with Steps -->
+            <div class="form-header-new">
+                <h1>Yeni İlan Oluştur</h1>
+                <div class="steps-indicator">
+                    <button class="step-btn active" data-step="1" onclick="goToStep(1)">
+                        <span class="step-icon">✓</span>
+                        Genel İlan Özellikleri
+                    </button>
+                    <button class="step-btn" data-step="2" onclick="goToStep(2)">
+                        <span class="step-icon">✗</span>
+                        İşletme Detayları
+                    </button>
+                    <button class="step-btn" data-step="3" onclick="goToStep(3)">
+                        <span class="step-icon">✗</span>
+                        İlan Yayın Detayları
+                    </button>
+                </div>
+            </div>
+
+            <!-- Multi-Step Form -->
+            <form id="addListingForm" class="multi-step-form">
+                
+                <!-- STEP 1: Genel İlan Özellikleri -->
+                <div class="form-step active" id="step1">
+                    <div class="step-content">
+                        <div class="section-title">
+                            <h2>Genel İlan Özellikleri</h2>
+                        </div>
+
+                        <div class="form-grid">
+                            <!-- İlan Başlığı -->
+                            <div class="form-group full-width">
+                                <label>İlan Başlığı <span class="required">* zorunlu</span></label>
+                                <input type="text" name="title" placeholder="İlan Başlığı" required>
+                            </div>
+
+                            <!-- Kategori & Sektör -->
+                            <div class="form-group">
+                                <label>Kategori <span class="required">* zorunlu</span></label>
+                                <select name="category" id="categorySelect" required onchange="loadSubcategoriesForForm()">
+                                    <option value="">Seçin</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Sektör <span class="required">* zorunlu</span></label>
+                                <select name="subcategory" id="subcategorySelect" required disabled>
+                                    <option value="">Önce kategori seçin</option>
+                                </select>
+                            </div>
+
+                            <!-- Kuruluş Yılı & Metrekare -->
+                            <div class="form-group">
+                                <label>Kuruluş Yılı</label>
+                                <input type="number" name="establishment_year" placeholder="1900" min="1900" max="2025">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Metrekare <span class="required">* zorunlu</span></label>
+                                <input type="number" name="area" placeholder="0" required>
+                            </div>
+
+                            <!-- Fiyat -->
+                            <div class="form-group">
+                                <label>Fiyat <span class="required">* zorunlu</span></label>
+                                <div class="input-with-prefix">
+                                    <span class="prefix">₺</span>
+                                    <input type="number" name="price" placeholder="0" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Aylık Kira</label>
+                                <div class="input-with-prefix">
+                                    <span class="prefix">₺</span>
+                                    <input type="number" name="rent" placeholder="0">
+                                </div>
+                            </div>
+
+                            <!-- Konum -->
+                            <div class="form-group full-width">
+                                <label>Konum <span class="required">* zorunlu</span></label>
+                                <input type="text" name="address" placeholder="Adres girin..." required>
+                            </div>
+
+                            <!-- İl & İlçe -->
+                            <div class="form-group">
+                                <label>İl <span class="required">* zorunlu</span></label>
+                                <select name="city" id="citySelect" required onchange="loadDistrictsForStep()">
+                                    <option value="">Seçin</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>İlçe <span class="required">* zorunlu</span></label>
+                                <select name="district" id="districtSelect" required disabled>
+                                    <option value="">Önce şehir seçin</option>
+                                </select>
+                            </div>
+
+                            <!-- İlan Açıklaması -->
+                            <div class="form-group full-width">
+                                <label>İlan Açıklaması <span class="required">* zorunlu</span></label>
+                                <div class="rich-editor">
+                                    <div class="editor-toolbar">
+                                        <button type="button" class="toolbar-btn" onclick="formatText('bold')">Kalın</button>
+                                        <button type="button" class="toolbar-btn" onclick="formatText('italic')">İtalik</button>
+                                        <button type="button" class="toolbar-btn" onclick="formatText('h2')">Büyük Başlık</button>
+                                        <button type="button" class="toolbar-btn" onclick="formatText('h3')">Orta Başlık</button>
+                                        <button type="button" class="toolbar-btn" onclick="formatText('h4')">Küçük Başlık</button>
+                                        <button type="button" class="toolbar-btn" onclick="formatText('ul')">Listeleme</button>
+                                    </div>
+                                    <textarea name="description" id="descriptionEditor" rows="8" placeholder="Açıklamayı buraya yazın..." required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <div></div>
+                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: İşletme Detayları -->
+                <div class="form-step" id="step2">
+                    <div class="step-content">
+                        <div class="section-title">
+                            <h2>İşletme Detayları</h2>
+                        </div>
+
+                        <div class="form-grid">
+                            <!-- Ciro, Çalışan, Net Kâr -->
+                            <div class="form-group">
+                                <label>Ciro (Aylık) <span class="info-icon" title="Aylık ortalama ciro">ℹ</span></label>
+                                <div class="input-with-prefix">
+                                    <span class="prefix">₺</span>
+                                    <input type="number" name="monthly_revenue" placeholder="0">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Çalışan Sayısı <span class="info-icon" title="Mevcut çalışan sayısı">ℹ</span></label>
+                                <input type="number" name="employees" placeholder="0">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Net Kâr (Aylık) <span class="info-icon" title="Aylık net kâr">ℹ</span></label>
+                                <div class="input-with-prefix">
+                                    <span class="prefix">₺</span>
+                                    <input type="number" name="monthly_profit" placeholder="0">
+                                </div>
+                            </div>
+
+                            <!-- Satış Türü -->
+                            <div class="form-group full-width">
+                                <label>Satış Türü <span class="required">* zorunlu</span></label>
+                                <select name="sale_type" required>
+                                    <option value="devren_kiralik">Devren Kiralık</option>
+                                    <option value="devren_satilik">Devren Satılık</option>
+                                    <option value="ortak_araniyor">Ortak Aranıyor</option>
+                                </select>
+                                <p class="field-hint"><strong>Devren Kiralık;</strong> kiracının dükkândaki eşyalarla birlikte işyerini başka birine devretmesidir. Mülk sahibinde bir değişiklik olmaz, <strong>sadece kiracı değişir.</strong></p>
+                            </div>
+
+                            <!-- Kira & Kontrat Bitiş -->
+                            <div class="form-group">
+                                <label>Kontrat Bitiş Tarihi</label>
+                                <input type="date" name="lease_end_date">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Eğitim, Satış Sonrası Destek <span class="required">* zorunlu</span></label>
+                                <select name="training_support" required>
+                                    <option value="">Seçin</option>
+                                    <option value="evet">Evet, sağlanacak</option>
+                                    <option value="hayir">Hayır</option>
+                                    <option value="anlasmaya_bagli">Anlaşmaya bağlı</option>
+                                </select>
+                            </div>
+
+                            <!-- Değerler -->
+                            <div class="form-group">
+                                <label>Duran Varlıklar <span class="info-icon" title="Makine, ekipman değeri">ℹ</span></label>
+                                <div class="input-with-prefix">
+                                    <span class="prefix">₺</span>
+                                    <input type="number" name="equipment_value" placeholder="0">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Envanter Değeri <span class="info-icon" title="Stok değeri">ℹ</span></label>
+                                <div class="input-with-prefix">
+                                    <span class="prefix">₺</span>
+                                    <input type="number" name="inventory_value" placeholder="0">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mobilya / Demirbaş Değeri <span class="info-icon" title="Mobilya ve demirbaş değeri">ℹ</span></label>
+                                <div class="input-with-prefix">
+                                    <span class="prefix">₺</span>
+                                    <input type="number" name="furniture_value" placeholder="0">
+                                </div>
+                            </div>
+
+                            <!-- Satış Sebebi & Franchise -->
+                            <div class="form-group">
+                                <label>Satış Sebebi <span class="required">* zorunlu</span></label>
+                                <select name="reason" required>
+                                    <option value="">Seçin</option>
+                                    <option value="emeklilik">Emeklilik</option>
+                                    <option value="saglik">Sağlık Sorunları</option>
+                                    <option value="tasinma">Şehir Değişikliği</option>
+                                    <option value="yeni_is">Yeni İş Fırsatı</option>
+                                    <option value="maddi">Maddi Nedenler</option>
+                                    <option value="aile">Aile Sebepleri</option>
+                                    <option value="diger">Diğer</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Franchise mı? <span class="required">* zorunlu</span></label>
+                                <select name="is_franchise" required>
+                                    <option value="">Seçin</option>
+                                    <option value="yes">Evet</option>
+                                    <option value="no">Hayır</option>
+                                </select>
+                            </div>
+
+                            <!-- Sosyal Medya -->
+                            <div class="form-group">
+                                <label>Instagram Bağlantısı</label>
+                                <input type="url" name="instagram" placeholder="https://instagram.com/...">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Facebook Bağlantısı</label>
+                                <input type="url" name="facebook" placeholder="https://facebook.com/...">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Website Bağlantısı</label>
+                                <input type="url" name="website" placeholder="https://website.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: İlan Yayın Detayları -->
+                <div class="form-step" id="step3">
+                    <div class="step-content">
+                        <div class="section-title">
+                            <h2>İlan Yayın Detayları</h2>
+                        </div>
+
+                        <div class="form-grid">
+                            <!-- Kapak Resmi -->
+                            <div class="form-group">
+                                <label>Kapak Resmi <span class="info-icon" title="Ana görsel">ℹ</span> <span class="required">* zorunlu</span></label>
+                                <div class="file-upload-box">
+                                    <input type="file" name="cover_image" id="coverImage" accept="image/*" required onchange="previewCoverImage(this)">
+                                    <label for="coverImage" class="file-label">
+                                        <span>Dosya Seç</span>
+                                        <span id="coverFileName">Dosya seçilmedi</span>
+                                    </label>
+                                </div>
+                                <div id="coverPreview" class="image-preview"></div>
+                            </div>
+
+                            <!-- İlan Tanıtım Belgesi -->
+                            <div class="form-group">
+                                <label>İlan Tanıtım Belgesi <span class="info-icon" title="PDF veya belge">ℹ</span></label>
+                                <div class="file-upload-box">
+                                    <input type="file" name="document" id="documentFile" accept=".pdf,.doc,.docx">
+                                    <label for="documentFile" class="file-label">
+                                        <span>Dosya Seç</span>
+                                        <span id="docFileName">Dosya seçilmedi</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- İlan Görselleri -->
+                            <div class="form-group full-width">
+                                <label>İlan Görselleri</label>
+                                <div class="multi-upload-area" id="imageDropZone">
+                                    <div class="upload-icon">⬆️</div>
+                                    <p>Dosyaları sürükleyip bırakın veya tıklayarak seçin</p>
+                                    <p class="upload-hint">Maksimum 20 dosya, her biri en fazla 4MB</p>
+                                    <p class="upload-hint">Kabul edilen dosya tipleri: image/*</p>
+                                    <input type="file" name="images" id="imageUpload" accept="image/*" multiple style="display: none;">
+                                </div>
+                                <div id="imagePreviewGrid" class="image-preview-grid"></div>
+                            </div>
+
+                            <!-- İletişim Bilgileri -->
+                            <div class="form-group full-width">
+                                <div class="section-divider"></div>
+                                <h3 style="margin-bottom: 1rem;">İletişim Bilgileri</h3>
+                            </div>
+
+                            <div class="form-group">
+                                <label>İletişim Adı <span class="required">* zorunlu</span></label>
+                                <input type="text" name="contact_name" placeholder="Ad Soyad" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Telefon <span class="required">* zorunlu</span></label>
+                                <input type="tel" name="phone" placeholder="0532 123 45 67" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>E-posta <span class="required">* zorunlu</span></label>
+                                <input type="email" name="email" placeholder="ornek@email.com" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
+                        <button type="submit" class="btn btn-submit">İlanı Yayınla</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>devredinplatform</h3>
+                    <p>Türkiye'nin en büyük işletme devir platformu</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+        
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 İlan verme sayfası yüklendi')
+            
+            await checkUserStatusForForm()
+            
+            const user = await getCurrentUser()
+            if (!user) {
+                alert('⚠️ İlan vermek için giriş yapmalısınız!')
+                window.location.href = 'login.html'
+                return
+            }
+            
+            // Kullanıcı bilgilerini doldur
+            const { data: profile } = await supabase
+                .from('users')
+                .select('full_name, phone')
+                .eq('id', user.id)
+                .single()
+            
+            if (profile) {
+                document.querySelector('input[name="contact_name"]').value = profile.full_name || ''
+                document.querySelector('input[name="phone"]').value = profile.phone || ''
+            }
+            document.querySelector('input[name="email"]').value = user.email || ''
+            
+            await loadCategoriesForForm()
+            await loadCitiesForForm()
+            setupImageUpload()
+        })
+        
+        // Navbar kullanıcı kontrolü
+        async function checkUserStatusForForm() {
+            const user = await getCurrentUser()
+            
+            const navLoading = document.getElementById('navLoading')
+            const loggedOut = document.getElementById('loggedOutButtons')
+            const loggedIn = document.getElementById('loggedInButtons')
+            const userName = document.getElementById('userName')
+            
+            if (navLoading) navLoading.style.display = 'none'
+            
+            if (user) {
+                loggedOut.style.display = 'none'
+                loggedIn.style.display = 'flex'
+                
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('full_name')
+                    .eq('id', user.id)
+                    .single()
+                
+                if (profile && profile.full_name) {
+                    userName.textContent = `👤 ${profile.full_name.split(' ')[0]}`
+                }
+            } else {
+                loggedOut.style.display = 'flex'
+                loggedIn.style.display = 'none'
+            }
+        }
+        
+        async function handleLogout() {
+            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
+                await logoutUser()
+                window.location.href = 'index.html'
+            }
+        }
+        
+        // Ana kategorileri yükle
+        async function loadCategoriesForForm() {
+            try {
+                const { data, error } = await supabase
+                    .from('categories')
+                    .select('id, name, icon')
+                    .is('parent_id', null)
+                    .order('name')
+                
+                if (error) throw error
+                
+                const categorySelect = document.getElementById('categorySelect')
+                categorySelect.innerHTML = '<option value="">Seçin</option>' + 
+                    data.map(cat => `<option value="${cat.id}">${cat.icon || ''} ${cat.name}</option>`).join('')
+                
+                console.log('✅ Kategoriler yüklendi')
+            } catch (error) {
+                console.error('❌ Kategori yükleme hatası:', error)
+            }
+        }
+        
+        // Alt kategorileri (sektörleri) yükle
+        async function loadSubcategoriesForForm() {
+            const categoryId = document.getElementById('categorySelect').value
+            const subcategorySelect = document.getElementById('subcategorySelect')
+            
+            if (!categoryId) {
+                subcategorySelect.innerHTML = '<option value="">Önce kategori seçin</option>'
+                subcategorySelect.disabled = true
+                return
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('categories')
+                    .select('id, name, icon')
+                    .eq('parent_id', categoryId)
+                    .order('name')
+                
+                if (error) throw error
+                
+                if (data.length === 0) {
+                    subcategorySelect.innerHTML = '<option value="">Bu kategoride sektör yok</option>'
+                    subcategorySelect.disabled = true
+                    return
+                }
+                
+                subcategorySelect.disabled = false
+                subcategorySelect.innerHTML = '<option value="">Seçin</option>' + 
+                    data.map(sub => `<option value="${sub.id}">${sub.icon || ''} ${sub.name}</option>`).join('')
+                
+                console.log('✅ Sektörler yüklendi')
+            } catch (error) {
+                console.error('❌ Sektör yükleme hatası:', error)
+            }
+        }
+        
+        // Şehirleri yükle
+        async function loadCitiesForForm() {
+            try {
+                const { data, error } = await supabase
+                    .from('cities')
+                    .select('id, name')
+                    .order('name')
+                
+                if (error) throw error
+                
+                const citySelect = document.getElementById('citySelect')
+                citySelect.innerHTML = '<option value="">Seçin</option>' + 
+                    data.map(city => `<option value="${city.id}">${city.name}</option>`).join('')
+                
+                console.log('✅ Şehirler yüklendi')
+            } catch (error) {
+                console.error('❌ Şehir yükleme hatası:', error)
+            }
+        }
+        
+        // İlçeleri yükle
+        async function loadDistrictsForStep() {
+            const cityId = document.getElementById('citySelect').value
+            const districtSelect = document.getElementById('districtSelect')
+            
+            if (!cityId) {
+                districtSelect.innerHTML = '<option value="">Önce şehir seçin</option>'
+                districtSelect.disabled = true
+                return
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('districts')
+                    .select('id, name')
+                    .eq('city_id', cityId)
+                    .order('name')
+                
+                if (error) throw error
+                
+                districtSelect.disabled = false
+                districtSelect.innerHTML = '<option value="">Seçin</option>' + 
+                    data.map(d => `<option value="${d.id}">${d.name}</option>`).join('')
+                
+                console.log('✅ İlçeler yüklendi')
+            } catch (error) {
+                console.error('❌ İlçe yükleme hatası:', error)
+            }
+        }
+        
+        // Step Navigation
+        function goToStep(step) {
+            if (step < 1 || step > totalSteps) return
+            
+            // Validate current step before moving forward
+            if (step > currentStep && !validateStep(currentStep)) {
+                return
+            }
+            
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'))
+            document.getElementById(`step${step}`).classList.add('active')
+            
+            updateStepIndicators(step)
+            currentStep = step
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+        
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                goToStep(currentStep + 1)
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep > 1) {
+                goToStep(currentStep - 1)
+            }
+        }
+        
+        function updateStepIndicators(activeStep) {
+            document.querySelectorAll('.step-btn').forEach((btn, index) => {
+                const stepNum = index + 1
+                btn.classList.remove('active', 'completed')
+                
+                if (stepNum < activeStep) {
+                    btn.classList.add('completed')
+                    btn.querySelector('.step-icon').textContent = '✓'
+                } else if (stepNum === activeStep) {
+                    btn.classList.add('active')
+                    btn.querySelector('.step-icon').textContent = '✓'
+                } else {
+                    btn.querySelector('.step-icon').textContent = '✗'
+                }
+            })
+        }
+        
+        function validateStep(step) {
+            const stepEl = document.getElementById(`step${step}`)
+            const requiredFields = stepEl.querySelectorAll('[required]')
+            let isValid = true
+            
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    field.classList.add('error')
+                    isValid = false
+                } else {
+                    field.classList.remove('error')
+                }
+            })
+            
+            if (!isValid) {
+                alert('⚠️ Lütfen zorunlu alanları doldurun!')
+            }
+            
+            return isValid
+        }
+        
+        // Image Upload Setup
+        function setupImageUpload() {
+            const dropZone = document.getElementById('imageDropZone')
+            const fileInput = document.getElementById('imageUpload')
+            
+            dropZone.addEventListener('click', () => fileInput.click())
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault()
+                dropZone.classList.add('dragover')
+            })
+            
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover')
+            })
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault()
+                dropZone.classList.remove('dragover')
+                handleFiles(e.dataTransfer.files)
+            })
+            
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files)
+            })
+        }
+        
+        let uploadedImages = []
+        
+        function handleFiles(files) {
+            const previewGrid = document.getElementById('imagePreviewGrid')
+            
+            Array.from(files).forEach(file => {
+                if (uploadedImages.length >= 20) {
+                    alert('Maksimum 20 görsel yükleyebilirsiniz!')
+                    return
+                }
+                
+                if (file.size > 4 * 1024 * 1024) {
+                    alert(`${file.name} dosyası 4MB'dan büyük!`)
+                    return
+                }
+                
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    uploadedImages.push({ file, preview: e.target.result })
+                    renderImagePreviews()
+                }
+                reader.readAsDataURL(file)
+            })
+        }
+        
+        function renderImagePreviews() {
+            const previewGrid = document.getElementById('imagePreviewGrid')
+            previewGrid.innerHTML = uploadedImages.map((img, index) => `
+                <div class="preview-item">
+                    <img src="${img.preview}" alt="Preview">
+                    <button type="button" class="remove-btn" onclick="removeImage(${index})">✕</button>
+                </div>
+            `).join('')
+        }
+        
+        function removeImage(index) {
+            uploadedImages.splice(index, 1)
+            renderImagePreviews()
+        }
+        
+        function previewCoverImage(input) {
+            const fileName = document.getElementById('coverFileName')
+            const preview = document.getElementById('coverPreview')
+            
+            if (input.files && input.files[0]) {
+                fileName.textContent = input.files[0].name
+                
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Cover Preview">`
+                }
+                reader.readAsDataURL(input.files[0])
+            }
+        }
+        
+        function formatText(format) {
+            const textarea = document.getElementById('descriptionEditor')
+            const start = textarea.selectionStart
+            const end = textarea.selectionEnd
+            const selectedText = textarea.value.substring(start, end)
+            
+            let formattedText = ''
+            switch(format) {
+                case 'bold': formattedText = `**${selectedText}**`; break
+                case 'italic': formattedText = `*${selectedText}*`; break
+                case 'h2': formattedText = `\n## ${selectedText}\n`; break
+                case 'h3': formattedText = `\n### ${selectedText}\n`; break
+                case 'h4': formattedText = `\n#### ${selectedText}\n`; break
+                case 'ul': formattedText = `\n- ${selectedText}\n`; break
+            }
+            
+            textarea.value = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end)
+        }
+        
+        // Form Submission
+        document.getElementById('addListingForm').addEventListener('submit', async (e) => {
+            e.preventDefault()
+            
+            if (!validateStep(3)) return
+            
+            console.log('📝 Form gönderiliyor...')
+            
+            const formData = new FormData(e.target)
+            
+            const listingData = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                category_id: parseInt(formData.get('category')),
+                subcategory_id: formData.get('subcategory') ? parseInt(formData.get('subcategory')) : null,
+                city_id: parseInt(formData.get('city')),
+                district_id: parseInt(formData.get('district')),
+                address: formData.get('address'),
+                area_sqm: parseInt(formData.get('area')) || null,
+                establishment_year: parseInt(formData.get('establishment_year')) || null,
+                employee_count: parseInt(formData.get('employees')) || null,
+                is_franchise: formData.get('is_franchise') === 'yes',
+                price: parseFloat(formData.get('price')),
+                monthly_rent: parseFloat(formData.get('rent')) || null,
+                monthly_revenue: parseFloat(formData.get('monthly_revenue')) || null,
+                monthly_profit: parseFloat(formData.get('monthly_profit')) || null,
+                inventory_value: parseFloat(formData.get('inventory_value')) || null,
+                equipment_value: parseFloat(formData.get('equipment_value')) || null,
+                lease_end_date: formData.get('lease_end_date') || null,
+                transfer_reason: formData.get('reason') || null,
+                contact_name: formData.get('contact_name'),
+                contact_phone: formData.get('phone'),
+                contact_email: formData.get('email')
+            }
+            
+            console.log('📊 İlan verisi:', listingData)
+            
+            try {
+                const result = await createListing(listingData)
+                
+                if (result.success) {
+                    alert('✅ İlanınız başarıyla oluşturuldu! Admin onayından sonra yayınlanacaktır.')
+                    window.location.href = 'profile.html'
+                } else {
+                    alert('❌ Hata: ' + result.error)
+                }
+            } catch (error) {
+                console.error('❌ Form gönderim hatası:', error)
+                alert('❌ Bir hata oluştu: ' + error.message)
+            }
+        })
+    </script>
+</body>
+</html>

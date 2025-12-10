@@ -1,0 +1,28 @@
+{
+  "name": "devredin-platform",
+  "version": "1.0.0",
+  "description": "Türkiye'nin en büyük işletme devir platformu",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "live-server --port=8000 --host=localhost",
+    "test": "echo \"No tests yet\"",
+    "build": "echo \"Build script here\""
+  },
+  "keywords": [
+    "franchise",
+    "business",
+    "devir",
+    "işletme",
+    "turkey"
+  ],
+  "author": "DevredinPlatform",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
+

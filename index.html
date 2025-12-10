@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevredinPlatform - Türkiye'nin Şirket ve Franchise Pazaryeri</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <span>●</span> Kısa bir süreliğine ilanlarınızı ÜCRETSİZ şekilde yayınlayabilirsiniz. 
+        <a href="add-listing.html">Hemen ilan başlat</a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="listings.html?type=franchise" class="nav-link">Franchise</a></li>
+                    <li><a href="#" class="nav-link">Blog</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <div id="navLoading" style="display: flex; gap: 1rem; align-items: center;">
+                        <span style="color: #94a3b8; font-size: 0.9rem;">⏳</span>
+                    </div>
+                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
+                        <a href="add-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                    </div>
+                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
+                        <a href="add-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-new">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <h1>Türkiye'nin Şirket ve<br><span class="highlight">Franchise Pazaryeri</span></h1>
+                    
+                    <!-- Search Tabs -->
+                    <div class="search-tabs-new">
+                        <button class="search-tab-new active" data-type="business">
+                            🏪 İşletme
+                        </button>
+                        <button class="search-tab-new" data-type="franchise">
+                            🏢 Franchise
+                        </button>
+                    </div>
+
+                    <!-- Search Filters -->
+                    <div class="search-filters">
+                        <div class="filter-dropdown">
+                            <span class="filter-icon">📁</span>
+                            <select id="heroCategory">
+                                <option value="">Kategori</option>
+                            </select>
+                        </div>
+                        <div class="filter-dropdown">
+                            <span class="filter-icon">📍</span>
+                            <select id="heroCity">
+                                <option value="">İl</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-search-hero" onclick="searchListings()">İşletme Ara</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <!-- Left Stats -->
+                <div class="stats-card stats-main">
+                    <h3>Devredin'den İstatistikler</h3>
+                    <div class="stat-item-large">
+                        <span class="stat-number" id="totalListings">0</span>
+                        <span class="stat-label">Toplam İlan Sayısı</span>
+                    </div>
+                    <div class="stat-item-large">
+                        <span class="stat-number" id="totalValue">₺0</span>
+                        <span class="stat-label">Toplam İlan Değeri</span>
+                    </div>
+                    <div class="stat-item-large">
+                        <span class="stat-number" id="avgValue">₺0</span>
+                        <span class="stat-label">Ortalama İşletme Değeri</span>
+                    </div>
+                </div>
+
+                <!-- Top Sectors -->
+                <div class="stats-card">
+                    <h4>● En Çok İlan Olan Sektörler</h4>
+                    <div class="stats-list" id="topSectors">
+                        <div class="stats-list-item"><span class="rank">1</span> Yükleniyor... <span class="count">0</span></div>
+                    </div>
+                </div>
+
+                <!-- Top Regions -->
+                <div class="stats-card">
+                    <h4>● En Çok İlan Olan Bölgeler</h4>
+                    <div class="stats-list" id="topRegions">
+                        <div class="stats-list-item"><span class="rank">1</span> Yükleniyor... <span class="count">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Listings -->
+    <section class="listings-section-new">
+        <div class="container">
+            <div class="section-header">
+                <h2>⭐ Öne Çıkan İlanlar</h2>
+                <a href="listings.html?featured=true" class="view-all">Tüm Öne Çıkanlar</a>
+            </div>
+            <div class="listings-carousel" id="featuredListings">
+                <!-- Listings will be loaded dynamically -->
+                <div class="listing-card-placeholder">Yükleniyor...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Listings -->
+    <section class="listings-section-new">
+        <div class="container">
+            <div class="section-header">
+                <h2>🕐 Son İlanlar</h2>
+                <a href="listings.html" class="view-all">Tüm İlanlar</a>
+            </div>
+            <div class="listings-carousel" id="recentListings">
+                <!-- Listings will be loaded dynamically -->
+                <div class="listing-card-placeholder">Yükleniyor...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>📁 Kategoriler</h2>
+            </div>
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="about">
+        <div class="container">
+            <h2>Nasıl Çalışır?</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon">📝</div>
+                    <h3>1. İlan Oluştur</h3>
+                    <p>İşletmenizi detaylı bilgilerle tanıtın</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">👀</div>
+                    <h3>2. Görünürlük Kazan</h3>
+                    <p>Binlerce potansiyel alıcıya ulaşın</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">🤝</div>
+                    <h3>3. Anlaşma Yap</h3>
+                    <p>Doğru alıcıyla buluşun ve devredin</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>devredin<span>platform</span></h3>
+                    <p>Türkiye'nin en büyük işletme devir platformu</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Devredin</h4>
+                    <ul>
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Bize Ulaşın</a></li>
+                        <li><a href="#">İşlem Rehberi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>İşletme Devral</h4>
+                    <ul>
+                        <li><a href="listings.html">Devren Kiralık İlanlar</a></li>
+                        <li><a href="listings.html?type=franchise">Franchise Bul</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Diğer</h4>
+                    <ul>
+                        <li><a href="#">Kullanım Koşulları</a></li>
+                        <li><a href="#">Gizlilik Politikası</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js?v=5"></script>
+    <script src="script.js?v=5"></script>
+    
+    <script>
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🏠 Ana sayfa yükleniyor...')
+            
+            await checkUserStatus()
+            await loadHeroFilters()
+            await loadStatistics()
+            await loadFeaturedListings()
+            await loadRecentListings()
+            await loadCategories()
+        })
+
+        // Kullanıcı durumu
+        async function checkUserStatus() {
+            const user = await getCurrentUser()
+            
+            const navLoading = document.getElementById('navLoading')
+            const loggedOut = document.getElementById('loggedOutButtons')
+            const loggedIn = document.getElementById('loggedInButtons')
+            const userName = document.getElementById('userName')
+            
+            if (navLoading) navLoading.style.display = 'none'
+            
+            if (user) {
+                loggedOut.style.display = 'none'
+                loggedIn.style.display = 'flex'
+                
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('full_name')
+                    .eq('id', user.id)
+                    .single()
+                
+                if (profile && profile.full_name) {
+                    userName.textContent = `${profile.full_name.split(' ')[0]} ▼`
+                }
+            } else {
+                loggedOut.style.display = 'flex'
+                loggedIn.style.display = 'none'
+            }
+        }
+
+        // Hero filtreleri yükle
+        async function loadHeroFilters() {
+            // Kategoriler
+            const { data: categories } = await supabase
+                .from('categories')
+                .select('id, name, icon')
+                .is('parent_id', null)
+                .order('name')
+            
+            const categorySelect = document.getElementById('heroCategory')
+            if (categories) {
+                categorySelect.innerHTML = '<option value="">Kategori</option>' +
+                    categories.map(c => `<option value="${c.id}">${c.icon || ''} ${c.name}</option>`).join('')
+            }
+
+            // Şehirler
+            const { data: cities } = await supabase
+                .from('cities')
+                .select('id, name')
+                .order('name')
+            
+            const citySelect = document.getElementById('heroCity')
+            if (cities) {
+                citySelect.innerHTML = '<option value="">İl</option>' +
+                    cities.map(c => `<option value="${c.id}">${c.name}</option>`).join('')
+            }
+        }
+
+        // İstatistikleri yükle
+        async function loadStatistics() {
+            try {
+                // Toplam ilan sayısı ve değeri
+                const { data: listings, count } = await supabase
+                    .from('listings')
+                    .select('price', { count: 'exact' })
+                    .in('status', ['active', 'pending'])
+                
+                const totalCount = count || 0
+                const totalValue = listings?.reduce((sum, l) => sum + (l.price || 0), 0) || 0
+                const avgValue = totalCount > 0 ? totalValue / totalCount : 0
+
+                document.getElementById('totalListings').textContent = totalCount.toLocaleString('tr-TR') + '+'
+                document.getElementById('totalValue').textContent = '₺' + totalValue.toLocaleString('tr-TR') + '+'
+                document.getElementById('avgValue').textContent = '₺' + Math.round(avgValue).toLocaleString('tr-TR')
+
+                // En çok ilan olan kategoriler
+                const { data: sectorStats } = await supabase
+                    .from('listings')
+                    .select('category_id, category:categories!category_id(name)')
+                    .in('status', ['active', 'pending'])
+                
+                if (sectorStats) {
+                    const sectorCounts = {}
+                    sectorStats.forEach(l => {
+                        const name = l.category?.name || 'Diğer'
+                        sectorCounts[name] = (sectorCounts[name] || 0) + 1
+                    })
+                    
+                    const topSectors = Object.entries(sectorCounts)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5)
+                    
+                    document.getElementById('topSectors').innerHTML = topSectors.map((s, i) => `
+                        <div class="stats-list-item">
+                            <span class="rank">${i + 1}</span> ${s[0]} 
+                            <span class="count">${s[1]}</span>
+                        </div>
+                    `).join('')
+                }
+
+                // En çok ilan olan bölgeler
+                const { data: regionStats } = await supabase
+                    .from('listings')
+                    .select('city_id, city:cities(name), district:districts(name)')
+                    .in('status', ['active', 'pending'])
+                
+                if (regionStats) {
+                    const regionCounts = {}
+                    regionStats.forEach(l => {
+                        const name = l.district?.name && l.city?.name ? 
+                            `${l.district.name}, ${l.city.name}` : 
+                            l.city?.name || 'Bilinmiyor'
+                        regionCounts[name] = (regionCounts[name] || 0) + 1
+                    })
+                    
+                    const topRegions = Object.entries(regionCounts)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5)
+                    
+                    document.getElementById('topRegions').innerHTML = topRegions.map((r, i) => `
+                        <div class="stats-list-item">
+                            <span class="rank">${i + 1}</span> ${r[0]} 
+                            <span class="count">${r[1]}</span>
+                        </div>
+                    `).join('')
+                }
+
+            } catch (error) {
+                console.error('İstatistik yükleme hatası:', error)
+            }
+        }
+
+        // Öne çıkan ilanları yükle
+        async function loadFeaturedListings() {
+            try {
+                const { data } = await supabase
+                    .from('listings')
+                    .select(`
+                        id, title, price, created_at,
+                        category:categories!category_id(name),
+                        city:cities(name),
+                        district:districts(name),
+                        images:listing_images(image_url, is_primary)
+                    `)
+                    .in('status', ['active', 'pending'])
+                    .eq('is_featured', true)
+                    .order('created_at', { ascending: false })
+                    .limit(8)
+                
+                const container = document.getElementById('featuredListings')
+                
+                if (data && data.length > 0) {
+                    container.innerHTML = data.map(listing => createListingCard(listing, true)).join('')
+                } else {
+                    // Öne çıkan yoksa son ilanları göster
+                    const { data: recent } = await supabase
+                        .from('listings')
+                        .select(`
+                            id, title, price, created_at,
+                            category:categories!category_id(name),
+                            city:cities(name),
+                            district:districts(name),
+                            images:listing_images(image_url, is_primary)
+                        `)
+                        .in('status', ['active', 'pending'])
+                        .order('created_at', { ascending: false })
+                        .limit(4)
+                    
+                    if (recent && recent.length > 0) {
+                        container.innerHTML = recent.map(listing => createListingCard(listing, true)).join('')
+                    } else {
+                        container.innerHTML = '<p style="text-align: center; color: #94a3b8;">Henüz ilan yok</p>'
+                    }
+                }
+            } catch (error) {
+                console.error('Öne çıkan ilanlar yükleme hatası:', error)
+            }
+        }
+
+        // Son ilanları yükle
+        async function loadRecentListings() {
+            try {
+                const { data } = await supabase
+                    .from('listings')
+                    .select(`
+                        id, title, price, created_at,
+                        category:categories!category_id(name),
+                        city:cities(name),
+                        district:districts(name),
+                        images:listing_images(image_url, is_primary)
+                    `)
+                    .in('status', ['active', 'pending'])
+                    .order('created_at', { ascending: false })
+                    .limit(8)
+                
+                const container = document.getElementById('recentListings')
+                
+                if (data && data.length > 0) {
+                    container.innerHTML = data.map(listing => createListingCard(listing, false)).join('')
+                } else {
+                    container.innerHTML = '<p style="text-align: center; color: #94a3b8;">Henüz ilan yok</p>'
+                }
+            } catch (error) {
+                console.error('Son ilanlar yükleme hatası:', error)
+            }
+        }
+
+        // İlan kartı oluştur
+        function createListingCard(listing, featured = false) {
+            const primaryImage = listing.images?.find(img => img.is_primary) || listing.images?.[0]
+            const imageStyle = primaryImage ? 
+                `background-image: url('${primaryImage.image_url}'); background-size: cover; background-position: center;` :
+                `background: #f1f5f9; display: flex; align-items: center; justify-content: center;`
+            const noImageIcon = !primaryImage ? '<span style="font-size: 3rem; opacity: 0.3;">🏪</span>' : ''
+            
+            const location = listing.district?.name && listing.city?.name ? 
+                `${listing.district.name}, ${listing.city.name}` : 
+                listing.city?.name || ''
+
+            return `
+                <a href="listing-detail.html?id=${listing.id}" class="listing-card-new">
+                    <div class="listing-image-new" style="${imageStyle}">
+                        ${noImageIcon}
+                        ${featured ? '<span class="featured-badge">⭐ ÖNE ÇIKAN</span>' : ''}
+                    </div>
+                    <div class="listing-content-new">
+                        <h3>${listing.title}</h3>
+                        <p class="listing-location-new">📍 ${location}</p>
+                        <p class="listing-price-new">${formatPrice(listing.price)}</p>
+                        <div class="listing-footer-new">
+                            <span>${formatDate(listing.created_at)}</span>
+                            <span class="view-details">Detayları görün →</span>
+                        </div>
+                    </div>
+                </a>
+            `
+        }
+
+        // Kategorileri yükle
+        async function loadCategories() {
+            try {
+                const { data } = await supabase
+                    .from('categories')
+                    .select('id, name, slug, icon')
+                    .is('parent_id', null)
+                    .order('name')
+                
+                const container = document.getElementById('categoriesGrid')
+                
+                if (data && data.length > 0) {
+                    container.innerHTML = data.map(cat => `
+                        <a href="listings.html?category=${cat.id}" class="category-card">
+                            <span class="category-icon">${cat.icon || '📁'}</span>
+                            <span class="category-name">${cat.name}</span>
+                        </a>
+                    `).join('')
+                }
+            } catch (error) {
+                console.error('Kategori yükleme hatası:', error)
+            }
+        }
+
+        // Arama fonksiyonu
+        function searchListings() {
+            const category = document.getElementById('heroCategory').value
+            const city = document.getElementById('heroCity').value
+            
+            let url = 'listings.html?'
+            if (category) url += `category=${category}&`
+            if (city) url += `city=${city}&`
+            
+            window.location.href = url
+        }
+
+        // Search tab switching
+        document.querySelectorAll('.search-tab-new').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.search-tab-new').forEach(t => t.classList.remove('active'))
+                tab.classList.add('active')
+            })
+        })
+    </script>
+</body>
+</html>

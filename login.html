@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - DevredinPlatform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="listings.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="index.html#about" class="nav-link">Nasıl Çalışır</a></li>
+                    <li><a href="index.html#contact" class="nav-link">İletişim</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                    <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="login-container">
+            <div class="login-box" id="loginBox">
+                <div class="login-header">
+                    <h1>Üye Girişi</h1>
+                    <p>Hesabınız yok mu? <a href="#" id="showRegisterLink">Kayıt olun</a></p>
+                </div>
+
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label>Email Adresiniz</label>
+                        <input type="email" name="email" placeholder="ornek@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Şifre</label>
+                        <div class="password-input">
+                            <input type="password" name="password" id="password" placeholder="••••••••" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword()">
+                                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember">
+                            <span>Beni hatırla</span>
+                        </label>
+                        <a href="#" class="forgot-password">Şifrenizi mi unuttunuz?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Giriş Yapın</button>
+                </form>
+
+                <div class="divider">
+                    <span>veya</span>
+                </div>
+
+                <button class="social-login google-login">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google ile devam et
+                </button>
+            </div>
+
+            <!-- Register Box (Hidden by default) -->
+            <div class="login-box" id="registerBox" style="display: none;">
+                <div class="login-header">
+                    <h1>Kayıt Ol</h1>
+                    <p>Zaten hesabınız var mı? <a href="#" id="showLoginLink">Giriş yapın</a></p>
+                </div>
+
+                <form class="login-form" id="registerForm">
+                    <div class="form-group">
+                        <label>Ad Soyad</label>
+                        <input type="text" name="fullName" placeholder="Ad Soyad" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Adresiniz</label>
+                        <input type="email" name="email" placeholder="ornek@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="tel" name="phone" placeholder="0532 123 45 67">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Şifre</label>
+                        <div class="password-input">
+                            <input type="password" name="password" id="registerPassword" placeholder="En az 6 karakter" required minlength="6">
+                            <button type="button" class="toggle-password" onclick="toggleRegisterPassword()">
+                                <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="remember-me">
+                            <input type="checkbox" name="terms" required>
+                            <span style="font-size: 0.9rem;">
+                                <a href="#">Kullanım koşullarını</a> ve <a href="#">gizlilik politikasını</a> kabul ediyorum
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Kayıt Ol</button>
+                </form>
+
+                <div class="divider">
+                    <span>veya</span>
+                </div>
+
+                <button class="social-login google-login">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google ile kayıt ol
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Backend API -->
+    <script src="backend/api.js"></script>
+    
+    <!-- Ana Script -->
+    <script src="script.js"></script>
+    
+    <script>
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+        }
+        
+        function toggleRegisterPassword() {
+            const passwordInput = document.getElementById('registerPassword');
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+        }
+        
+        // Toggle between login and register forms
+        window.addEventListener('DOMContentLoaded', () => {
+            const showRegisterLink = document.getElementById('showRegisterLink');
+            const showLoginLink = document.getElementById('showLoginLink');
+            const loginBox = document.getElementById('loginBox');
+            const registerBox = document.getElementById('registerBox');
+            
+            if (showRegisterLink) {
+                showRegisterLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginBox.style.display = 'none';
+                    registerBox.style.display = 'block';
+                    console.log('📝 Kayıt formu gösteriliyor');
+                });
+            }
+            
+            if (showLoginLink) {
+                showLoginLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginBox.style.display = 'block';
+                    registerBox.style.display = 'none';
+                    console.log('🔐 Giriş formu gösteriliyor');
+                });
+            }
+        });
+        
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = e.target.email.value;
+            const password = e.target.password.value;
+            
+            console.log('🔐 Giriş yapılıyor...');
+            
+            const result = await loginUser(email, password);
+            
+            if (result.success) {
+                alert('✅ Giriş başarılı! Yönlendiriliyorsunuz...');
+                console.log('✅ Giriş başarılı:', result.data);
+                window.location.href = 'index.html';
+            } else {
+                alert('❌ Giriş hatası: ' + result.error);
+                console.error('❌ Giriş hatası:', result.error);
+            }
+        });
+        
+        // Register form submission
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const fullName = formData.get('fullName');
+            const phone = formData.get('phone');
+            
+            console.log('📝 Kayıt yapılıyor...');
+            
+            const result = await registerUser(email, password, fullName, phone);
+            
+            if (result.success) {
+                alert('✅ Kayıt başarılı! Email adresinize doğrulama linki gönderildi. Lütfen email\'inizi kontrol edin.');
+                console.log('✅ Kayıt başarılı:', result.data);
+                
+                // Login formunu göster
+                document.getElementById('loginBox').style.display = 'block';
+                document.getElementById('registerBox').style.display = 'none';
+                
+                // Login formuna email'i doldur
+                document.querySelector('#loginForm input[name="email"]').value = email;
+            } else {
+                alert('❌ Kayıt hatası: ' + result.error);
+                console.error('❌ Kayıt hatası:', result.error);
+            }
+        });
+        
+        // Sayfa yüklendiğinde kullanıcı kontrolü
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await getCurrentUser();
+            
+            if (user) {
+                console.log('✅ Kullanıcı zaten giriş yapmış:', user.email);
+                
+                // Kullanıcıya sor
+                if (confirm('Zaten giriş yapmışsınız. Ana sayfaya gitmek ister misiniz?')) {
+                    window.location.href = 'index.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

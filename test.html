@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Test - DevredinPlatform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0f172a;
+            color: white;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .test-section {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .test-section h2 {
+            color: #FF6B35;
+            margin-bottom: 1rem;
+        }
+        
+        button {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            border-left-color: #10b981;
+        }
+        
+        .error {
+            border-left-color: #ef4444;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .status.connected {
+            background: #10b981;
+        }
+        
+        .status.disconnected {
+            background: #ef4444;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #0f172a;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Backend Test Console</h1>
+        
+        <!-- Connection Status -->
+        <div class="test-section">
+            <h2>📡 Bağlantı Durumu</h2>
+            <span class="status" id="connectionStatus">Kontrol ediliyor...</span>
+            <div id="connectionResult" class="result"></div>
+        </div>
+        
+        <!-- Test Buttons -->
+        <div class="test-section">
+            <h2>🧪 Test Fonksiyonları</h2>
+            
+            <button onclick="testConnection()">1. Bağlantıyı Test Et</button>
+            <button onclick="testCategories()">2. Kategorileri Getir</button>
+            <button onclick="testCities()">3. Şehirleri Getir</button>
+            <button onclick="testListings()">4. İlanları Getir</button>
+            <button onclick="testStats()">5. İstatistikleri Getir</button>
+            <button onclick="clearResults()">🗑️ Sonuçları Temizle</button>
+            
+            <div id="testResults" class="result"></div>
+        </div>
+        
+        <!-- Create Listing Test -->
+        <div class="test-section">
+            <h2>➕ İlan Oluşturma Testi</h2>
+            <p style="color: #94a3b8; margin-bottom: 1rem;">
+                ⚠️ Önce giriş yapmanız gerekiyor!
+            </p>
+            
+            <input type="text" id="listingTitle" placeholder="İlan Başlığı">
+            <input type="text" id="listingDescription" placeholder="Açıklama">
+            <input type="number" id="listingPrice" placeholder="Fiyat (₺)">
+            
+            <button onclick="testCreateListing()">Test İlanı Oluştur</button>
+            
+            <div id="createResult" class="result"></div>
+        </div>
+        
+        <!-- Auth Test -->
+        <div class="test-section">
+            <h2>🔐 Kullanıcı İşlemleri</h2>
+            
+            <h3 style="margin-top: 1rem;">Kayıt Ol</h3>
+            <input type="email" id="signupEmail" placeholder="Email">
+            <input type="password" id="signupPassword" placeholder="Şifre">
+            <input type="text" id="signupName" placeholder="Ad Soyad">
+            <button onclick="testSignup()">Kayıt Ol</button>
+            
+            <h3 style="margin-top: 1.5rem;">Giriş Yap</h3>
+            <input type="email" id="loginEmail" placeholder="Email">
+            <input type="password" id="loginPassword" placeholder="Şifre">
+            <button onclick="testLogin()">Giriş Yap</button>
+            
+            <button onclick="testGetUser()">Mevcut Kullanıcıyı Göster</button>
+            <button onclick="testLogout()">Çıkış Yap</button>
+            
+            <div id="authResult" class="result"></div>
+        </div>
+        
+        <!-- Console -->
+        <div class="test-section">
+            <h2>📝 Console Log</h2>
+            <div id="consoleLog" class="result">
+Console açık. F12 ile tarayıcı console'unu da açabilirsiniz.
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Backend API -->
+    <script src="backend/api.js"></script>
+    
+    <!-- Test Script -->
+    <script>
+        // Custom console.log override
+        const originalLog = console.log
+        const consoleDiv = document.getElementById('consoleLog')
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args)
+            consoleDiv.textContent += '\n' + args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
+            ).join(' ')
+            consoleDiv.scrollTop = consoleDiv.scrollHeight
+        }
+        
+        // Test functions
+        async function testConnection() {
+            log('testResults', '🔌 Bağlantı test ediliyor...')
+            
+            try {
+                const { data, error } = await supabase
+                    .from('categories')
+                    .select('count')
+                    .limit(1)
+                
+                if (error) throw error
+                
+                updateStatus(true)
+                log('testResults', '✅ Bağlantı başarılı!', 'success')
+                console.log('✅ Supabase bağlantısı başarılı')
+            } catch (error) {
+                updateStatus(false)
+                log('testResults', '❌ Bağlantı hatası: ' + error.message, 'error')
+                console.error('❌ Bağlantı hatası:', error)
+            }
+        }
+        
+        async function testCategories() {
+            log('testResults', '📂 Kategoriler yükleniyor...')
+            
+            const result = await loadCategories()
+            
+            if (result.success) {
+                log('testResults', `✅ ${result.data.length} kategori bulundu:\n\n${JSON.stringify(result.data, null, 2)}`, 'success')
+                console.log('Kategoriler:', result.data)
+            } else {
+                log('testResults', '❌ Hata: ' + result.error, 'error')
+            }
+        }
+        
+        async function testCities() {
+            log('testResults', '🌍 Şehirler yükleniyor...')
+            
+            const result = await loadCities()
+            
+            if (result.success) {
+                log('testResults', `✅ ${result.data.length} şehir bulundu:\n\n${JSON.stringify(result.data, null, 2)}`, 'success')
+                console.log('Şehirler:', result.data)
+            } else {
+                log('testResults', '❌ Hata: ' + result.error, 'error')
+            }
+        }
+        
+        async function testListings() {
+            log('testResults', '📋 İlanlar yükleniyor...')
+            
+            const result = await loadListings({ limit: 5 })
+            
+            if (result.success) {
+                log('testResults', `✅ ${result.data.length} ilan bulundu:\n\n${JSON.stringify(result.data, null, 2)}`, 'success')
+                console.log('İlanlar:', result.data)
+            } else {
+                log('testResults', '❌ Hata: ' + result.error, 'error')
+            }
+        }
+        
+        async function testStats() {
+            log('testResults', '📊 İstatistikler yükleniyor...')
+            
+            const result = await loadPlatformStats()
+            
+            if (result.success) {
+                log('testResults', `✅ İstatistikler:\n\n${JSON.stringify(result.data, null, 2)}`, 'success')
+                console.log('İstatistikler:', result.data)
+            } else {
+                log('testResults', '❌ Hata: ' + result.error, 'error')
+            }
+        }
+        
+        async function testSignup() {
+            const email = document.getElementById('signupEmail').value
+            const password = document.getElementById('signupPassword').value
+            const name = document.getElementById('signupName').value
+            
+            if (!email || !password || !name) {
+                log('authResult', '❌ Tüm alanları doldurun!', 'error')
+                return
+            }
+            
+            log('authResult', '📝 Kayıt yapılıyor...')
+            
+            const result = await registerUser(email, password, name, '')
+            
+            if (result.success) {
+                log('authResult', '✅ Kayıt başarılı! Email doğrulama linkini kontrol edin.', 'success')
+                console.log('Kayıt başarılı:', result.data)
+            } else {
+                log('authResult', '❌ Hata: ' + result.error, 'error')
+            }
+        }
+        
+        async function testLogin() {
+            const email = document.getElementById('loginEmail').value
+            const password = document.getElementById('loginPassword').value
+            
+            if (!email || !password) {
+                log('authResult', '❌ Email ve şifre gerekli!', 'error')
+                return
+            }
+            
+            log('authResult', '🔐 Giriş yapılıyor...')
+            
+            const result = await loginUser(email, password)
+            
+            if (result.success) {
+                log('authResult', '✅ Giriş başarılı!', 'success')
+                console.log('Giriş başarılı:', result.data)
+            } else {
+                log('authResult', '❌ Hata: ' + result.error, 'error')
+            }
+        }
+        
+        async function testGetUser() {
+            log('authResult', '👤 Kullanıcı bilgileri getiriliyor...')
+            
+            const user = await getCurrentUser()
+            
+            if (user) {
+                log('authResult', `✅ Giriş yapılmış:\n\n${JSON.stringify(user, null, 2)}`, 'success')
+            } else {
+                log('authResult', '❌ Giriş yapılmamış', 'error')
+            }
+        }
+        
+        async function testLogout() {
+            log('authResult', '🚪 Çıkış yapılıyor...')
+            
+            await logoutUser()
+            log('authResult', '✅ Çıkış yapıldı', 'success')
+        }
+        
+        async function testCreateListing() {
+            const title = document.getElementById('listingTitle').value
+            const description = document.getElementById('listingDescription').value
+            const price = document.getElementById('listingPrice').value
+            
+            if (!title || !description || !price) {
+                log('createResult', '❌ Tüm alanları doldurun!', 'error')
+                return
+            }
+            
+            log('createResult', '📝 İlan oluşturuluyor...')
+            
+            const result = await createListing({
+                title,
+                description,
+                price: parseFloat(price),
+                category_id: 1, // Yeme-İçme
+                city_id: 1, // İstanbul
+                sector: 'Test',
+                contact_name: 'Test User',
+                contact_phone: '0532 000 00 00',
+                contact_email: 'test@test.com'
+            })
+            
+            if (result.success) {
+                log('createResult', `✅ İlan oluşturuldu!\n\n${JSON.stringify(result.data, null, 2)}`, 'success')
+                console.log('İlan oluşturuldu:', result.data)
+            } else {
+                log('createResult', '❌ Hata: ' + result.error, 'error')
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('testResults').textContent = ''
+            document.getElementById('authResult').textContent = ''
+            document.getElementById('createResult').textContent = ''
+            consoleDiv.textContent = 'Console temizlendi.'
+        }
+        
+        function log(elementId, message, type = '') {
+            const element = document.getElementById(elementId)
+            element.textContent = message
+            element.className = 'result ' + type
+        }
+        
+        function updateStatus(connected) {
+            const status = document.getElementById('connectionStatus')
+            const result = document.getElementById('connectionResult')
+            
+            if (connected) {
+                status.textContent = '✅ Bağlı'
+                status.className = 'status connected'
+                result.textContent = 'Supabase bağlantısı aktif\nURL: https://higrbnrjpwjnypzeodpm.supabase.co'
+                result.className = 'result success'
+            } else {
+                status.textContent = '❌ Bağlantı Yok'
+                status.className = 'status disconnected'
+                result.textContent = 'Supabase bağlantısı kurulamadı'
+                result.className = 'result error'
+            }
+        }
+        
+        // Auto test on load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Test sayfası yüklendi')
+            console.log('📡 Supabase URL:', SUPABASE_CONFIG.url)
+            testConnection()
+        })
+    </script>
+</body>
+</html>
+

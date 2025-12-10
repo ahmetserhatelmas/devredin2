@@ -1,0 +1,284 @@
+<!-- 
+============================================
+BACKEND ENTEGRASYONU ÖRNEK HTML
+============================================
+Bu dosya, mevcut HTML'lerinize backend nasıl entegre edileceğini gösterir
+-->
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Entegre Örnek - DevredinPlatform</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <div class="user-menu" id="userMenu">
+                    <!-- Giriş yapmamış kullanıcı -->
+                    <div id="loggedOut">
+                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                    </div>
+                    
+                    <!-- Giriş yapmış kullanıcı -->
+                    <div id="loggedIn" style="display: none;">
+                        <span id="userName">Merhaba, Kullanıcı</span>
+                        <button onclick="logoutUser()" class="btn btn-outline">Çıkış</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Listings Container -->
+    <section class="listings-section">
+        <div class="container">
+            <h2>Son İlanlar</h2>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="loading">
+                <p>İlanlar yükleniyor...</p>
+            </div>
+            
+            <!-- Listings Grid -->
+            <div id="listingsGrid" class="listings-grid" style="display: none;">
+                <!-- İlanlar buraya dinamik olarak eklenecek -->
+            </div>
+            
+            <!-- Error State -->
+            <div id="errorState" class="error" style="display: none;">
+                <p>İlanlar yüklenirken bir hata oluştu.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supabase Config -->
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_CONFIG = {
+            url: 'https://higrbnrjpwjnypzeodpm.supabase.co',
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ3JibnJqcHdqbnlwemVvZHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyNzg5NjUsImV4cCI6MjA4MDg1NDk2NX0.Zg9wGmcwmc3P1PsDMwQtApycxK6unjsdl-u6_msC5Jg'
+        }
+
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(
+            SUPABASE_CONFIG.url, 
+            SUPABASE_CONFIG.anonKey
+        )
+    </script>
+
+    <!-- Backend API -->
+    <script src="backend/api.js"></script>
+
+    <!-- Page Specific JS -->
+    <script>
+        // ============================================
+        // PAGE INITIALIZATION
+        // ============================================
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Page loaded, initializing...')
+            
+            // Kullanıcı durumunu kontrol et
+            await checkUserStatus()
+            
+            // İlanları yükle
+            await loadAndDisplayListings()
+        })
+
+        // ============================================
+        // USER STATUS CHECK
+        // ============================================
+        
+        async function checkUserStatus() {
+            const user = await getCurrentUser()
+            
+            const loggedOut = document.getElementById('loggedOut')
+            const loggedIn = document.getElementById('loggedIn')
+            const userName = document.getElementById('userName')
+            
+            if (user) {
+                // Kullanıcı giriş yapmış
+                loggedOut.style.display = 'none'
+                loggedIn.style.display = 'flex'
+                
+                // Kullanıcı adını göster
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('full_name')
+                    .eq('id', user.id)
+                    .single()
+                
+                if (profile) {
+                    userName.textContent = `Merhaba, ${profile.full_name}`
+                }
+            } else {
+                // Kullanıcı giriş yapmamış
+                loggedOut.style.display = 'flex'
+                loggedIn.style.display = 'none'
+            }
+        }
+
+        // ============================================
+        // LOAD AND DISPLAY LISTINGS
+        // ============================================
+        
+        async function loadAndDisplayListings() {
+            const loadingState = document.getElementById('loadingState')
+            const listingsGrid = document.getElementById('listingsGrid')
+            const errorState = document.getElementById('errorState')
+            
+            try {
+                // İlanları yükle
+                const result = await loadListings({
+                    limit: 12,
+                    sortBy: 'created_at',
+                    sortOrder: 'desc'
+                })
+                
+                if (result.success && result.data) {
+                    // Loading'i gizle, grid'i göster
+                    loadingState.style.display = 'none'
+                    listingsGrid.style.display = 'grid'
+                    
+                    // İlanları ekle
+                    listingsGrid.innerHTML = result.data.map(listing => 
+                        createListingCard(listing)
+                    ).join('')
+                    
+                    // Favori butonlarına event listener ekle
+                    attachFavoriteListeners()
+                } else {
+                    throw new Error(result.error || 'İlanlar yüklenemedi')
+                }
+            } catch (error) {
+                console.error('Error:', error)
+                loadingState.style.display = 'none'
+                errorState.style.display = 'block'
+            }
+        }
+
+        // ============================================
+        // CREATE LISTING CARD HTML
+        // ============================================
+        
+        function createListingCard(listing) {
+            // Ana görseli bul
+            const primaryImage = listing.images?.find(img => img.is_primary) || listing.images?.[0]
+            const imageUrl = primaryImage?.image_url || ''
+            const imageStyle = imageUrl ? 
+                `background-image: url('${imageUrl}'); background-size: cover; background-position: center;` : 
+                `background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);`
+            
+            // Fiyatı formatla
+            const price = formatPrice(listing.price)
+            const rent = listing.monthly_rent ? formatPrice(listing.monthly_rent) : null
+            
+            // Tarihi formatla
+            const date = formatDate(listing.created_at)
+            
+            return `
+                <a href="listing-detail.html?id=${listing.id}" class="listing-card">
+                    <div class="listing-image" style="${imageStyle}">
+                        <span class="listing-badge">${listing.category?.name || 'Kategori'}</span>
+                        <button class="favorite-btn" data-listing-id="${listing.id}" onclick="event.preventDefault(); handleFavoriteClick('${listing.id}')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="listing-content">
+                        <h3>${listing.title}</h3>
+                        <div class="listing-location">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            ${listing.district?.name || ''}, ${listing.city?.name || ''}
+                        </div>
+                        <div class="listing-details">
+                            ${listing.area_sqm ? `<span>📐 ${listing.area_sqm} m²</span>` : ''}
+                            ${rent ? `<span>💰 Kira: ${rent}</span>` : ''}
+                            ${listing.establishment_year ? `<span>📅 ${listing.establishment_year}</span>` : ''}
+                        </div>
+                        <div class="listing-footer">
+                            <span class="listing-price">${price}</span>
+                            <span class="listing-date">${date}</span>
+                        </div>
+                    </div>
+                </a>
+            `
+        }
+
+        // ============================================
+        // FAVORITE BUTTON HANDLER
+        // ============================================
+        
+        async function handleFavoriteClick(listingId) {
+            const result = await toggleFavorite(listingId)
+            
+            if (result.success) {
+                if (result.action === 'added') {
+                    alert('✅ Favorilere eklendi!')
+                } else {
+                    alert('❌ Favorilerden çıkarıldı')
+                }
+                
+                // Butonun görünümünü güncelle
+                const btn = document.querySelector(`[data-listing-id="${listingId}"] svg`)
+                if (btn) {
+                    btn.style.fill = result.action === 'added' ? 'currentColor' : 'none'
+                }
+            }
+        }
+
+        function attachFavoriteListeners() {
+            // Zaten onclick ile eklendi, ek bir şey yapılmasına gerek yok
+        }
+
+        // ============================================
+        // SEARCH FUNCTIONALITY
+        // ============================================
+        
+        async function handleSearch(event) {
+            event.preventDefault()
+            
+            const searchInput = document.querySelector('.search-input-group input')
+            const searchQuery = searchInput?.value || ''
+            
+            if (!searchQuery) return
+            
+            // Arama sonuçlarını yükle
+            const result = await loadListings({
+                search: searchQuery,
+                limit: 20
+            })
+            
+            if (result.success) {
+                const listingsGrid = document.getElementById('listingsGrid')
+                listingsGrid.innerHTML = result.data.map(listing => 
+                    createListingCard(listing)
+                ).join('')
+                
+                attachFavoriteListeners()
+            }
+        }
+
+        console.log('✅ Page initialized with backend integration')
+    </script>
+</body>
+</html>
+

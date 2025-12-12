@@ -3,16 +3,20 @@
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('👤 Profil sayfası yükleniyor...')
     
-    // Kullanıcı kontrolü
-    const user = await getCurrentUser()
-    if (!user) {
-        alert('⚠️ Bu sayfayı görüntülemek için giriş yapmalısınız!')
-        window.location.href = 'login.html'
-        return
-    }
+    // Navbar is managed by api.js automatically
     
-    // Navbar kullanıcı durumu
-    await checkUserStatus()
+    // Check if user is logged in using cached data first
+    const cachedUser = getCachedUser()
+    
+    if (!cachedUser) {
+        // Verify with API
+        const user = await getCurrentUser()
+        if (!user) {
+            alert('⚠️ Bu sayfayı görüntülemek için giriş yapmalısınız!')
+            window.location.href = 'login.html'
+            return
+        }
+    }
     
     // Profil bilgilerini yükle
     await loadProfile()
@@ -24,45 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadFavorites()
 })
 
-// Navbar kullanıcı kontrolü
-async function checkUserStatus() {
-    const user = await getCurrentUser()
-    
-    const navLoading = document.getElementById('navLoading')
-    const loggedOut = document.getElementById('loggedOutButtons')
-    const loggedIn = document.getElementById('loggedInButtons')
-    const userName = document.getElementById('userName')
-    
-    // Yükleme göstergesini gizle
-    if (navLoading) navLoading.style.display = 'none'
-    
-    if (user) {
-        loggedOut.style.display = 'none'
-        loggedIn.style.display = 'flex'
-        
-        const { data: profile } = await supabase
-            .from('users')
-            .select('full_name')
-            .eq('id', user.id)
-            .single()
-        
-        if (profile && profile.full_name) {
-            userName.textContent = `👤 ${profile.full_name.split(' ')[0]}`
-        } else {
-            userName.textContent = '👤 Profilim'
-        }
-    } else {
-        loggedOut.style.display = 'flex'
-        loggedIn.style.display = 'none'
-    }
-}
-
-async function handleLogout() {
-    if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-        await logoutUser()
-        window.location.href = 'index.html'
-    }
-}
+// handleLogout is now handled by api.js
 
 // Profil bilgilerini yükle
 async function loadProfile() {

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franchise Detayı - DevredinPlatform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="franchise-detail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="franchise.html" class="nav-link active">Franchise</a></li>
+                    <li><a href="#" class="nav-link">Blog</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <div id="navLoading" class="nav-loading">
+                        <div class="nav-skeleton"></div>
+                        <div class="nav-skeleton"></div>
+                    </div>
+                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                    </div>
+                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
+                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Franchise Detail -->
+    <section class="franchise-detail-page">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="franchise-hero">
+                <div class="brand-logo-large" id="brandLogoLarge">
+                    <div class="skeleton-logo"></div>
+                </div>
+                <h1 class="brand-title" id="brandTitle">
+                    <span class="skeleton-text skeleton-title"></span>
+                </h1>
+                <div class="brand-category" id="brandCategory">
+                    <span class="skeleton-text" style="width: 100px;"></span>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Yatırım</div>
+                        <div class="stat-value" id="statInvestment"><span class="skeleton-text" style="width: 150px;"></span></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Şube Sayısı</div>
+                        <div class="stat-value" id="statLocations"><span class="skeleton-text" style="width: 40px;"></span></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Bayii Sayısı</div>
+                        <div class="stat-value" id="statFranchisees"><span class="skeleton-text" style="width: 40px;"></span></div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Geri Dönüş (Ortalama)</div>
+                        <div class="stat-value" id="statRoi"><span class="skeleton-text" style="width: 60px;"></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info Bar -->
+            <div class="info-bar">
+                <div class="info-item">
+                    <span class="info-icon">📅</span>
+                    <span class="info-text">Kuruluş: <strong id="infoFounded">-</strong></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">📍</span>
+                    <span class="info-text">Merkez: <strong id="infoHQ">-</strong></span>
+                </div>
+                <div class="info-item" id="infoWebsiteItem" style="display: none;">
+                    <span class="info-icon">🌐</span>
+                    <a href="#" class="info-link" id="infoWebsite" target="_blank">Web Sitesi</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="content-sections">
+                
+                <!-- About Section -->
+                <section class="content-section">
+                    <h2 class="section-title">Hakkında</h2>
+                    <div class="section-content" id="aboutContent">
+                        <span class="skeleton-text" style="width: 100%;"></span>
+                        <span class="skeleton-text" style="width: 95%;"></span>
+                        <span class="skeleton-text" style="width: 90%;"></span>
+                    </div>
+                </section>
+
+                <!-- Company Info Section -->
+                <section class="content-section" id="companySection">
+                    <h2 class="section-title">📋 Şirket Bilgileri</h2>
+                    <div class="info-table">
+                        <div class="info-row">
+                            <span class="row-label">Marka Adı</span>
+                            <span class="row-value" id="companyBrand">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Kuruluş Yılı</span>
+                            <span class="row-value" id="companyYear">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Merkez</span>
+                            <span class="row-value" id="companyHQ">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Sektör</span>
+                            <span class="row-value" id="companySector">-</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Social Media Section -->
+                <section class="content-section" id="socialSection" style="display: none;">
+                    <h2 class="section-title">🔗 Sosyal Medya</h2>
+                    <div class="social-links-list" id="socialLinksList"></div>
+                </section>
+
+                <!-- Contact Section -->
+                <section class="content-section">
+                    <h2 class="section-title">📞 İletişim Bilgileri</h2>
+                    
+                    <!-- Contact Person -->
+                    <div class="contact-person-card">
+                        <div class="person-avatar-large">👤</div>
+                        <div class="person-details">
+                            <div class="person-name" id="contactPersonName">
+                                <span class="skeleton-text" style="width: 150px;"></span>
+                            </div>
+                            <div class="person-role" id="contactPersonRole">İlan Sahibi</div>
+                        </div>
+                    </div>
+
+                    <!-- Franchise Contact -->
+                    <div class="franchise-contact-card" id="franchiseContactCard">
+                        <h3>Franchise İletişim Temsilcisi</h3>
+                        <div class="contact-details">
+                            <div class="contact-row">
+                                <span class="contact-icon">👤</span>
+                                <span class="contact-label">İsim:</span>
+                                <span class="contact-value" id="franchiseContactName">-</span>
+                            </div>
+                            <div class="contact-row">
+                                <span class="contact-icon">💼</span>
+                                <span class="contact-label">Pozisyon:</span>
+                                <span class="contact-value" id="franchiseContactPosition">-</span>
+                            </div>
+                            <div class="contact-row">
+                                <span class="contact-icon">✉️</span>
+                                <span class="contact-label">E-posta:</span>
+                                <span class="contact-value" id="franchiseContactEmail">-</span>
+                            </div>
+                            <div class="contact-row">
+                                <span class="contact-icon">📞</span>
+                                <span class="contact-label">Telefon:</span>
+                                <span class="contact-value" id="franchiseContactPhone">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Contact Buttons -->
+                    <div class="quick-contact">
+                        <h3>Hızlı İletişim</h3>
+                        <div class="contact-buttons">
+                            <button class="contact-btn whatsapp-btn" id="whatsappContactBtn">
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                                WhatsApp ile İletişim
+                                <span class="btn-subtitle">Hızlı mesajlaşma için WhatsApp kullanın</span>
+                            </button>
+                            <button class="contact-btn phone-btn" id="phoneContactBtn">
+                                <span class="btn-icon">📞</span>
+                                Telefon ile Ara
+                                <span class="btn-subtitle phone-number" id="phoneNumber">+90 (532) 161 5716</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Investment Section -->
+                <section class="content-section">
+                    <h2 class="section-title">💰 Yatırım ve Finansal Bilgiler</h2>
+                    <div class="info-note">
+                        <span class="note-icon">ℹ️</span>
+                        Bu ilandaki yatırım aralığı yaklaşık ve tahmini değeri belirtmektedir.
+                    </div>
+                    <div class="info-table">
+                        <div class="info-row">
+                            <span class="row-label">Minimum Yatırım</span>
+                            <span class="row-value" id="finMinInvestment">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Maksimum Yatırım</span>
+                            <span class="row-value" id="finMaxInvestment">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Ciro Paylaşım Oranı</span>
+                            <span class="row-value" id="finRevenueShare">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Ortalama Geri Dönüş Süresi</span>
+                            <span class="row-value" id="finRoi">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Ortalama Aylık Ciro</span>
+                            <span class="row-value" id="finRevenue">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Ortalama Aylık Kar</span>
+                            <span class="row-value" id="finProfit">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Ortalama Kar Marjı</span>
+                            <span class="row-value" id="finMargin">-</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Network Section -->
+                <section class="content-section">
+                    <h2 class="section-title">🌐 Ağ ve Hedefler</h2>
+                    <div class="info-table">
+                        <div class="info-row">
+                            <span class="row-label">Toplam İşletme Sayısı</span>
+                            <span class="row-value" id="netLocations">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Toplam Bayii Sayısı</span>
+                            <span class="row-value" id="netFranchisees">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Müsait Bölgeler:</span>
+                            <div class="row-value regions-tags" id="netRegions">-</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Operations Section -->
+                <section class="content-section">
+                    <h2 class="section-title">⚙️ Operasyonel Gereksinimler</h2>
+                    <div class="info-table">
+                        <div class="info-row">
+                            <span class="row-label">Minimum M²</span>
+                            <span class="row-value" id="opMinSqm">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Havalandırma Gereksinimi</span>
+                            <span class="row-value" id="opVentilation">Gerekli Değil</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Minimum Çalışan Sayısı</span>
+                            <span class="row-value" id="opMinStaff">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Yarı Zamanlı Çalışabilir</span>
+                            <span class="row-value" id="opPartTime">Evet</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Evden Çalışabilir</span>
+                            <span class="row-value" id="opRemote">Hayır</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Partner Requirements Section -->
+                <section class="content-section">
+                    <h2 class="section-title">👤 Bayii Profil Gereksinimleri</h2>
+                    <div class="info-table">
+                        <div class="info-row">
+                            <span class="row-label">Minimum Gereken Sermaye</span>
+                            <span class="row-value" id="reqCapital">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="row-label">Önceki İş Deneyimi Gerekli</span>
+                            <span class="row-value" id="reqExperience">-</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Training Section -->
+                <section class="content-section">
+                    <h2 class="section-title">📚 Eğitim ve Destek</h2>
+                    <div class="info-table">
+                        <div class="info-row">
+                            <span class="row-label">Sürekli Eğitim Programı</span>
+                            <span class="row-value" id="trainProgram">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="support-categories" id="supportCategories">
+                        <div class="support-category">
+                            <h3>Tek Seferlik Hizmetler:</h3>
+                            <div class="support-tags" id="oneTimeServices"></div>
+                        </div>
+                        <div class="support-category">
+                            <h3>Sürekli Hizmetler:</h3>
+                            <div class="support-tags" id="ongoingServices"></div>
+                        </div>
+                        <div class="support-category">
+                            <h3>Destek Alanları:</h3>
+                            <div class="support-tags" id="supportAreas"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Documents Section -->
+                <section class="content-section">
+                    <h2 class="section-title">📄 Belgeler ve Dosyalar</h2>
+                    <div class="documents-list">
+                        <div class="document-card document-investor">
+                            <span class="doc-icon">📊</span>
+                            <span class="doc-text">Detaylı yatırımcı sunum dosyası</span>
+                            <button class="doc-btn" disabled>Yakında</button>
+                        </div>
+                    </div>
+
+                    <div class="info-warning">
+                        <span class="warning-icon">⚠️</span>
+                        <div class="warning-text">
+                            <strong>Lütfen dikkat:</strong> Franchise listesinde yer alan işletmeler, devredin.com ile yapılan reklam ve/veya sponsorluk anlaşmaları kapsamında listelenmiştir. Listeleme, ücretli bir tanıtım niteliği taşımaktadır.
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="script.js"></script>
+    <script src="franchise-detail.js"></script>
+</body>
+</html>

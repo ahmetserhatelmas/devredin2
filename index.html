@@ -11,7 +11,7 @@
     <!-- Top Banner -->
     <div class="top-banner">
         <span>●</span> Kısa bir süreliğine ilanlarınızı ÜCRETSİZ şekilde yayınlayabilirsiniz. 
-        <a href="add-listing.html">Hemen ilan başlat</a>
+        <a href="create-listing.html">Hemen ilan başlat</a>
     </div>
 
     <!-- Navigation -->
@@ -23,21 +23,23 @@
                 </div>
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
-                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                    <li><a href="listings.html?type=franchise" class="nav-link">Franchise</a></li>
+                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
                     <li><a href="#" class="nav-link">Blog</a></li>
                 </ul>
                 <div class="nav-buttons">
-                    <div id="navLoading" style="display: flex; gap: 1rem; align-items: center;">
-                        <span style="color: #94a3b8; font-size: 0.9rem;">⏳</span>
+                    <div id="navLoading" class="nav-loading">
+                        <div class="nav-skeleton"></div>
+                        <div class="nav-skeleton"></div>
                     </div>
                     <div id="loggedOutButtons" style="display: none; gap: 1rem;">
-                        <a href="add-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
                         <a href="login.html" class="btn btn-outline">Giriş Yap</a>
                     </div>
                     <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
-                        <a href="add-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
                         <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
+                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
                     </div>
                 </div>
             </div>
@@ -233,43 +235,13 @@
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('🏠 Ana sayfa yükleniyor...')
             
-            await checkUserStatus()
+            // Navbar is managed by api.js automatically
             await loadHeroFilters()
             await loadStatistics()
             await loadFeaturedListings()
             await loadRecentListings()
             await loadCategories()
         })
-
-        // Kullanıcı durumu
-        async function checkUserStatus() {
-            const user = await getCurrentUser()
-            
-            const navLoading = document.getElementById('navLoading')
-            const loggedOut = document.getElementById('loggedOutButtons')
-            const loggedIn = document.getElementById('loggedInButtons')
-            const userName = document.getElementById('userName')
-            
-            if (navLoading) navLoading.style.display = 'none'
-            
-            if (user) {
-                loggedOut.style.display = 'none'
-                loggedIn.style.display = 'flex'
-                
-                const { data: profile } = await supabase
-                    .from('users')
-                    .select('full_name')
-                    .eq('id', user.id)
-                    .single()
-                
-                if (profile && profile.full_name) {
-                    userName.textContent = `${profile.full_name.split(' ')[0]} ▼`
-                }
-            } else {
-                loggedOut.style.display = 'flex'
-                loggedIn.style.display = 'none'
-            }
-        }
 
         // Hero filtreleri yükle
         async function loadHeroFilters() {

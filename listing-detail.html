@@ -17,23 +17,23 @@
                     <a href="index.html">devredin<span>platform</span></a>
                 </div>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
-                    <li><a href="listings.html" class="nav-link active">İşletme Devral</a></li>
-                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                    <li><a href="index.html#about" class="nav-link">Nasıl Çalışır</a></li>
-                    <li><a href="index.html#contact" class="nav-link">İletişim</a></li>
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
+                    <li><a href="#" class="nav-link">Blog</a></li>
                 </ul>
                 <div class="nav-buttons">
-                    <div id="navLoading" style="display: flex; gap: 1rem; align-items: center;">
-                        <span style="color: #94a3b8; font-size: 0.9rem;">⏳</span>
+                    <div id="navLoading" class="nav-loading">
+                        <div class="nav-skeleton"></div>
+                        <div class="nav-skeleton"></div>
                     </div>
                     <div id="loggedOutButtons" style="display: none; gap: 1rem;">
                         <a href="login.html" class="btn btn-outline">Giriş Yap</a>
-                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
                     </div>
                     <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
                         <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
-                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
                         <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
                     </div>
                 </div>
@@ -48,13 +48,13 @@
             <div class="breadcrumb-detail">
                 <a href="index.html">Ana Sayfa</a> / 
                 <a href="listings.html">İlanlar</a> / 
-                <span>Yükleniyor...</span>
+                <span class="breadcrumb-title"><span class="skeleton-text" style="width: 150px;"></span></span>
             </div>
 
             <div class="listing-detail-layout">
                 <!-- Main Content -->
                 <div class="listing-detail-main">
-                    <h1 class="listing-title">Yükleniyor...</h1>
+                    <h1 class="listing-title"><span class="skeleton-text skeleton-title"></span></h1>
                     
                     <!-- Share Buttons -->
                     <div class="share-buttons">
@@ -85,11 +85,8 @@
 
                     <!-- Image Gallery -->
                     <div class="image-gallery">
-                        <div class="main-image">
-                            <div class="image-placeholder">
-                                <span>📷</span>
-                                <p>Görseller yüklenecek</p>
-                            </div>
+                        <div class="main-image skeleton-image">
+                            <!-- Skeleton will be replaced with actual image -->
                         </div>
                         <div class="thumbnails">
                             <!-- Thumbnails will be loaded dynamically -->
@@ -107,7 +104,10 @@
                     <div class="tab-contents">
                         <div class="tab-content active" id="description">
                             <div class="listing-description">
-                                <p>Yükleniyor...</p>
+                                <span class="skeleton-text" style="width: 100%;"></span>
+                                <span class="skeleton-text" style="width: 90%;"></span>
+                                <span class="skeleton-text" style="width: 95%;"></span>
+                                <span class="skeleton-text" style="width: 80%;"></span>
                             </div>
                         </div>
 
@@ -119,7 +119,8 @@
 
                         <div class="tab-content" id="location">
                             <div class="listing-location-info">
-                                <p>Yükleniyor...</p>
+                                <span class="skeleton-text" style="width: 70%;"></span>
+                                <span class="skeleton-text" style="width: 50%;"></span>
                             </div>
                         </div>
                     </div>
@@ -129,36 +130,36 @@
                 <aside class="listing-detail-sidebar">
                     <!-- Price Card -->
                     <div class="price-card">
-                        <div class="detail-price">₺0</div>
+                        <div class="detail-price"><span class="skeleton-text skeleton-price"></span></div>
                         
                         <div class="detail-info-list">
                             <div class="detail-info-item">
                                 <span class="info-label">Sektör:</span>
-                                <span class="info-value info-sector">-</span>
+                                <span class="info-value info-sector"><span class="skeleton-text skeleton-small"></span></span>
                             </div>
                             <div class="detail-info-item">
                                 <span class="info-label">Metrekare:</span>
-                                <span class="info-value info-area">-</span>
+                                <span class="info-value info-area"><span class="skeleton-text skeleton-small"></span></span>
                             </div>
                             <div class="detail-info-item">
                                 <span class="info-label">Kira:</span>
-                                <span class="info-value info-rent">-</span>
+                                <span class="info-value info-rent"><span class="skeleton-text skeleton-small"></span></span>
                             </div>
                             <div class="detail-info-item">
                                 <span class="info-label">Kira Kontrat Bitiş Tarihi:</span>
-                                <span class="info-value info-lease-end">-</span>
+                                <span class="info-value info-lease-end"><span class="skeleton-text skeleton-small"></span></span>
                             </div>
                             <div class="detail-info-item">
                                 <span class="info-label">Çalışan Sayısı:</span>
-                                <span class="info-value info-employees">-</span>
+                                <span class="info-value info-employees"><span class="skeleton-text skeleton-small"></span></span>
                             </div>
                             <div class="detail-info-item">
                                 <span class="info-label">Ciro (Aylık):</span>
-                                <span class="info-value info-revenue">-</span>
+                                <span class="info-value info-revenue"><span class="skeleton-text skeleton-small"></span></span>
                             </div>
                             <div class="detail-info-item">
                                 <span class="info-label">Net Kar (Aylık):</span>
-                                <span class="info-value info-profit">-</span>
+                                <span class="info-value info-profit"><span class="skeleton-text skeleton-small"></span></span>
                             </div>
                         </div>
                     </div>
@@ -168,13 +169,13 @@
                         <div class="owner-info">
                             <div class="owner-avatar">👤</div>
                             <div class="owner-details">
-                                <h3 class="owner-name">İlan Sahibi</h3>
+                                <h3 class="owner-name"><span class="skeleton-text" style="width: 100px;"></span></h3>
                                 <span class="owner-label">İlan Sahibi</span>
                             </div>
                         </div>
                         
                         <a href="#" class="owner-phone">
-                            📞 <span>Telefon yükleniyor...</span>
+                            📞 <span class="skeleton-text" style="width: 120px;"></span>
                         </a>
                         
                         <div class="contact-buttons">

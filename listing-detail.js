@@ -1,12 +1,12 @@
-// Listing Detail Page - Dynamic Content
+// Listing Detail Page - Dynamic Content (Optimized)
 
 let currentListing = null;
 
-// Sayfa yüklendiğinde
-async function initListingDetail() {
+// ⚡ Sayfa yüklendiğinde HIZLI başlat
+function initListingDetail() {
     console.log('📋 İlan detay sayfası yükleniyor...')
     
-    // URL'den ilan ID'sini al
+    // URL'den ilan ID'sini al (senkron - hızlı)
     const urlParams = new URLSearchParams(window.location.search)
     const listingId = urlParams.get('id')
     
@@ -17,11 +17,8 @@ async function initListingDetail() {
     
     console.log('🔍 İlan ID:', listingId)
     
-    // İlanı yükle
-    await loadListingDetail(listingId)
-    
-    // Kullanıcı durumunu kontrol et
-    await checkUserStatus()
+    // ⚡ İlanı hemen yükle (await yok - paralel)
+    loadListingDetail(listingId)
 }
 
 // Sayfa hazır olduğunda başlat
@@ -31,18 +28,21 @@ if (document.readyState === 'loading') {
     initListingDetail()
 }
 
-// İlan detaylarını yükle
+// ⚡ OPTİMİZE: İlan detaylarını hızlı yükle
 async function loadListingDetail(listingId) {
     try {
-        // Önce basit sorgu ile ilanı al
+        // ⚡ Sadece gerekli alanları çek (performans için)
         const { data, error } = await supabase
             .from('listings')
             .select(`
-                *,
-                category:categories!category_id(id, name, slug, icon),
-                city:cities(id, name),
-                district:districts(id, name),
-                images:listing_images(id, image_url, is_primary)
+                id, title, price, description, address, area_sqm, monthly_rent,
+                monthly_revenue, monthly_profit, employee_count, establishment_year,
+                lease_end_date, transfer_reason, is_franchise, inventory_value,
+                equipment_value, contact_name, contact_phone, sector,
+                category:categories!category_id(name, icon),
+                city:cities(name),
+                district:districts(name),
+                images:listing_images(image_url, is_primary)
             `)
             .eq('id', listingId)
             .single()
@@ -60,15 +60,14 @@ async function loadListingDetail(listingId) {
         currentListing = data
         console.log('✅ İlan yüklendi:', data)
         
-        // Görüntülenme sayısını artır
-        await incrementViewCount(listingId)
-        
-        // Sayfayı render et
+        // ⚡ Sayfayı HEMEN render et
         renderListingDetail(data)
+        
+        // ⚡ View count arka planda artır (beklemeden)
+        incrementViewCount(listingId)
         
     } catch (error) {
         console.error('❌ İlan yükleme hatası:', error)
-        console.error('Hata detayı:', JSON.stringify(error, null, 2))
         showError('İlan yüklenirken bir hata oluştu: ' + (error.message || error))
     }
 }
@@ -82,10 +81,13 @@ async function incrementViewCount(listingId) {
     }
 }
 
-// İlan detaylarını render et
+// ⚡ İlan detaylarını hızlı render et
 function renderListingDetail(listing) {
     // Sayfa başlığı
     document.title = `${listing.title} - DevredinPlatform`
+    
+    // ⚡ Loaded class ekle (skeleton'ları kaldır)
+    document.body.classList.add('loaded')
     
     // Breadcrumb
     const breadcrumb = document.querySelector('.breadcrumb-detail')
@@ -105,17 +107,28 @@ function renderListingDetail(listing) {
     const priceEl = document.querySelector('.detail-price')
     if (priceEl) priceEl.textContent = formatPrice(listing.price)
     
-    // Ana görsel
+    // ⚡ Ana görsel - hızlı yükleme
     const mainImage = document.querySelector('.main-image')
     if (mainImage) {
+        mainImage.classList.remove('skeleton-image')
         const primaryImage = listing.images?.find(img => img.is_primary) || listing.images?.[0]
         if (primaryImage) {
+            // Preload image for faster display
+            const img = new Image()
+            img.onload = () => {
+                mainImage.innerHTML = `<img src="${primaryImage.image_url}" alt="${listing.title}" style="opacity: 0; transition: opacity 0.3s ease;">`
+                setTimeout(() => {
+                    mainImage.querySelector('img').style.opacity = '1'
+                }, 50)
+            }
+            img.src = primaryImage.image_url
+            // Fallback - show immediately
             mainImage.innerHTML = `<img src="${primaryImage.image_url}" alt="${listing.title}">`
         } else {
             mainImage.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: white;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <span style="font-size: 4rem;">📷</span>
-                    <p>Görseller yüklenecek</p>
+                    <p>Görsel bulunmuyor</p>
                 </div>
             `
         }
@@ -140,9 +153,12 @@ function renderListingDetail(listing) {
     updateDetailInfo('.info-revenue', listing.monthly_revenue ? formatPrice(listing.monthly_revenue) : '-')
     updateDetailInfo('.info-profit', listing.monthly_profit ? formatPrice(listing.monthly_profit) : '-')
     
-    // İlan sahibi bilgileri
+    // İlan sahibi bilgileri (skeleton'ları temizle)
     const ownerName = document.querySelector('.owner-name')
-    if (ownerName) ownerName.textContent = listing.contact_name || 'İlan Sahibi'
+    if (ownerName) {
+        ownerName.innerHTML = '' // Skeleton temizle
+        ownerName.textContent = listing.contact_name || 'İlan Sahibi'
+    }
     
     const ownerPhone = document.querySelector('.owner-phone')
     if (ownerPhone) {
@@ -192,10 +208,13 @@ function renderListingDetail(listing) {
     setupContactButtons(listing)
 }
 
-// Detay bilgisi güncelle
+// ⚡ Detay bilgisi güncelle (skeleton'ı temizle)
 function updateDetailInfo(selector, value) {
     const el = document.querySelector(selector)
-    if (el) el.textContent = value
+    if (el) {
+        el.innerHTML = '' // Skeleton'ı temizle
+        el.textContent = value
+    }
 }
 
 // Ana görseli değiştir
@@ -242,42 +261,7 @@ function showError(message) {
     }
 }
 
-// Kullanıcı durumu kontrolü
-async function checkUserStatus() {
-    const user = await getCurrentUser()
-    
-    const navLoading = document.getElementById('navLoading')
-    const loggedOut = document.getElementById('loggedOutButtons')
-    const loggedIn = document.getElementById('loggedInButtons')
-    const userName = document.getElementById('userName')
-    
-    if (navLoading) navLoading.style.display = 'none'
-    
-    if (user) {
-        loggedOut.style.display = 'none'
-        loggedIn.style.display = 'flex'
-        
-        const { data: profile } = await supabase
-            .from('users')
-            .select('full_name')
-            .eq('id', user.id)
-            .single()
-        
-        if (profile && profile.full_name) {
-            userName.textContent = `👤 ${profile.full_name.split(' ')[0]}`
-        }
-    } else {
-        loggedOut.style.display = 'flex'
-        loggedIn.style.display = 'none'
-    }
-}
-
-async function handleLogout() {
-    if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-        await logoutUser()
-        window.location.href = 'index.html'
-    }
-}
+// Navbar and handleLogout are now managed centrally by api.js
 
 // Tab functionality
 document.querySelectorAll('.tab-btn').forEach(btn => {

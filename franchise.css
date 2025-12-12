@@ -1,0 +1,458 @@
+/* Franchise Listings Page Styles */
+
+.franchise-page {
+    padding: 6rem 0 3rem;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.franchise-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+}
+
+/* Filters Sidebar */
+.franchise-filters {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 90px;
+    border: 1px solid #e2e8f0;
+}
+
+.filters-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+}
+
+/* Filter Accordion */
+.filter-accordion {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+}
+
+.filter-accordion.active {
+    border-color: var(--secondary-color);
+}
+
+.accordion-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: white;
+    border: none;
+    cursor: pointer;
+}
+
+.accordion-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.accordion-icon {
+    font-size: 1.2rem;
+}
+
+.accordion-label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--dark-text);
+}
+
+.accordion-value {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.accordion-content {
+    display: none;
+    padding: 0 1.25rem 1.25rem;
+}
+
+.filter-accordion.active .accordion-content {
+    display: block;
+}
+
+/* Filter Search Box */
+.filter-search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.filter-search-box .search-icon {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.filter-search-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+/* Sector List */
+.sector-list {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.sector-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.sector-item:hover {
+    background: #f1f5f9;
+}
+
+.sector-item.selected {
+    background: #eff6ff;
+}
+
+.sector-item .sector-icon {
+    font-size: 1.2rem;
+}
+
+.sector-item .sector-name {
+    font-weight: 500;
+    color: var(--dark-text);
+}
+
+.sector-item .sector-count {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* Investment Ranges */
+.investment-ranges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.range-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.range-option:hover {
+    background: #f1f5f9;
+}
+
+.range-option input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.range-option span {
+    font-size: 0.95rem;
+    color: var(--dark-text);
+}
+
+/* Filter Actions */
+.filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn-apply {
+    padding: 0.9rem;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-apply:hover {
+    background: #003d6e;
+}
+
+.btn-clear {
+    padding: 0.7rem;
+    background: transparent;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-clear:hover {
+    background: #f1f5f9;
+}
+
+/* Main Content */
+.franchise-main {
+    min-height: 80vh;
+}
+
+.franchise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.franchise-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+.franchise-count {
+    font-size: 0.95rem;
+    color: #64748b;
+}
+
+.franchise-count strong {
+    color: var(--dark-text);
+}
+
+/* Search Bar */
+.franchise-search {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1.2rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+}
+
+.search-box .search-icon {
+    font-size: 1.1rem;
+    color: #94a3b8;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+}
+
+.btn-search {
+    padding: 0.8rem 2rem;
+    background: var(--dark-text);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-search:hover {
+    background: #0f172a;
+}
+
+/* Franchise Grid */
+.franchise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.loading-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+/* Franchise Card */
+.franchise-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.franchise-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    border-color: var(--secondary-color);
+}
+
+.franchise-logo {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    padding: 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.franchise-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.franchise-logo .no-logo {
+    font-size: 4rem;
+    opacity: 0.3;
+}
+
+.franchise-info {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.franchise-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark-text);
+    margin-bottom: 0.75rem;
+}
+
+.franchise-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.franchise-category .cat-icon {
+    font-size: 1rem;
+}
+
+.franchise-location {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+}
+
+.franchise-investment {
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.investment-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-bottom: 0.25rem;
+}
+
+.investment-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+}
+
+.page-btn {
+    padding: 0.7rem 1.2rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--dark-text);
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.page-btn.active {
+    background: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .franchise-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .franchise-filters {
+        position: static;
+    }
+
+    .franchise-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .franchise-search {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .franchise-grid {
+        grid-template-columns: 1fr;
+    }
+}
+

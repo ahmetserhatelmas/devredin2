@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Oluştur - DevredinPlatform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .create-listing-page {
+            min-height: 100vh;
+            background: #f8fafc;
+            padding-top: 80px;
+        }
+        
+        .create-header {
+            background: white;
+            padding: 3rem 0;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .create-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .create-header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        .listing-types {
+            max-width: 1100px;
+            margin: 4rem auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .listing-type-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .listing-type-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 78, 137, 0.15);
+        }
+        
+        .listing-type-card .card-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: #f1f5f9;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+        
+        .listing-type-card:hover .card-icon {
+            background: #eff6ff;
+        }
+        
+        .listing-type-card h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+        }
+        
+        .listing-type-card p {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .listing-type-card .card-features {
+            text-align: left;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .listing-type-card .card-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #475569;
+            padding: 0.4rem 0;
+        }
+        
+        .listing-type-card .card-features li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .listing-type-card .card-btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .listing-type-card:hover .card-btn {
+            background: #003d6e;
+        }
+        
+        /* Franchise card special styling */
+        .listing-type-card.franchise-card {
+            border-color: var(--primary-color);
+            position: relative;
+        }
+        
+        .listing-type-card.franchise-card::before {
+            content: 'Popüler';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .listing-type-card.franchise-card .card-btn {
+            background: var(--primary-color);
+        }
+        
+        .listing-type-card.franchise-card:hover .card-btn {
+            background: #e55a2b;
+        }
+        
+        @media (max-width: 968px) {
+            .listing-types {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+            
+            .create-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="create-listing.html" class="nav-link active">İşletmeni Devret</a></li>
+                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
+                    <li><a href="#" class="nav-link">Blog</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <div id="navLoading" class="nav-loading">
+                        <div class="nav-skeleton"></div>
+                        <div class="nav-skeleton"></div>
+                    </div>
+                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                    </div>
+                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
+                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Create Listing Page -->
+    <div class="create-listing-page">
+        <div class="create-header">
+            <h1>İlan Oluştur</h1>
+            <p>Sizin için en uygun olanı seçin</p>
+        </div>
+        
+        <div class="listing-types">
+            <!-- İşletme Satış İlanı -->
+            <a href="add-listing.html" class="listing-type-card">
+                <div class="card-icon">🏪</div>
+                <h2>İşletme Satış İlanı Oluştur</h2>
+                <p>Mevcut işletmenizi satışa çıkarın veya devredin. Restoran, kafe, mağaza ve daha fazlası.</p>
+                <ul class="card-features">
+                    <li>Hızlı ve kolay ilan oluşturma</li>
+                    <li>Detaylı işletme bilgileri</li>
+                    <li>Fotoğraf ve belge yükleme</li>
+                    <li>Konum ve harita desteği</li>
+                </ul>
+                <span class="card-btn">İşletme İlanı Oluştur</span>
+            </a>
+            
+            <!-- Franchise İlanı -->
+            <a href="add-franchise.html" class="listing-type-card franchise-card">
+                <div class="card-icon">🏢</div>
+                <h2>Franchise İlanı Oluştur</h2>
+                <p>Franchise markanızı tanıtın ve yeni franchise ortakları bulun.</p>
+                <ul class="card-features">
+                    <li>Marka ve şirket bilgileri</li>
+                    <li>Yatırım ve mali detaylar</li>
+                    <li>Franchise koşulları</li>
+                    <li>Eğitim ve destek bilgileri</li>
+                    <li>Bölge seçenekleri</li>
+                </ul>
+                <span class="card-btn">Franchise İlanı Oluştur</span>
+            </a>
+            
+            <!-- Devralma Talebi -->
+            <a href="add-request.html" class="listing-type-card">
+                <div class="card-icon">🔍</div>
+                <h2>Devralma Talebi Oluştur</h2>
+                <p>İşletme arıyorsanız talebinizi oluşturun, size uygun ilanlar gelsin.</p>
+                <ul class="card-features">
+                    <li>Aradığınız sektörü belirtin</li>
+                    <li>Bütçe aralığınızı girin</li>
+                    <li>Konum tercihlerinizi seçin</li>
+                    <li>Satıcılar size ulaşsın</li>
+                </ul>
+                <span class="card-btn">Talep Oluştur</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+

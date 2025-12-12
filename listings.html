@@ -17,28 +17,28 @@
                     <a href="index.html">devredin<span>platform</span></a>
                 </div>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
                     <li><a href="listings.html" class="nav-link active">İşletme Devral</a></li>
-                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                    <li><a href="index.html#about" class="nav-link">Nasıl Çalışır</a></li>
-                    <li><a href="index.html#contact" class="nav-link">İletişim</a></li>
+                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
+                    <li><a href="#" class="nav-link">Blog</a></li>
                 </ul>
                 <div class="nav-buttons">
                     <!-- Yükleniyor -->
-                    <div id="navLoading" style="display: flex; gap: 1rem; align-items: center;">
-                        <span style="color: #94a3b8; font-size: 0.9rem;">⏳</span>
+                    <div id="navLoading" class="nav-loading">
+                        <div class="nav-skeleton"></div>
+                        <div class="nav-skeleton"></div>
                     </div>
                     
                     <!-- Giriş Yapmamış -->
                     <div id="loggedOutButtons" style="display: none; gap: 1rem;">
                         <a href="login.html" class="btn btn-outline">Giriş Yap</a>
-                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
                     </div>
                     
                     <!-- Giriş Yapmış -->
                     <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
                         <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
-                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
                         <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
                     </div>
                 </div>
@@ -66,104 +66,153 @@
     <section class="listings-section">
         <div class="container">
             <div class="listings-layout">
-                <!-- Filters Sidebar -->
+                <!-- Filters Sidebar - Modern Design -->
                 <aside class="filters-sidebar">
                     <div class="filters-header">
                         <h3>Filtreler</h3>
-                        <button class="clear-filters">Temizle</button>
                     </div>
 
-                    <!-- Location Filter -->
-                    <div class="filter-group">
-                        <button class="filter-toggle">
-                            <span>📍 Şehir</span>
-                            <span class="toggle-icon">−</span>
+                    <!-- Saved Filters Dropdown -->
+                    <div class="saved-filters-dropdown">
+                        <button class="saved-filters-btn">
+                            <span class="saved-icon">📁</span>
+                            <span>Filtrelerim</span>
+                            <span class="dropdown-arrow">▼</span>
                         </button>
-                        <div class="filter-content" id="cityFilterContent">
-                            <!-- Şehirler dinamik yüklenecek -->
-                            <select id="cityFilter" class="filter-select" style="width: 100%; padding: 0.8rem; border: 1px solid #e2e8f0; border-radius: 8px;">
-                                <option value="">Tüm Şehirler</option>
-                            </select>
-                        </div>
                     </div>
 
-                    <!-- Category Filter (Ana Kategoriler) -->
-                    <div class="filter-group">
-                        <button class="filter-toggle">
-                            <span>📁 Kategori</span>
-                            <span class="toggle-icon">−</span>
-                        </button>
-                        <div class="filter-content" id="categoryFilterContent">
-                            <!-- Kategoriler dinamik yüklenecek -->
-                            <p style="color: #94a3b8;">Yükleniyor...</p>
-                        </div>
+                    <!-- Selected Filter Tags -->
+                    <div class="selected-filters" id="selectedFilters" style="display: none;">
+                        <!-- Seçili filtreler buraya eklenecek -->
                     </div>
 
-                    <!-- Subcategory Filter (Sektörler) -->
-                    <div class="filter-group" id="subcategoryFilterGroup" style="display: none;">
-                        <button class="filter-toggle">
-                            <span>🏪 Sektör</span>
-                            <span class="toggle-icon">−</span>
+                    <!-- Location Filter (Yer) -->
+                    <div class="filter-accordion" data-filter="location">
+                        <button class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">🌐</span>
+                                <span class="accordion-label">Yer</span>
+                            </div>
+                            <span class="accordion-value" id="locationValue">Belirlenmedi</span>
                         </button>
-                        <div class="filter-content" id="subcategoryFilterContent">
-                            <!-- Sektörler kategori seçildiğinde yüklenecek -->
-                            <p style="color: #94a3b8;">Önce kategori seçin</p>
-                        </div>
-                    </div>
-
-                    <!-- Price Filter -->
-                    <div class="filter-group">
-                        <button class="filter-toggle">
-                            <span>💰 Fiyat</span>
-                            <span class="toggle-icon">−</span>
-                        </button>
-                        <div class="filter-content">
-                            <div class="price-inputs">
-                                <input type="number" placeholder="Min ₺" class="price-input" id="minPrice">
-                                <span>-</span>
-                                <input type="number" placeholder="Max ₺" class="price-input" id="maxPrice">
+                        <div class="accordion-content">
+                            <div class="filter-search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="locationSearch" placeholder="Lokasyon arayın">
+                            </div>
+                            <div class="location-suggestions" id="locationSuggestions">
+                                <p class="suggestions-title">Önerilen konumlar</p>
+                                <div class="suggestion-item nearby-item" onclick="useNearbyLocation()">
+                                    <div class="suggestion-icon-circle">📍</div>
+                                    <div class="suggestion-text">
+                                        <span class="suggestion-main">Yakınızda</span>
+                                        <span class="suggestion-sub">Çevrenizdeki ilanları bulun</span>
+                                    </div>
+                                </div>
+                                <div id="cityList" class="city-list">
+                                    <!-- Şehirler buraya yüklenecek -->
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Area Filter -->
-                    <div class="filter-group">
-                        <button class="filter-toggle">
-                            <span>📐 Metrekare</span>
-                            <span class="toggle-icon">−</span>
+                    <!-- Sector Filter (Sektör) -->
+                    <div class="filter-accordion" data-filter="sector">
+                        <button class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">🏢</span>
+                                <span class="accordion-label">Sektör</span>
+                            </div>
+                            <span class="accordion-value" id="sectorValue">Belirlenmedi</span>
                         </button>
-                        <div class="filter-content">
-                            <div class="price-inputs">
-                                <input type="number" placeholder="Min m²" class="price-input" id="minArea">
-                                <span>-</span>
-                                <input type="number" placeholder="Max m²" class="price-input" id="maxArea">
+                        <div class="accordion-content">
+                            <div class="filter-search-box">
+                                <input type="text" id="categorySearch" placeholder="Kategori, alt kategori veya sektör">
+                            </div>
+                            <div class="category-list" id="categoryList">
+                                <!-- Kategoriler buraya yüklenecek -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- Development Filter -->
-                    <div class="filter-group">
-                        <button class="filter-toggle">
-                            <span>⚙️ Gelişmiş</span>
-                            <span class="toggle-icon">−</span>
+                    <!-- Price Filter (Fiyat) -->
+                    <div class="filter-accordion" data-filter="price">
+                        <button class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">💰</span>
+                                <span class="accordion-label">Fiyat</span>
+                            </div>
+                            <span class="accordion-value" id="priceValue">Belirlenmedi</span>
                         </button>
-                        <div class="filter-content">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="feature" value="franchise">
-                                <span>Franchise</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="feature" value="established">
-                                <span>Köklü İşletme</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="feature" value="profitable">
-                                <span>Kârlı</span>
-                            </label>
+                        <div class="accordion-content">
+                            <div class="price-histogram" id="priceHistogram">
+                                <!-- Histogram buraya çizilecek -->
+                            </div>
+                            <div class="price-range-slider">
+                                <div class="slider-track" id="sliderTrack"></div>
+                                <input type="range" id="minPriceSlider" min="0" max="10000000" value="0" class="range-slider range-min">
+                                <input type="range" id="maxPriceSlider" min="0" max="10000000" value="10000000" class="range-slider range-max">
+                            </div>
+                            <div class="slider-labels">
+                                <span>Minimum</span>
+                                <span>Maximum</span>
+                            </div>
+                            <div class="price-inputs-modern">
+                                <input type="text" id="minPriceInput" placeholder="En düşük">
+                                <span class="price-separator">-</span>
+                                <input type="text" id="maxPriceInput" placeholder="5.550.000">
+                            </div>
                         </div>
                     </div>
 
-                    <button class="btn btn-primary" id="filterButton" style="width: 100%; margin-top: 1rem;">Filtrele</button>
+                    <!-- Advanced Filter (Gelişmiş) -->
+                    <div class="filter-accordion" data-filter="advanced">
+                        <button class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">⚙️</span>
+                                <span class="accordion-label">Gelişmiş</span>
+                            </div>
+                            <span class="accordion-value" id="advancedValue">Belirlenmedi</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="advanced-filters">
+                                <label class="modern-checkbox">
+                                    <input type="checkbox" name="feature" value="franchise">
+                                    <span class="checkmark"></span>
+                                    <span>Franchise</span>
+                                </label>
+                                <label class="modern-checkbox">
+                                    <input type="checkbox" name="feature" value="established">
+                                    <span class="checkmark"></span>
+                                    <span>Köklü İşletme (5+ yıl)</span>
+                                </label>
+                                <label class="modern-checkbox">
+                                    <input type="checkbox" name="feature" value="profitable">
+                                    <span class="checkmark"></span>
+                                    <span>Kârlı İşletme</span>
+                                </label>
+                                
+                                <div class="area-filter">
+                                    <p class="filter-subtitle">Metrekare</p>
+                                    <div class="price-inputs-modern">
+                                        <input type="number" id="minArea" placeholder="Min m²">
+                                        <span class="price-separator">-</span>
+                                        <input type="number" id="maxArea" placeholder="Max m²">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Action Buttons -->
+                    <div class="filter-actions">
+                        <button class="btn-apply-filters" id="applyFiltersBtn">
+                            Filtreleri Uygula
+                        </button>
+                        <button class="btn-clear-filters" id="clearFiltersBtn">
+                            Filtreleri Temizle
+                        </button>
+                    </div>
                 </aside>
 
                 <!-- Main Content -->
@@ -250,51 +299,7 @@
     <script src="script.js?v=5"></script>
     <script src="listings.js?v=5"></script>
     
-    <script>
-        // Kullanıcı durumunu kontrol et
-        document.addEventListener('DOMContentLoaded', async () => {
-            await checkUserStatus()
-        })
-        
-        async function checkUserStatus() {
-            const user = await getCurrentUser()
-            
-            const navLoading = document.getElementById('navLoading')
-            const loggedOut = document.getElementById('loggedOutButtons')
-            const loggedIn = document.getElementById('loggedInButtons')
-            const userName = document.getElementById('userName')
-            
-            // Yükleme göstergesini gizle
-            if (navLoading) navLoading.style.display = 'none'
-            
-            if (user) {
-                loggedOut.style.display = 'none'
-                loggedIn.style.display = 'flex'
-                
-                const { data: profile } = await supabase
-                    .from('users')
-                    .select('full_name')
-                    .eq('id', user.id)
-                    .single()
-                
-                if (profile && profile.full_name) {
-                    userName.textContent = `👤 ${profile.full_name.split(' ')[0]}`
-                } else {
-                    userName.textContent = `👤 Profilim`
-                }
-            } else {
-                loggedOut.style.display = 'flex'
-                loggedIn.style.display = 'none'
-            }
-        }
-        
-        async function handleLogout() {
-            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-                await logoutUser()
-                window.location.href = 'index.html'
-            }
-        }
-    </script>
+    <!-- Navbar management is handled by api.js automatically -->
 </body>
 </html>
 

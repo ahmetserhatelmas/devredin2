@@ -17,28 +17,28 @@
                     <a href="index.html">devredin<span>platform</span></a>
                 </div>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
                     <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
-                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                    <li><a href="index.html#about" class="nav-link">Nasıl Çalışır</a></li>
-                    <li><a href="index.html#contact" class="nav-link">İletişim</a></li>
+                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
+                    <li><a href="#" class="nav-link">Blog</a></li>
                 </ul>
                 <div class="nav-buttons">
                     <!-- Yükleniyor -->
-                    <div id="navLoading" style="display: flex; gap: 1rem; align-items: center;">
-                        <span style="color: #94a3b8; font-size: 0.9rem;">⏳</span>
+                    <div id="navLoading" class="nav-loading">
+                        <div class="nav-skeleton"></div>
+                        <div class="nav-skeleton"></div>
                     </div>
                     
                     <!-- Giriş Yapmamış -->
                     <div id="loggedOutButtons" style="display: none; gap: 1rem;">
                         <a href="login.html" class="btn btn-outline">Giriş Yap</a>
-                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
                     </div>
                     
                     <!-- Giriş Yapmış -->
                     <div id="loggedInButtons" style="display: none; gap: 1rem; align-items: center;">
                         <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
-                        <a href="add-listing.html" class="btn btn-primary">İlan Ver</a>
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
                         <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
                     </div>
                 </div>

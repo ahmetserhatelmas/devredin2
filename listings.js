@@ -1,117 +1,4 @@
-// Listings Page JavaScript - Dynamic Filtering
-
-// Sayfa yüklendiğinde
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('📋 İlanlar sayfası yükleniyor...')
-    
-    // URL parametrelerini oku
-    await parseURLParams()
-    
-    // Kategorileri yükle
-    await loadCategoriesFilter()
-    
-    // Şehirleri yükle
-    await loadCitiesFilter()
-    
-    // URL'den gelen filtreleri UI'a uygula
-    await applyFiltersToUI()
-    
-    // İlanları yükle
-    await loadListings()
-})
-
-// URL parametrelerini oku ve filtrelere uygula
-async function parseURLParams() {
-    const params = new URLSearchParams(window.location.search)
-    
-    // Kategori
-    const categoryId = params.get('category')
-    if (categoryId) {
-        currentFilters.category = [parseInt(categoryId)]
-        console.log('🏷️ URL\'den kategori:', categoryId)
-    }
-    
-    // Şehir
-    const cityId = params.get('city')
-    if (cityId) {
-        currentFilters.city = parseInt(cityId)
-        console.log('🏙️ URL\'den şehir:', cityId)
-    }
-    
-    // Arama
-    const search = params.get('search')
-    if (search) {
-        currentFilters.search = search
-        console.log('🔍 URL\'den arama:', search)
-    }
-}
-
-// Filtreleri UI elementlerine uygula
-async function applyFiltersToUI() {
-    // Şehir dropdown'ını güncelle
-    if (currentFilters.city) {
-        const citySelect = document.getElementById('cityFilter')
-        if (citySelect) {
-            citySelect.value = currentFilters.city
-        }
-    }
-    
-    // Kategori radio'sunu güncelle
-    if (currentFilters.category.length > 0) {
-        const categoryId = currentFilters.category[0]
-        const categoryRadio = document.querySelector(`input[name="mainCategory"][value="${categoryId}"]`)
-        if (categoryRadio) {
-            categoryRadio.checked = true
-            // Sektörleri yükle (handleMainCategoryChange çağırmadan)
-            await loadSubcategoriesForCategory(categoryId)
-        }
-    }
-    
-    // Arama inputunu güncelle
-    if (currentFilters.search) {
-        const searchInput = document.querySelector('.search-bar-compact input')
-        if (searchInput) {
-            searchInput.value = currentFilters.search
-        }
-    }
-}
-
-// Belirli kategori için sektörleri yükle (ilanları yeniden yüklemeden)
-async function loadSubcategoriesForCategory(categoryId) {
-    const subcategoryGroup = document.getElementById('subcategoryFilterGroup')
-    if (subcategoryGroup) {
-        subcategoryGroup.style.display = 'block'
-    }
-    
-    try {
-        const { data, error } = await supabase
-            .from('categories')
-            .select('id, name, slug, icon')
-            .eq('parent_id', categoryId)
-            .order('name')
-        
-        if (error) throw error
-        
-        const filterContent = document.getElementById('subcategoryFilterContent')
-        
-        if (data.length === 0) {
-            filterContent.innerHTML = '<p style="color: #94a3b8; font-size: 0.9rem;">Bu kategoride sektör yok</p>'
-            return
-        }
-        
-        filterContent.innerHTML = data.map(sub => `
-            <label class="checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; cursor: pointer;">
-                <input type="checkbox" name="subcategory" value="${sub.id}" onchange="handleSubcategoryChange()">
-                <span>${sub.icon || '📌'} ${sub.name}</span>
-            </label>
-        `).join('')
-        
-        console.log('✅ Sektörler yüklendi:', data.length)
-        
-    } catch (error) {
-        console.error('❌ Sektör yükleme hatası:', error)
-    }
-}
+// Listings Page JavaScript - Modern Filter Design
 
 // Global filtre durumu
 let currentFilters = {
@@ -119,6 +6,7 @@ let currentFilters = {
     category: [],
     subcategory: [],
     city: null,
+    cityName: '',
     minPrice: null,
     maxPrice: null,
     minArea: null,
@@ -128,45 +16,776 @@ let currentFilters = {
     page: 1
 }
 
-// İlanları yükle
+// Kategori verileri cache
+let categoriesCache = []
+let citiesCache = []
+
+// Sayfa yüklendiğinde
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('📋 İlanlar sayfası yükleniyor...')
+    
+    // URL parametrelerini oku
+    parseURLParams()
+    
+    // Accordion event listeners
+    setupAccordions()
+    
+    // Filter button listeners
+    setupFilterButtons()
+    
+    // Search listeners
+    setupSearchListeners()
+    
+    // URL'den gelen filtreleri UI'a uygula
+    applyFiltersToUI()
+    
+    // ⚡ HIZLI: İlanları önce yükle (en önemli veri)
+    loadListings()
+    
+    // ⚡ PARALEL: Diğer verileri eşzamanlı yükle
+    Promise.all([
+        loadCategoriesOptimized(),
+        loadCitiesFilter(),
+        createPriceHistogramOptimized()
+    ]).then(() => {
+        setupPriceSlider()
+        console.log('✅ Tüm filtreler yüklendi')
+    })
+})
+
+// Accordion setup
+function setupAccordions() {
+    document.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const accordion = header.closest('.filter-accordion')
+            const wasActive = accordion.classList.contains('active')
+            
+            // Diğer accordion'ları kapat
+            document.querySelectorAll('.filter-accordion').forEach(acc => {
+                acc.classList.remove('active')
+            })
+            
+            // Tıklananı aç/kapat
+            if (!wasActive) {
+                accordion.classList.add('active')
+            }
+        })
+    })
+}
+
+// ⚡ OPTİMİZE: Kategorileri tek sorguda yükle
+async function loadCategoriesOptimized() {
+    try {
+        // Ana kategorileri çek
+        const { data: categories, error } = await supabase
+            .from('categories')
+            .select('id, name, slug, icon')
+            .is('parent_id', null)
+            .order('name')
+        
+        if (error) throw error
+        
+        // Kategorileri hemen render et (sayısız)
+        categoriesCache = categories.map(cat => ({ ...cat, count: '...' }))
+        renderCategories(categoriesCache)
+        
+        // Arka planda ilan sayılarını tek sorguda çek
+        const { data: listings } = await supabase
+            .from('listings')
+            .select('category_id')
+            .in('status', ['active', 'pending'])
+        
+        // Sayıları hesapla
+        const counts = {}
+        listings?.forEach(l => {
+            counts[l.category_id] = (counts[l.category_id] || 0) + 1
+        })
+        
+        // Kategorileri güncelle
+        categoriesCache = categories.map(cat => ({ 
+            ...cat, 
+            count: counts[cat.id] || 0 
+        }))
+        
+        renderCategories(categoriesCache)
+        
+        console.log('✅ Kategoriler yüklendi:', categoriesCache.length)
+    } catch (error) {
+        console.error('❌ Kategori yükleme hatası:', error)
+    }
+}
+
+// Eski fonksiyon için alias (geriye uyumluluk)
+async function loadCategoriesWithCounts() {
+    return loadCategoriesOptimized()
+}
+
+// Kategorileri render et
+function renderCategories(categories) {
+    const categoryList = document.getElementById('categoryList')
+    if (!categoryList) return
+    
+    categoryList.innerHTML = categories.map(cat => `
+        <div class="category-item" data-id="${cat.id}" onclick="selectCategory(${cat.id}, '${cat.name}')">
+            <div class="cat-icon">${cat.icon || '📁'}</div>
+            <div class="cat-info">
+                <span class="cat-name">${cat.name}</span>
+                <span class="cat-count">${cat.count} ilan</span>
+            </div>
+        </div>
+        <div class="subcategory-list" id="subcategories-${cat.id}" style="display: none;"></div>
+    `).join('')
+}
+
+// Kategori seçimi
+async function selectCategory(categoryId, categoryName) {
+    const categoryItem = document.querySelector(`.category-item[data-id="${categoryId}"]`)
+    const wasSelected = categoryItem.classList.contains('selected')
+    
+    // Önceki seçimleri temizle
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('selected')
+    })
+    document.querySelectorAll('.subcategory-list').forEach(list => {
+        list.style.display = 'none'
+    })
+    
+    if (wasSelected) {
+        // Seçimi kaldır
+        currentFilters.category = []
+        currentFilters.subcategory = []
+        updateFilterValue('sector', 'Belirlenmedi')
+        updateSelectedTags()
+        return
+    }
+    
+    // Yeni seçim
+    categoryItem.classList.add('selected')
+    currentFilters.category = [categoryId]
+    currentFilters.subcategory = []
+    
+    // Değeri güncelle
+    updateFilterValue('sector', categoryName)
+    
+    // Seçili tag ekle
+    updateSelectedTags()
+    
+    // Alt kategorileri yükle
+    await loadSubcategories(categoryId)
+}
+
+// ⚡ OPTİMİZE: Alt kategorileri hızlı yükle
+async function loadSubcategories(categoryId) {
+    try {
+        const subcategoryList = document.getElementById(`subcategories-${categoryId}`)
+        if (!subcategoryList) return
+        
+        // Önce loading göster
+        subcategoryList.innerHTML = '<div style="padding: 0.5rem; color: #94a3b8;">Yükleniyor...</div>'
+        subcategoryList.style.display = 'block'
+        
+        const { data, error } = await supabase
+            .from('categories')
+            .select('id, name, icon')
+            .eq('parent_id', categoryId)
+            .order('name')
+        
+        if (error) throw error
+        if (data.length === 0) {
+            subcategoryList.style.display = 'none'
+            return
+        }
+        
+        // Önce sayısız render et (hızlı)
+        subcategoryList.innerHTML = data.map(sub => `
+            <div class="subcategory-item" data-id="${sub.id}" onclick="selectSubcategory(${sub.id}, '${sub.name}', event)">
+                <span class="sub-icon">${sub.icon || '📌'}</span>
+                <span>${sub.name}</span>
+            </div>
+        `).join('')
+        
+    } catch (error) {
+        console.error('❌ Alt kategori yükleme hatası:', error)
+    }
+}
+
+// Alt kategori seçimi
+function selectSubcategory(subcategoryId, subcategoryName, event) {
+    event.stopPropagation()
+    
+    const subcategoryItem = document.querySelector(`.subcategory-item[data-id="${subcategoryId}"]`)
+    const wasSelected = subcategoryItem.classList.contains('selected')
+    
+    // Toggle seçimi
+    if (wasSelected) {
+        subcategoryItem.classList.remove('selected')
+        currentFilters.subcategory = currentFilters.subcategory.filter(id => id !== subcategoryId)
+    } else {
+        subcategoryItem.classList.add('selected')
+        currentFilters.subcategory.push(subcategoryId)
+    }
+    
+    updateSelectedTags()
+}
+
+// Şehirleri yükle
+async function loadCitiesFilter() {
+    try {
+        const { data, error } = await supabase
+            .from('cities')
+            .select('id, name')
+            .order('name')
+        
+        if (error) throw error
+        
+        citiesCache = data
+        
+        renderCities(data)
+        
+        // Arama dinleyicisi
+        const locationSearch = document.getElementById('locationSearch')
+        if (locationSearch) {
+            locationSearch.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase()
+                const filtered = data.filter(city => 
+                    city.name.toLowerCase().includes(query)
+                )
+                renderCities(filtered)
+            })
+        }
+        
+        console.log('✅ Şehirler yüklendi:', data.length)
+    } catch (error) {
+        console.error('❌ Şehir yükleme hatası:', error)
+    }
+}
+
+// Şehirleri render et
+function renderCities(cities) {
+    const cityList = document.getElementById('cityList')
+    if (!cityList) return
+    
+    cityList.innerHTML = cities.slice(0, 10).map(city => `
+        <div class="city-item ${currentFilters.city === city.id ? 'selected' : ''}" 
+             data-id="${city.id}" 
+             onclick="selectCity(${city.id}, '${city.name}')">
+            <span class="city-icon">🏛️</span>
+            <span class="city-name">${city.name}</span>
+        </div>
+    `).join('')
+}
+
+// Şehir seçimi
+function selectCity(cityId, cityName) {
+    const cityItem = document.querySelector(`.city-item[data-id="${cityId}"]`)
+    const wasSelected = cityItem?.classList.contains('selected')
+    
+    // Önceki seçimi temizle
+    document.querySelectorAll('.city-item').forEach(item => {
+        item.classList.remove('selected')
+    })
+    
+    if (wasSelected) {
+        currentFilters.city = null
+        currentFilters.cityName = ''
+        updateFilterValue('location', 'Belirlenmedi')
+    } else {
+        cityItem?.classList.add('selected')
+        currentFilters.city = cityId
+        currentFilters.cityName = cityName
+        updateFilterValue('location', cityName)
+    }
+    
+    updateSelectedTags()
+}
+
+// Yakınızdaki konumu kullan
+function useNearbyLocation() {
+    if (!navigator.geolocation) {
+        alert('Tarayıcınız konum özelliğini desteklemiyor.')
+        return
+    }
+    
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            console.log('📍 Konum alındı:', position.coords)
+            updateFilterValue('location', 'Yakınızda')
+            // TODO: Koordinatlara göre en yakın şehri bul
+            alert('Yakınızdaki ilanlar gösteriliyor...')
+        },
+        (error) => {
+            console.error('❌ Konum hatası:', error)
+            alert('Konum alınamadı. Lütfen konum iznini kontrol edin.')
+        }
+    )
+}
+
+// ⚡ OPTİMİZE: Fiyat histogramı - sadece fiyat alanını çek
+async function createPriceHistogramOptimized() {
+    const histogram = document.getElementById('priceHistogram')
+    if (!histogram) return
+    
+    try {
+        // Sadece fiyatları çek (minimum veri)
+        const { data, error } = await supabase
+            .from('listings')
+            .select('price')
+            .in('status', ['active', 'pending'])
+            .not('price', 'is', null)
+            .gt('price', 0)
+            .limit(500) // Performans için limit
+        
+        if (error) throw error
+        if (!data || data.length === 0) return
+        
+        const prices = data.map(l => l.price)
+        const maxPrice = Math.max(...prices)
+        const buckets = 20
+        const bucketSize = maxPrice / buckets
+        const distribution = new Array(buckets).fill(0)
+        
+        prices.forEach(price => {
+            const bucketIndex = Math.min(Math.floor(price / bucketSize), buckets - 1)
+            distribution[bucketIndex]++
+        })
+        
+        const maxCount = Math.max(...distribution)
+        
+        histogram.innerHTML = distribution.map((count, i) => {
+            const height = maxCount > 0 ? (count / maxCount) * 100 : 0
+            return `<div class="histogram-bar" style="height: ${Math.max(height, 5)}%"></div>`
+        }).join('')
+        
+        // Max fiyatı slider'a ayarla
+        const maxSlider = document.getElementById('maxPriceSlider')
+        const minSlider = document.getElementById('minPriceSlider')
+        if (maxSlider) {
+            maxSlider.max = maxPrice
+            maxSlider.value = maxPrice
+        }
+        if (minSlider) {
+            minSlider.max = maxPrice
+        }
+        
+        // Input placeholder'ı güncelle
+        const maxInput = document.getElementById('maxPriceInput')
+        if (maxInput) {
+            maxInput.placeholder = formatPrice(maxPrice)
+        }
+        
+    } catch (error) {
+        console.error('❌ Histogram hatası:', error)
+    }
+}
+
+// Eski fonksiyon için alias
+async function createPriceHistogram() {
+    return createPriceHistogramOptimized()
+}
+
+// Fiyat slider kurulumu
+function setupPriceSlider() {
+    const minSlider = document.getElementById('minPriceSlider')
+    const maxSlider = document.getElementById('maxPriceSlider')
+    const minInput = document.getElementById('minPriceInput')
+    const maxInput = document.getElementById('maxPriceInput')
+    
+    if (!minSlider || !maxSlider) return
+    
+    const updateSliderTrack = () => {
+        const min = parseInt(minSlider.value)
+        const max = parseInt(maxSlider.value)
+        const total = parseInt(maxSlider.max)
+        
+        const minPercent = (min / total) * 100
+        const maxPercent = (max / total) * 100
+        
+        const track = document.getElementById('sliderTrack')
+        if (track) {
+            track.style.background = `linear-gradient(to right, 
+                #e2e8f0 ${minPercent}%, 
+                var(--secondary-color) ${minPercent}%, 
+                var(--secondary-color) ${maxPercent}%, 
+                #e2e8f0 ${maxPercent}%)`
+        }
+        
+        // Histogram bar'larını güncelle
+        updateHistogramBars(min, max, total)
+    }
+    
+    minSlider.addEventListener('input', () => {
+        const min = parseInt(minSlider.value)
+        const max = parseInt(maxSlider.value)
+        
+        if (min > max) {
+            minSlider.value = max
+        }
+        
+        if (minInput) {
+            minInput.value = min > 0 ? formatNumber(min) : ''
+        }
+        
+        currentFilters.minPrice = min > 0 ? min : null
+        updateSliderTrack()
+        updatePriceValue()
+    })
+    
+    maxSlider.addEventListener('input', () => {
+        const min = parseInt(minSlider.value)
+        const max = parseInt(maxSlider.value)
+        
+        if (max < min) {
+            maxSlider.value = min
+        }
+        
+        if (maxInput) {
+            maxInput.value = formatNumber(max)
+        }
+        
+        currentFilters.maxPrice = max
+        updateSliderTrack()
+        updatePriceValue()
+    })
+    
+    // Input değişikliklerini dinle
+    if (minInput) {
+        minInput.addEventListener('change', () => {
+            const value = parseNumber(minInput.value)
+            minSlider.value = value
+            currentFilters.minPrice = value > 0 ? value : null
+            updateSliderTrack()
+            updatePriceValue()
+        })
+    }
+    
+    if (maxInput) {
+        maxInput.addEventListener('change', () => {
+            const value = parseNumber(maxInput.value)
+            maxSlider.value = value
+            currentFilters.maxPrice = value
+            updateSliderTrack()
+            updatePriceValue()
+        })
+    }
+    
+    updateSliderTrack()
+}
+
+// Histogram bar'larını güncelle
+function updateHistogramBars(min, max, total) {
+    const bars = document.querySelectorAll('.histogram-bar')
+    const buckets = bars.length
+    const bucketSize = total / buckets
+    
+    bars.forEach((bar, i) => {
+        const bucketMin = i * bucketSize
+        const bucketMax = (i + 1) * bucketSize
+        
+        if (bucketMax < min || bucketMin > max) {
+            bar.classList.add('inactive')
+        } else {
+            bar.classList.remove('inactive')
+        }
+    })
+}
+
+// Fiyat değerini güncelle
+function updatePriceValue() {
+    const min = currentFilters.minPrice
+    const max = currentFilters.maxPrice
+    
+    if (min || max) {
+        const minStr = min ? formatPrice(min) : 'En düşük'
+        const maxStr = max ? formatPrice(max) : 'En yüksek'
+        updateFilterValue('price', `${minStr} - ${maxStr}`)
+    } else {
+        updateFilterValue('price', 'Belirlenmedi')
+    }
+}
+
+// Filtre değerini güncelle
+function updateFilterValue(filter, value) {
+    const valueEl = document.getElementById(`${filter}Value`)
+    if (valueEl) {
+        valueEl.textContent = value
+        valueEl.classList.toggle('has-value', value !== 'Belirlenmedi')
+    }
+}
+
+// Seçili etiketleri güncelle
+function updateSelectedTags() {
+    const container = document.getElementById('selectedFilters')
+    if (!container) return
+    
+    const tags = []
+    
+    // Şehir etiketi
+    if (currentFilters.cityName) {
+        tags.push(`
+            <span class="filter-tag">
+                ${currentFilters.cityName}
+                <span class="remove-tag" onclick="removeFilter('city')">×</span>
+            </span>
+        `)
+    }
+    
+    // Kategori etiketleri
+    currentFilters.category.forEach(catId => {
+        const cat = categoriesCache.find(c => c.id === catId)
+        if (cat) {
+            tags.push(`
+                <span class="filter-tag">
+                    ${cat.name}
+                    <span class="remove-tag" onclick="removeFilter('category', ${catId})">×</span>
+                </span>
+            `)
+        }
+    })
+    
+    container.innerHTML = tags.join('')
+    container.style.display = tags.length > 0 ? 'flex' : 'none'
+}
+
+// Filtreyi kaldır
+function removeFilter(type, id = null) {
+    if (type === 'city') {
+        currentFilters.city = null
+        currentFilters.cityName = ''
+        updateFilterValue('location', 'Belirlenmedi')
+        document.querySelectorAll('.city-item').forEach(item => {
+            item.classList.remove('selected')
+        })
+    } else if (type === 'category') {
+        currentFilters.category = currentFilters.category.filter(c => c !== id)
+        currentFilters.subcategory = []
+        updateFilterValue('sector', 'Belirlenmedi')
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.classList.remove('selected')
+        })
+        document.querySelectorAll('.subcategory-list').forEach(list => {
+            list.style.display = 'none'
+        })
+    }
+    
+    updateSelectedTags()
+}
+
+// Filtre butonları kurulumu
+function setupFilterButtons() {
+    const applyBtn = document.getElementById('applyFiltersBtn')
+    const clearBtn = document.getElementById('clearFiltersBtn')
+    
+    if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
+            // Gelişmiş filtreleri topla
+            collectAdvancedFilters()
+            loadListings()
+            
+            // Accordion'ları kapat
+            document.querySelectorAll('.filter-accordion').forEach(acc => {
+                acc.classList.remove('active')
+            })
+        })
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearAllFilters)
+    }
+}
+
+// Gelişmiş filtreleri topla
+function collectAdvancedFilters() {
+    // Özellik checkbox'ları
+    const features = []
+    document.querySelectorAll('input[name="feature"]:checked').forEach(cb => {
+        features.push(cb.value)
+    })
+    currentFilters.features = features
+    
+    // Metrekare
+    const minArea = document.getElementById('minArea')
+    const maxArea = document.getElementById('maxArea')
+    currentFilters.minArea = minArea?.value ? parseInt(minArea.value) : null
+    currentFilters.maxArea = maxArea?.value ? parseInt(maxArea.value) : null
+    
+    // Gelişmiş değeri güncelle
+    if (features.length > 0 || currentFilters.minArea || currentFilters.maxArea) {
+        updateFilterValue('advanced', `${features.length} filtre aktif`)
+    } else {
+        updateFilterValue('advanced', 'Belirlenmedi')
+    }
+}
+
+// Arama dinleyicileri
+function setupSearchListeners() {
+    // Kategori arama
+    const categorySearch = document.getElementById('categorySearch')
+    if (categorySearch) {
+        categorySearch.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase()
+            const filtered = categoriesCache.filter(cat => 
+                cat.name.toLowerCase().includes(query)
+            )
+            renderCategories(filtered)
+        })
+    }
+    
+    // Ana arama
+    const searchBtn = document.querySelector('.btn-search-compact')
+    const searchInput = document.querySelector('.search-bar-compact input')
+    
+    if (searchBtn && searchInput) {
+        searchBtn.addEventListener('click', () => {
+            currentFilters.search = searchInput.value.trim()
+            currentFilters.page = 1
+            loadListings()
+        })
+        
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                currentFilters.search = searchInput.value.trim()
+                currentFilters.page = 1
+                loadListings()
+            }
+        })
+    }
+    
+    // Sıralama
+    const sortSelect = document.querySelector('.sort-select')
+    if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+            currentFilters.sort = e.target.value
+            currentFilters.page = 1
+            loadListings()
+        })
+    }
+}
+
+// URL parametrelerini oku (senkron - hızlı)
+function parseURLParams() {
+    const params = new URLSearchParams(window.location.search)
+    
+    const categoryId = params.get('category')
+    if (categoryId) {
+        currentFilters.category = [parseInt(categoryId)]
+    }
+    
+    const cityId = params.get('city')
+    if (cityId) {
+        currentFilters.city = parseInt(cityId)
+    }
+    
+    const search = params.get('search')
+    if (search) {
+        currentFilters.search = search
+    }
+}
+
+// Filtreleri UI'a uygula (senkron - hızlı)
+function applyFiltersToUI() {
+    // Arama inputunu doldur
+    if (currentFilters.search) {
+        const searchInput = document.querySelector('.search-bar-compact input')
+        if (searchInput) {
+            searchInput.value = currentFilters.search
+        }
+    }
+}
+
+// Tüm filtreleri temizle
+function clearAllFilters() {
+    currentFilters = {
+        search: '',
+        category: [],
+        subcategory: [],
+        city: null,
+        cityName: '',
+        minPrice: null,
+        maxPrice: null,
+        minArea: null,
+        maxArea: null,
+        features: [],
+        sort: 'newest',
+        page: 1
+    }
+    
+    // UI'ı temizle
+    document.querySelectorAll('.category-item').forEach(item => item.classList.remove('selected'))
+    document.querySelectorAll('.subcategory-list').forEach(list => list.style.display = 'none')
+    document.querySelectorAll('.city-item').forEach(item => item.classList.remove('selected'))
+    document.querySelectorAll('input[name="feature"]').forEach(cb => cb.checked = false)
+    
+    const minArea = document.getElementById('minArea')
+    const maxArea = document.getElementById('maxArea')
+    if (minArea) minArea.value = ''
+    if (maxArea) maxArea.value = ''
+    
+    const minPriceInput = document.getElementById('minPriceInput')
+    const maxPriceInput = document.getElementById('maxPriceInput')
+    if (minPriceInput) minPriceInput.value = ''
+    if (maxPriceInput) maxPriceInput.value = ''
+    
+    const minSlider = document.getElementById('minPriceSlider')
+    const maxSlider = document.getElementById('maxPriceSlider')
+    if (minSlider) minSlider.value = 0
+    if (maxSlider) maxSlider.value = maxSlider.max
+    
+    const searchInput = document.querySelector('.search-bar-compact input')
+    if (searchInput) searchInput.value = ''
+    
+    const sortSelect = document.querySelector('.sort-select')
+    if (sortSelect) sortSelect.value = 'newest'
+    
+    // Değerleri güncelle
+    updateFilterValue('location', 'Belirlenmedi')
+    updateFilterValue('sector', 'Belirlenmedi')
+    updateFilterValue('price', 'Belirlenmedi')
+    updateFilterValue('advanced', 'Belirlenmedi')
+    
+    updateSelectedTags()
+    setupPriceSlider()
+    loadListings()
+    
+    console.log('🗑️ Tüm filtreler temizlendi')
+}
+
+// ⚡ OPTİMİZE: İlanları hızlı yükle
 async function loadListings() {
     const grid = document.getElementById('listingsGrid')
     
     grid.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
-            <p style="font-size: 1.2rem; color: #64748b;">⏳ İlanlar yükleniyor...</p>
+            <div class="loading-spinner"></div>
+            <p style="font-size: 1.2rem; color: #64748b; margin-top: 1rem;">⏳ İlanlar yükleniyor...</p>
         </div>
     `
     
     try {
+        // ⚡ Sadece gerekli alanları çek (performans için)
         let query = supabase
             .from('listings')
             .select(`
-                *,
-                category:categories!category_id(id, name, slug),
-                subcategory:categories!subcategory_id(id, name, slug),
-                city:cities(id, name),
-                district:districts(id, name),
+                id, title, price, area_sqm, monthly_rent, establishment_year, created_at,
+                category:categories!category_id(name),
+                city:cities(name),
+                district:districts(name),
                 images:listing_images(image_url, is_primary)
             `, { count: 'exact' })
             .in('status', ['active', 'pending'])
         
-        // Kategori filtresi
+        // Filtreler
         if (currentFilters.category.length > 0) {
             query = query.in('category_id', currentFilters.category)
         }
         
-        // Sektör (alt kategori) filtresi
         if (currentFilters.subcategory.length > 0) {
             query = query.in('subcategory_id', currentFilters.subcategory)
         }
         
-        // Şehir filtresi
         if (currentFilters.city) {
             query = query.eq('city_id', currentFilters.city)
         }
         
-        // Fiyat filtresi
         if (currentFilters.minPrice) {
             query = query.gte('price', currentFilters.minPrice)
         }
@@ -174,7 +793,6 @@ async function loadListings() {
             query = query.lte('price', currentFilters.maxPrice)
         }
         
-        // Alan filtresi
         if (currentFilters.minArea) {
             query = query.gte('area_sqm', currentFilters.minArea)
         }
@@ -182,12 +800,10 @@ async function loadListings() {
             query = query.lte('area_sqm', currentFilters.maxArea)
         }
         
-        // Arama filtresi
         if (currentFilters.search) {
             query = query.or(`title.ilike.%${currentFilters.search}%,description.ilike.%${currentFilters.search}%`)
         }
         
-        // Özellik filtreleri
         if (currentFilters.features.includes('franchise')) {
             query = query.eq('is_franchise', true)
         }
@@ -239,10 +855,7 @@ async function loadListings() {
             return
         }
         
-        // İlanları render et
         grid.innerHTML = data.map(listing => createListingCard(listing)).join('')
-        
-        // Sayfalamayı güncelle
         updatePagination(count, perPage)
         
         console.log(`✅ ${data.length} ilan yüklendi (Toplam: ${count})`)
@@ -295,277 +908,6 @@ function createListingCard(listing) {
     `
 }
 
-// Ana kategorileri filtre olarak yükle (parent_id = null)
-async function loadCategoriesFilter() {
-    try {
-        const { data, error } = await supabase
-            .from('categories')
-            .select('id, name, slug, icon')
-            .is('parent_id', null)
-            .order('name')
-        
-        if (error) throw error
-        
-        const filterContent = document.getElementById('categoryFilterContent')
-        if (filterContent && data) {
-            filterContent.innerHTML = data.map(cat => `
-                <label class="checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; cursor: pointer;">
-                    <input type="radio" name="mainCategory" value="${cat.id}" onchange="handleMainCategoryChange(${cat.id})">
-                    <span>${cat.icon || '📁'} ${cat.name}</span>
-                </label>
-            `).join('')
-        }
-        
-        console.log('✅ Ana kategoriler yüklendi:', data.length)
-    } catch (error) {
-        console.error('❌ Kategori yükleme hatası:', error)
-    }
-}
-
-// Ana kategori seçildiğinde sektörleri (alt kategorileri) yükle
-async function handleMainCategoryChange(categoryId) {
-    currentFilters.category = [categoryId]
-    currentFilters.subcategory = []
-    currentFilters.page = 1
-    
-    // Sektör filter grubunu göster
-    const subcategoryGroup = document.getElementById('subcategoryFilterGroup')
-    subcategoryGroup.style.display = 'block'
-    
-    try {
-        const { data, error } = await supabase
-            .from('categories')
-            .select('id, name, slug, icon')
-            .eq('parent_id', categoryId)
-            .order('name')
-        
-        if (error) throw error
-        
-        const filterContent = document.getElementById('subcategoryFilterContent')
-        
-        if (data.length === 0) {
-            filterContent.innerHTML = '<p style="color: #94a3b8; font-size: 0.9rem;">Bu kategoride sektör yok</p>'
-            loadListings()
-            return
-        }
-        
-        filterContent.innerHTML = data.map(sub => `
-            <label class="checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; cursor: pointer;">
-                <input type="checkbox" name="subcategory" value="${sub.id}" onchange="handleSubcategoryChange()">
-                <span>${sub.icon || '📌'} ${sub.name}</span>
-            </label>
-        `).join('')
-        
-        console.log('✅ Sektörler yüklendi:', data.length)
-        
-        // İlanları yükle
-        loadListings()
-        
-    } catch (error) {
-        console.error('❌ Sektör yükleme hatası:', error)
-    }
-}
-
-// Sektör (alt kategori) değişikliği
-function handleSubcategoryChange() {
-    const checked = document.querySelectorAll('input[name="subcategory"]:checked')
-    currentFilters.subcategory = Array.from(checked).map(cb => parseInt(cb.value))
-    currentFilters.page = 1
-    console.log('🏪 Sektör filtresi:', currentFilters.subcategory)
-    loadListings()
-}
-
-// Şehirleri filtre olarak yükle
-async function loadCitiesFilter() {
-    try {
-        const { data, error } = await supabase
-            .from('cities')
-            .select('id, name')
-            .order('name')
-        
-        if (error) throw error
-        
-        const citySelect = document.getElementById('cityFilter')
-        if (citySelect && data) {
-            citySelect.innerHTML = `
-                <option value="">Tüm Şehirler</option>
-                ${data.map(city => `<option value="${city.id}">${city.name}</option>`).join('')}
-            `
-            citySelect.addEventListener('change', handleCityChange)
-        }
-        
-        console.log('✅ Şehirler yüklendi:', data.length)
-    } catch (error) {
-        console.error('❌ Şehir yükleme hatası:', error)
-    }
-}
-
-// Şehir değişikliği
-function handleCityChange() {
-    const citySelect = document.getElementById('cityFilter')
-    currentFilters.city = citySelect.value ? parseInt(citySelect.value) : null
-    currentFilters.page = 1
-    console.log('🏙️ Şehir filtresi:', currentFilters.city)
-    loadListings()
-}
-
-// Fiyat değişikliği
-function handlePriceChange() {
-    const minPrice = document.getElementById('minPrice')
-    const maxPrice = document.getElementById('maxPrice')
-    currentFilters.minPrice = minPrice?.value ? parseInt(minPrice.value) : null
-    currentFilters.maxPrice = maxPrice?.value ? parseInt(maxPrice.value) : null
-    currentFilters.page = 1
-    console.log('💰 Fiyat filtresi:', currentFilters.minPrice, '-', currentFilters.maxPrice)
-}
-
-// Alan değişikliği
-function handleAreaChange() {
-    const minArea = document.getElementById('minArea')
-    const maxArea = document.getElementById('maxArea')
-    currentFilters.minArea = minArea?.value ? parseInt(minArea.value) : null
-    currentFilters.maxArea = maxArea?.value ? parseInt(maxArea.value) : null
-    currentFilters.page = 1
-    console.log('📐 Alan filtresi:', currentFilters.minArea, '-', currentFilters.maxArea)
-}
-
-// Gelişmiş filtre değişikliği
-function handleFeatureChange() {
-    const checked = document.querySelectorAll('input[name="feature"]:checked')
-    currentFilters.features = Array.from(checked).map(cb => cb.value)
-    currentFilters.page = 1
-    console.log('⚙️ Özellik filtresi:', currentFilters.features)
-}
-
-// Filtrele butonuna tıklama
-const filterButton = document.getElementById('filterButton')
-if (filterButton) {
-    filterButton.addEventListener('click', (e) => {
-        e.preventDefault()
-        console.log('🔍 Filtreleme başlatılıyor...')
-        handlePriceChange()
-        handleAreaChange()
-        handleFeatureChange()
-        loadListings()
-    })
-}
-
-// Tüm filtreleri temizle
-function clearAllFilters() {
-    // Filtreleri sıfırla
-    currentFilters = {
-        search: '',
-        category: [],
-        subcategory: [],
-        city: null,
-        minPrice: null,
-        maxPrice: null,
-        minArea: null,
-        maxArea: null,
-        features: [],
-        sort: 'newest',
-        page: 1
-    }
-    
-    // UI'ı temizle
-    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false)
-    document.querySelectorAll('input[type="radio"]').forEach(rb => rb.checked = false)
-    document.querySelectorAll('.price-input').forEach(input => input.value = '')
-    document.querySelectorAll('.filter-select').forEach(select => select.value = '')
-    
-    const cityFilter = document.getElementById('cityFilter')
-    if (cityFilter) cityFilter.value = ''
-    
-    const sortSelect = document.querySelector('.sort-select')
-    if (sortSelect) sortSelect.value = 'newest'
-    
-    const searchInput = document.querySelector('.search-bar-compact input')
-    if (searchInput) searchInput.value = ''
-    
-    // Sektör filter grubunu gizle
-    const subcategoryGroup = document.getElementById('subcategoryFilterGroup')
-    if (subcategoryGroup) subcategoryGroup.style.display = 'none'
-    
-    // İlanları yeniden yükle
-    loadListings()
-    
-    console.log('🗑️ Tüm filtreler temizlendi')
-}
-
-// Filter toggles
-document.querySelectorAll('.filter-toggle').forEach(toggle => {
-    toggle.addEventListener('click', () => {
-        const content = toggle.nextElementSibling
-        const icon = toggle.querySelector('.toggle-icon')
-        
-        if (content.style.display === 'none') {
-            content.style.display = 'block'
-            icon.textContent = '−'
-        } else {
-            content.style.display = 'none'
-            icon.textContent = '+'
-        }
-    })
-})
-
-// View toggle
-document.querySelectorAll('.view-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'))
-        btn.classList.add('active')
-        
-        const view = btn.dataset.view
-        const grid = document.getElementById('listingsGrid')
-        
-        if (view === 'list') {
-            grid.style.gridTemplateColumns = '1fr'
-        } else if (view === 'grid') {
-            grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(350px, 1fr))'
-        } else if (view === 'map') {
-            alert('Harita görünümü yakında eklenecek!')
-        }
-    })
-})
-
-// Clear filters button
-const clearFiltersBtn = document.querySelector('.clear-filters')
-if (clearFiltersBtn) {
-    clearFiltersBtn.addEventListener('click', clearAllFilters)
-}
-
-// Sort functionality
-const sortSelect = document.querySelector('.sort-select')
-if (sortSelect) {
-    sortSelect.addEventListener('change', (e) => {
-        currentFilters.sort = e.target.value
-        currentFilters.page = 1
-        loadListings()
-    })
-}
-
-// Search functionality
-const searchBtn = document.querySelector('.btn-search-compact')
-if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-        const searchInput = document.querySelector('.search-bar-compact input')
-        currentFilters.search = searchInput.value.trim()
-        currentFilters.page = 1
-        loadListings()
-    })
-}
-
-// Search on Enter
-const searchInput = document.querySelector('.search-bar-compact input')
-if (searchInput) {
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            currentFilters.search = searchInput.value.trim()
-            currentFilters.page = 1
-            loadListings()
-        }
-    })
-}
-
 // Sayfalama güncelle
 function updatePagination(totalCount, perPage) {
     const totalPages = Math.ceil(totalCount / perPage)
@@ -586,7 +928,6 @@ function updatePagination(totalCount, perPage) {
         </button>
     `
     
-    // İlk 5 sayfa
     for (let i = 1; i <= Math.min(5, totalPages); i++) {
         paginationHTML += `
             <button class="page-btn ${i === currentFilters.page ? 'active' : ''}" onclick="goToPage(${i})">
@@ -618,8 +959,6 @@ function goToPage(page) {
     if (page < 1) return
     currentFilters.page = page
     loadListings()
-    
-    // Sayfanın üstüne scroll
     window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
@@ -638,4 +977,32 @@ async function toggleFav(listingId) {
     }
 }
 
-console.log('✅ Listings.js yüklendi!')
+// Yardımcı fonksiyonlar
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
+function parseNumber(str) {
+    return parseInt(str.replace(/\./g, '')) || 0
+}
+
+// View toggle
+document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+        
+        const view = btn.dataset.view
+        const grid = document.getElementById('listingsGrid')
+        
+        if (view === 'list') {
+            grid.style.gridTemplateColumns = '1fr'
+        } else if (view === 'grid') {
+            grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(350px, 1fr))'
+        } else if (view === 'map') {
+            alert('Harita görünümü yakında eklenecek!')
+        }
+    })
+})
+
+console.log('✅ Listings.js (Modern) yüklendi!')

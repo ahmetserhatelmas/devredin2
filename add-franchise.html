@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franchise İlanı Oluştur - DevredinPlatform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="add-franchise.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="create-listing.html" class="nav-link active">İşletmeni Devret</a></li>
+                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
+                    <li><a href="#" class="nav-link">Blog</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <div id="navLoading" class="nav-loading">
+                        <div class="nav-skeleton"></div>
+                        <div class="nav-skeleton"></div>
+                    </div>
+                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                    </div>
+                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
+                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Franchise Form -->
+    <section class="franchise-form-section">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb-nav">
+                <a href="index.html">Ana Sayfa</a> - <a href="create-listing.html">İlan Oluştur</a> - <span>Yeni Franchise İlanı Başlat</span>
+            </div>
+
+            <h1 class="page-title">Franchise İlanı Başlat</h1>
+
+            <!-- Step Progress -->
+            <div class="step-progress">
+                <div class="step-item active" data-step="1">
+                    <div class="step-icon">📋</div>
+                    <span>Şirket Genel Bakış</span>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-icon">💰</div>
+                    <span>Yatırım ve Mali Bilgiler</span>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-icon">⚙️</div>
+                    <span>İş Modeli ve Operasyonlar</span>
+                </div>
+                <div class="step-item" data-step="4">
+                    <div class="step-icon">👥</div>
+                    <span>Ortak Profili ve Destek</span>
+                </div>
+                <div class="step-item" data-step="5">
+                    <div class="step-icon">📷</div>
+                    <span>Marka Varlıkları ve Sosyal Medya</span>
+                </div>
+                <div class="step-item" data-step="6">
+                    <div class="step-icon">📄</div>
+                    <span>Ek Bilgiler</span>
+                </div>
+                <div class="step-item" data-step="7">
+                    <div class="step-icon">👁️</div>
+                    <span>Genel Bakış</span>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form id="franchiseForm" class="franchise-form" novalidate>
+                
+                <!-- STEP 1: Şirket Genel Bakış -->
+                <div class="form-step active" id="step1">
+                    <div class="step-header">
+                        <h2>Şirket ve Marka Bilgileri</h2>
+                        <p>Franchise markanız hakkında temel bilgileri girin</p>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Marka Bilgileri</h3>
+                        
+                        <div class="form-row four-cols">
+                            <div class="form-group">
+                                <label>Marka Adı <span class="required">* zorunlu</span></label>
+                                <input type="text" name="brand_name" placeholder="Marka adınızı girin" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Ana Şirket</label>
+                                <input type="text" name="parent_company" placeholder="Ana şirket adını girin (varsa)">
+                            </div>
+                            <div class="form-group">
+                                <label>Kuruluş Yılı</label>
+                                <input type="number" name="founded_year" placeholder="2020" min="1900" max="2025">
+                            </div>
+                            <div class="form-group">
+                                <label>Sektör <span class="required">* zorunlu</span></label>
+                                <select name="sector" id="sectorSelect" required>
+                                    <option value="">Sektör seçin</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Genel Müdürlük Ülkesi</label>
+                                <input type="text" name="hq_country" value="Türkiye" placeholder="Türkiye">
+                            </div>
+                            <div class="form-group">
+                                <label>Genel Müdürlük Şehir</label>
+                                <select name="hq_city" id="hqCitySelect">
+                                    <option value="">Şehir seçin</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Website Adresi</label>
+                            <input type="url" name="website" placeholder="https://www.marka.com">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Görsel ve Açıklama</h3>
+                        
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Logo <span class="required">* zorunlu</span></label>
+                                <div class="file-upload-btn">
+                                    <input type="file" name="logo" id="logoUpload" accept="image/*" required>
+                                    <label for="logoUpload">
+                                        <span class="upload-icon">⬆️</span>
+                                        <span>Logo Yükle</span>
+                                    </label>
+                                </div>
+                                <div id="logoPreview" class="file-preview"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Thumbnail</label>
+                                <p class="field-hint">Lütfen yatay (landscape) formatda bir görsel seçin</p>
+                                <div class="file-upload-btn">
+                                    <input type="file" name="thumbnail" id="thumbnailUpload" accept="image/*">
+                                    <label for="thumbnailUpload">
+                                        <span class="upload-icon">⬆️</span>
+                                        <span>Thumbnail Yükle</span>
+                                    </label>
+                                </div>
+                                <div id="thumbnailPreview" class="file-preview"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Açıklama <span class="required">* zorunlu</span></label>
+                            <textarea name="description" rows="5" placeholder="Markanız hakkında detaylı açıklama girin..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">İletişim Bilgileri</h3>
+                        
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Franchise Sorumlusu Ad Soyad <span class="required">* zorunlu</span></label>
+                                <input type="text" name="contact_name" placeholder="Ad Soyad" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Pozisyon</label>
+                                <input type="text" name="contact_position" placeholder="Franchise Müdürü">
+                            </div>
+                        </div>
+
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Telefon <span class="required">* zorunlu</span></label>
+                                <input type="tel" name="contact_phone" placeholder="0532 123 45 67" required>
+                            </div>
+                            <div class="form-group">
+                                <label>E-posta <span class="required">* zorunlu</span></label>
+                                <input type="email" name="contact_email" placeholder="franchise@marka.com" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <div></div>
+                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Yatırım ve Mali Bilgiler -->
+                <div class="form-step" id="step2">
+                    <div class="step-header">
+                        <h2>Yatırım ve Mali Bilgiler</h2>
+                        <p>Franchise yatırımına ilişkin finansal bilgileri girin</p>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Yatırım Aralığı</h3>
+                        
+                        <div class="form-row three-cols">
+                            <div class="form-group">
+                                <label>Minimum Yatırım Tutarı <span class="required">* zorunlu</span></label>
+                                <input type="number" name="min_investment" placeholder="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Maksimum Yatırım Tutarı <span class="required">* zorunlu</span></label>
+                                <input type="number" name="max_investment" placeholder="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Para Birimi <span class="required">* zorunlu</span></label>
+                                <select name="currency" required>
+                                    <option value="">Para birimi seçin</option>
+                                    <option value="TRY" selected>TRY - Türk Lirası</option>
+                                    <option value="USD">USD - Amerikan Doları</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Kurulum Ücretleri</h3>
+                        
+                        <div class="form-group">
+                            <label>m² Başına Kurulum Ücreti</label>
+                            <input type="number" name="setup_cost_per_sqm" placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Kâr Paylaşımı</h3>
+                        
+                        <div class="form-row three-cols">
+                            <div class="form-group">
+                                <label>Kâr Paylaşımı (%)</label>
+                                <input type="number" name="profit_share" placeholder="0" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Ciro Paylaşımı (%)</label>
+                                <input type="number" name="revenue_share" placeholder="0" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Ortalama Yatırım Geri Dönüş Süresi (Ay) <span class="required">* zorunlu</span></label>
+                                <input type="number" name="roi_months" placeholder="0" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Finansal Performans</h3>
+                        
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Ortalama Aylık Ciro</label>
+                                <input type="number" name="avg_monthly_revenue" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Ortalama Aylık Kâr</label>
+                                <input type="number" name="avg_monthly_profit" placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Minimum Kâr Marjı (%)</label>
+                                <input type="number" name="min_profit_margin" placeholder="0" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Maksimum Kâr Marjı (%)</label>
+                                <input type="number" name="max_profit_margin" placeholder="0" min="0" max="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: İş Modeli ve Operasyonlar -->
+                <div class="form-step" id="step3">
+                    <div class="step-header">
+                        <h2>İş Modeli ve Operasyonlar</h2>
+                        <p>Franchise iş modeli ve operasyonel bilgileri girin</p>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Ağ ve Hedefler</h3>
+                        
+                        <div class="form-row three-cols">
+                            <div class="form-group">
+                                <label>Toplam İşletme Sayısı <span class="required">* zorunlu</span></label>
+                                <input type="number" name="total_locations" placeholder="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Toplam Franchisee Sayısı <span class="required">* zorunlu</span></label>
+                                <input type="number" name="total_franchisees" placeholder="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Marka Tarafından Yönetilen Franchisee Sayısı</label>
+                                <input type="number" name="brand_managed_locations" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Franchise Verilecek Bölgeler</h3>
+                        
+                        <div class="region-selector">
+                            <label class="region-checkbox">
+                                <input type="checkbox" name="regions" value="ege">
+                                <span>Ege</span>
+                            </label>
+                            <label class="region-checkbox">
+                                <input type="checkbox" name="regions" value="karadeniz">
+                                <span>Karadeniz</span>
+                            </label>
+                            <label class="region-checkbox">
+                                <input type="checkbox" name="regions" value="ic_anadolu">
+                                <span>İç Anadolu</span>
+                            </label>
+                            <label class="region-checkbox">
+                                <input type="checkbox" name="regions" value="dogu_anadolu">
+                                <span>Doğu Anadolu</span>
+                            </label>
+                            <label class="region-checkbox">
+                                <input type="checkbox" name="regions" value="marmara">
+                                <span>Marmara</span>
+                            </label>
+                            <label class="region-checkbox">
+                                <input type="checkbox" name="regions" value="akdeniz">
+                                <span>Akdeniz</span>
+                            </label>
+                            <label class="region-checkbox">
+                                <input type="checkbox" name="regions" value="guneydogu_anadolu">
+                                <span>Güneydoğu Anadolu</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Operasyon Gereksinimleri</h3>
+                        
+                        <div class="form-row three-cols">
+                            <div class="form-group">
+                                <label>Minimum Metrekare <span class="required">* zorunlu</span></label>
+                                <input type="number" name="min_sqm" placeholder="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Minimum Cephe Metresi</label>
+                                <input type="number" name="min_frontage" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Minimum Tavan Yüksekliği (m)</label>
+                                <input type="number" name="min_ceiling_height" placeholder="0" step="0.1">
+                            </div>
+                        </div>
+
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Minimum Personel Sayısı</label>
+                                <input type="number" name="min_staff" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Maksimum Personel Sayısı</label>
+                                <input type="number" name="max_staff" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Ortak Profili ve Destek -->
+                <div class="form-step" id="step4">
+                    <div class="step-header">
+                        <h2>Ortak Profili ve Destek</h2>
+                        <p>Franchise ortağı gereksinimleri ve destek hizmetleri hakkında bilgi girin</p>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">İş Ortağı Gereksinimleri</h3>
+                        
+                        <div class="form-row three-cols">
+                            <div class="form-group">
+                                <label>Minimum Gerekli Sermaye <span class="required">* zorunlu</span></label>
+                                <input type="number" name="min_capital" placeholder="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sermaye Para Birimi <span class="required">* zorunlu</span></label>
+                                <select name="capital_currency" required>
+                                    <option value="">Para birimi seçin</option>
+                                    <option value="TRY" selected>TRY - Türk Lirası</option>
+                                    <option value="USD">USD - Amerikan Doları</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Minimum Sektör Deneyimi (Yıl)</label>
+                                <input type="number" name="min_experience_years" placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Önceki İş Deneyimi Gerekli mi?</label>
+                            <select name="experience_required">
+                                <option value="">Seçin</option>
+                                <option value="yes">Evet</option>
+                                <option value="no">Hayır</option>
+                                <option value="preferred">Tercih edilir</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>İdeal Aday Profili</label>
+                            <textarea name="ideal_candidate" rows="4" placeholder="İdeal franchise ortağının sahip olması gereken özellikleri, deneyimleri ve nitelikleri hakkında detaylı bilgi girin..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Eğitim ve Destek</h3>
+                        
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>İlk Eğitim Süresi (Ay)</label>
+                                <input type="number" name="initial_training_months" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Devam Eden Eğitim Programı Var mı?</label>
+                                <select name="ongoing_training">
+                                    <option value="">Seçin</option>
+                                    <option value="yes">Evet</option>
+                                    <option value="no">Hayır</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Hizmetler</h3>
+                        
+                        <div class="form-group">
+                            <label>Tek Seferlik Hizmetler</label>
+                            <div class="checkbox-group">
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="one_time_services" value="setup">
+                                    <span>Kurulum</span>
+                                </label>
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="one_time_services" value="opening">
+                                    <span>Açılış</span>
+                                </label>
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="one_time_services" value="architectural">
+                                    <span>Mimari Proje</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Devam Eden Hizmetler</label>
+                            <div class="checkbox-group">
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="ongoing_services" value="advertising">
+                                    <span>Reklam</span>
+                                </label>
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="ongoing_services" value="marketing">
+                                    <span>Pazarlama</span>
+                                </label>
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="ongoing_services" value="software">
+                                    <span>Yazılım</span>
+                                </label>
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="ongoing_services" value="logistics">
+                                    <span>Lojistik</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Destek Alanları</h3>
+                        
+                        <div class="form-group">
+                            <label>Hangi Alanlarda Destek Sağlanıyor?</label>
+                            <div class="checkbox-group">
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="support_areas" value="personnel">
+                                    <span>Personel</span>
+                                </label>
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="support_areas" value="operational">
+                                    <span>Operasyonel</span>
+                                </label>
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="support_areas" value="financial">
+                                    <span>Finansal</span>
+                                </label>
+                                <label class="region-checkbox">
+                                    <input type="checkbox" name="support_areas" value="legal">
+                                    <span>Hukuki</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    </div>
+                </div>
+
+                <!-- STEP 5: Marka Varlıkları ve Sosyal Medya -->
+                <div class="form-step" id="step5">
+                    <div class="step-header">
+                        <h2>Medya ve Sosyal Ağlar</h2>
+                        <p>Markanızın medya dosyalarını ve sosyal medya hesaplarını ekleyin</p>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Marka Dokümanları</h3>
+                        
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Yatırımcı Sunumu</label>
+                                <div class="document-upload">
+                                    <input type="file" name="investor_presentation" id="investorDoc" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                                    <label for="investorDoc" class="doc-upload-box">
+                                        <span class="doc-icon">📄</span>
+                                        <span>Yatırımcı sunumu PDF dosyasını seçin</span>
+                                        <span class="doc-hint">Maksimum 20MB, PDF formatında</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Broşür</label>
+                                <div class="document-upload">
+                                    <input type="file" name="brochure" id="brochureDoc" accept=".pdf,.doc,.docx">
+                                    <label for="brochureDoc" class="doc-upload-box">
+                                        <span class="doc-icon">📄</span>
+                                        <span>Broşür PDF dosyasını seçin</span>
+                                        <span class="doc-hint">Maksimum 20MB, PDF formatında</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Sosyal Medya Hesapları</h3>
+                        
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>Facebook Bağlantısı</label>
+                                <input type="url" name="facebook" placeholder="https://facebook.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label>Instagram Bağlantısı</label>
+                                <input type="url" name="instagram" placeholder="https://instagram.com/...">
+                            </div>
+                        </div>
+
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label>LinkedIn Bağlantısı</label>
+                                <input type="url" name="linkedin" placeholder="https://linkedin.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label>YouTube Bağlantısı</label>
+                                <input type="url" name="youtube" placeholder="https://youtube.com/...">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Twitter Bağlantısı</label>
+                            <input type="url" name="twitter" placeholder="https://twitter.com/...">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Galeri Görselleri</h3>
+                        
+                        <div class="multi-upload-area" id="galleryDropZone">
+                            <div class="upload-icon">📷</div>
+                            <p>Dosyaları sürükleyip bırakın veya tıklayarak seçin</p>
+                            <p class="upload-hint">Maksimum 20 dosya, her biri en fazla 4MB</p>
+                            <input type="file" name="gallery" id="galleryUpload" accept="image/*" multiple style="display: none;">
+                        </div>
+                        <div id="galleryPreviewGrid" class="image-preview-grid"></div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    </div>
+                </div>
+
+                <!-- STEP 6: Ek Bilgiler -->
+                <div class="form-step" id="step6">
+                    <div class="step-header">
+                        <h2>Ek Bilgiler</h2>
+                        <p>Sık sorulan sorularınızı ve ek bilgileri ekleyin</p>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Sık Sorulan Sorular</h3>
+                        
+                        <div id="faqContainer">
+                            <!-- FAQ items will be added here -->
+                        </div>
+                        
+                        <button type="button" class="btn btn-add-faq" onclick="addFaqItem()">
+                            + Yeni Soru Ekle
+                        </button>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Ek Bilgiler</h3>
+                        
+                        <div class="form-group">
+                            <label>Ek Bilgiler <span class="optional">(İsteğe bağlı)</span></label>
+                            <textarea name="additional_info" rows="5" placeholder="Franchise hakkında ek bilgiler, özel koşullar veya önemli notlar ekleyebilirsiniz..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
+                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    </div>
+                </div>
+
+                <!-- STEP 7: Genel Bakış -->
+                <div class="form-step" id="step7">
+                    <div class="step-header success-header">
+                        <h2>Neredeyse hazırsınız.</h2>
+                        <p>Tüm bilgileri başarıyla girdiniz. Franchise ilanınızı yayına almak için aşağıdaki butona tıklayın.</p>
+                        <p class="edit-note">Eğer değiştirmek istediğiniz bir yer varsa, lütfen önceki adımlara giderek bilgileri güncelleyin.</p>
+                    </div>
+
+                    <div class="preview-summary" id="previewSummary">
+                        <!-- Preview will be generated here -->
+                    </div>
+
+                    <div class="step-navigation final-nav">
+                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
+                        <button type="button" class="btn btn-preview" onclick="showPreview()">Önizleme</button>
+                        <button type="submit" class="btn btn-submit">Franchise İlanını Başlat</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="script.js"></script>
+    <script src="add-franchise.js"></script>
+</body>
+</html>
+

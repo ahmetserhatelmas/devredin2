@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franchise Fırsatları - DevredinPlatform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="franchise.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html">devredin<span>platform</span></a>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="franchise.html" class="nav-link active">Franchise</a></li>
+                    <li><a href="#" class="nav-link">Blog</a></li>
+                </ul>
+                <div class="nav-buttons">
+                    <div id="navLoading" class="nav-loading">
+                        <div class="nav-skeleton"></div>
+                        <div class="nav-skeleton"></div>
+                    </div>
+                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                    </div>
+                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
+                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
+                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
+                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Franchise Page -->
+    <section class="franchise-page">
+        <div class="container">
+            <div class="franchise-layout">
+                <!-- Filters Sidebar -->
+                <aside class="franchise-filters">
+                    <h2 class="filters-title">Filtreler</h2>
+
+                    <!-- Sektör Filter -->
+                    <div class="filter-accordion active" data-filter="sector">
+                        <button class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">🏢</span>
+                                <span class="accordion-label">Sektör</span>
+                            </div>
+                            <span class="accordion-value" id="sectorValue">Belirlenmedi</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="filter-search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="sectorSearch" placeholder="Sektör ara...">
+                            </div>
+                            <div class="sector-list" id="sectorList">
+                                <!-- Sektörler buraya yüklenecek -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Yatırım Tutarı Filter -->
+                    <div class="filter-accordion" data-filter="investment">
+                        <button class="accordion-header">
+                            <div class="accordion-title">
+                                <span class="accordion-icon">💰</span>
+                                <span class="accordion-label">Yatırım Tutarı</span>
+                            </div>
+                            <span class="accordion-value" id="investmentValue">Belirlenmedi</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="investment-ranges">
+                                <label class="range-option">
+                                    <input type="radio" name="investment" value="0-500000">
+                                    <span>₺0 - ₺500.000</span>
+                                </label>
+                                <label class="range-option">
+                                    <input type="radio" name="investment" value="500000-1000000">
+                                    <span>₺500.000 - ₺1.000.000</span>
+                                </label>
+                                <label class="range-option">
+                                    <input type="radio" name="investment" value="1000000-2500000">
+                                    <span>₺1.000.000 - ₺2.500.000</span>
+                                </label>
+                                <label class="range-option">
+                                    <input type="radio" name="investment" value="2500000-5000000">
+                                    <span>₺2.500.000 - ₺5.000.000</span>
+                                </label>
+                                <label class="range-option">
+                                    <input type="radio" name="investment" value="5000000+">
+                                    <span>₺5.000.000+</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Buttons -->
+                    <div class="filter-actions">
+                        <button class="btn-apply" onclick="applyFilters()">Filtreleri Uygula</button>
+                        <button class="btn-clear" onclick="clearFilters()">Temizle</button>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="franchise-main">
+                    <div class="franchise-header">
+                        <h1>Franchise Fırsatları</h1>
+                        <span class="franchise-count">Toplam franchise sayısı: <strong id="totalCount">0</strong></span>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="franchise-search">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="searchInput" placeholder="Marka, sektör, ilan no veya anahtar kelime ile ara...">
+                        </div>
+                        <button class="btn-search" onclick="searchFranchises()">Ara</button>
+                    </div>
+
+                    <!-- Franchise Grid -->
+                    <div class="franchise-grid" id="franchiseGrid">
+                        <!-- Franchise kartları buraya yüklenecek -->
+                        <div class="loading-state">
+                            <p>⏳ Franchise'lar yükleniyor...</p>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination">
+                        <!-- Sayfalama buraya eklenecek -->
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="script.js"></script>
+    <script src="franchise-listings.js"></script>
+</body>
+</html>
+

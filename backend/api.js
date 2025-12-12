@@ -19,8 +19,63 @@ const SUPABASE_CONFIG = {
 const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
 
 // ============================================
-// AUTH FUNCTIONS
+// AUTH FUNCTIONS - Session Management
 // ============================================
+
+// Session cache key
+const USER_CACHE_KEY = 'devredin_user_cache'
+const PROFILE_CACHE_KEY = 'devredin_profile_cache'
+
+// Cached user data for instant display
+let cachedUser = null
+let cachedProfile = null
+
+// Initialize cached data from localStorage
+function initCachedData() {
+    try {
+        const userCache = localStorage.getItem(USER_CACHE_KEY)
+        const profileCache = localStorage.getItem(PROFILE_CACHE_KEY)
+        
+        if (userCache) cachedUser = JSON.parse(userCache)
+        if (profileCache) cachedProfile = JSON.parse(profileCache)
+    } catch (e) {
+        console.warn('Cache read error:', e)
+    }
+}
+
+// Save user data to cache
+function saveToCache(user, profile) {
+    try {
+        if (user) {
+            localStorage.setItem(USER_CACHE_KEY, JSON.stringify(user))
+            cachedUser = user
+        }
+        if (profile) {
+            localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(profile))
+            cachedProfile = profile
+        }
+    } catch (e) {
+        console.warn('Cache save error:', e)
+    }
+}
+
+// Clear cache on logout
+function clearCache() {
+    localStorage.removeItem(USER_CACHE_KEY)
+    localStorage.removeItem(PROFILE_CACHE_KEY)
+    cachedUser = null
+    cachedProfile = null
+}
+
+// Get cached user (instant, no API call)
+function getCachedUser() {
+    return cachedUser
+}
+
+// Get cached profile (instant, no API call)
+function getCachedProfile() {
+    return cachedProfile
+}
 
 // Kullanıcı girişi
 async function loginUser(email, password) {
@@ -31,6 +86,15 @@ async function loginUser(email, password) {
         })
 
         if (error) throw error
+
+        // Cache user data
+        saveToCache(data.user, null)
+        
+        // Fetch and cache profile
+        const profile = await fetchUserProfile(data.user.id)
+        if (profile) {
+            saveToCache(data.user, profile)
+        }
 
         console.log('Login successful:', data)
         return { success: true, data }
@@ -43,7 +107,6 @@ async function loginUser(email, password) {
 // Kullanıcı kaydı
 async function registerUser(email, password, fullName, phone) {
     try {
-        // Auth ile kullanıcı oluştur (metadata ile)
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email,
             password,
@@ -57,6 +120,11 @@ async function registerUser(email, password, fullName, phone) {
 
         if (authError) throw authError
 
+        // Cache new user
+        if (authData.user) {
+            saveToCache(authData.user, { full_name: fullName, phone })
+        }
+
         console.log('✅ Registration successful:', authData)
         return { success: true, data: authData }
     } catch (error) {
@@ -67,6 +135,7 @@ async function registerUser(email, password, fullName, phone) {
 
 // Çıkış yap
 async function logoutUser() {
+    clearCache()
     const { error } = await supabase.auth.signOut()
     if (!error) {
         window.location.href = 'index.html'
@@ -76,8 +145,117 @@ async function logoutUser() {
 // Mevcut kullanıcıyı al
 async function getCurrentUser() {
     const { data: { user } } = await supabase.auth.getUser()
+    
+    // Update cache if user exists
+    if (user) {
+        saveToCache(user, cachedProfile)
+    } else {
+        clearCache()
+    }
+    
     return user
 }
+
+// Fetch user profile from database
+async function fetchUserProfile(userId) {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select('full_name, phone, email, avatar_url')
+            .eq('id', userId)
+            .single()
+        
+        if (error) throw error
+        return data
+    } catch (error) {
+        console.warn('Profile fetch error:', error)
+        return null
+    }
+}
+
+// ============================================
+// UNIFIED NAVBAR MANAGEMENT
+// ============================================
+
+// Initialize navbar with cached data first, then verify
+async function initializeNavbar() {
+    const navLoading = document.getElementById('navLoading')
+    const loggedOut = document.getElementById('loggedOutButtons')
+    const loggedIn = document.getElementById('loggedInButtons')
+    const userName = document.getElementById('userName')
+    
+    if (!navLoading && !loggedOut && !loggedIn) return
+    
+    // STEP 1: Show cached data immediately (no flicker)
+    initCachedData()
+    
+    if (cachedUser && cachedProfile) {
+        // Show logged in state immediately
+        if (navLoading) navLoading.style.display = 'none'
+        if (loggedOut) loggedOut.style.display = 'none'
+        if (loggedIn) loggedIn.style.display = 'flex'
+        
+        if (userName && cachedProfile.full_name) {
+            const firstName = cachedProfile.full_name.split(' ')[0]
+            userName.textContent = `👤 ${firstName}`
+        }
+        
+        console.log('📌 Navbar: Using cached user data')
+    }
+    
+    // STEP 2: Verify with API in background
+    const user = await getCurrentUser()
+    
+    if (navLoading) navLoading.style.display = 'none'
+    
+    if (user) {
+        if (loggedOut) loggedOut.style.display = 'none'
+        if (loggedIn) loggedIn.style.display = 'flex'
+        
+        // Fetch fresh profile if not cached or different user
+        if (!cachedProfile || cachedUser?.id !== user.id) {
+            const profile = await fetchUserProfile(user.id)
+            if (profile) {
+                saveToCache(user, profile)
+                if (userName && profile.full_name) {
+                    const firstName = profile.full_name.split(' ')[0]
+                    userName.textContent = `👤 ${firstName}`
+                }
+            }
+        }
+    } else {
+        // Not logged in
+        if (loggedOut) loggedOut.style.display = 'flex'
+        if (loggedIn) loggedIn.style.display = 'none'
+        clearCache()
+    }
+}
+
+// Handle logout with smooth transition
+async function handleLogout() {
+    if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
+        // Clear cache first for instant UI update
+        clearCache()
+        
+        // Update UI immediately
+        const loggedOut = document.getElementById('loggedOutButtons')
+        const loggedIn = document.getElementById('loggedInButtons')
+        if (loggedOut) loggedOut.style.display = 'flex'
+        if (loggedIn) loggedIn.style.display = 'none'
+        
+        // Then do actual logout
+        await supabase.auth.signOut()
+        window.location.href = 'index.html'
+    }
+}
+
+// Auto-initialize navbar when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initializeNavbar()
+})
+
+// Initialize cache on script load
+initCachedData()
 
 // ============================================
 // LISTING FUNCTIONS

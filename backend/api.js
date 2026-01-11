@@ -16,7 +16,8 @@ const SUPABASE_CONFIG = {
 }
 
 // Initialize Supabase
-const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
+// Override global supabase with our client instance
+supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
 
 // ============================================
 // AUTH FUNCTIONS - Session Management

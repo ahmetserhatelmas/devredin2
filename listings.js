@@ -886,18 +886,18 @@ function createListingCard(listing) {
                 ${noImageIcon}
                 <span class="listing-badge">${listing.category?.name || 'Kategori'}</span>
                 <button class="favorite-btn" onclick="event.preventDefault(); toggleFav('${listing.id}')" style="width: 32px; height: 32px; border-radius: 50%; background: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                    ❤️
+                    ❤
                 </button>
             </div>
             <div class="listing-content">
                 <h3>${listing.title}</h3>
                 <div class="listing-location">
-                    📍 ${listing.district?.name || ''}, ${listing.city?.name || ''}
+                    ${listing.district?.name || ''}, ${listing.city?.name || ''}
                 </div>
                 <div class="listing-details">
-                    <span>📐 ${listing.area_sqm || 0} m²</span>
-                    <span>💰 Kira: ${formatPrice(listing.monthly_rent)}</span>
-                    <span>📅 ${listing.establishment_year || '-'}</span>
+                    <span>${listing.area_sqm || 0} m²</span>
+                    <span>Kira: ${formatPrice(listing.monthly_rent)}</span>
+                    <span>${listing.establishment_year || '-'}</span>
                 </div>
                 <div class="listing-footer">
                     <span class="listing-price">${formatPrice(listing.price)}</span>

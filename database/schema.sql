@@ -438,12 +438,37 @@ SELECT id, 'Maltepe', 'maltepe', 40.9339, 29.1270 FROM cities WHERE slug = 'ista
 ON CONFLICT (city_id, slug) DO NOTHING;
 
 -- ============================================
+-- BLOG_POSTS TABLE (Blog Yazıları)
+-- ============================================
+CREATE TABLE IF NOT EXISTS blog_posts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    excerpt TEXT,
+    content TEXT,
+    cover_image TEXT,
+    category VARCHAR(50) DEFAULT 'genel',
+    tags TEXT,
+    status VARCHAR(20) DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+    author_id UUID REFERENCES users(id),
+    views INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create index for blog posts
+CREATE INDEX IF NOT EXISTS idx_blog_posts_status ON blog_posts(status);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON blog_posts(category);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_created_at ON blog_posts(created_at DESC);
+
+-- ============================================
 -- STORAGE BUCKETS (Supabase Storage)
 -- ============================================
 
 -- Create storage buckets (run this from Supabase Dashboard or via API)
 -- insert into storage.buckets (id, name, public) values ('listing-images', 'listing-images', true);
 -- insert into storage.buckets (id, name, public) values ('user-avatars', 'user-avatars', true);
+-- insert into storage.buckets (id, name, public) values ('blog-images', 'blog-images', true);
 
 -- Storage policies will be added via Supabase Dashboard
 

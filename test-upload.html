@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Upload - Supabase Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .upload-box {
+            border: 2px dashed #ccc;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        button {
+            background: #004E89;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #003A6B;
+        }
+        .preview {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .preview img {
+            max-width: 200px;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        .log {
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .log div {
+            margin: 5px 0;
+        }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .info { color: #0ff; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Supabase Storage Upload Test</h1>
+    
+    <div class="upload-box">
+        <h3>Test Image Upload</h3>
+        <input type="file" id="testImage" accept="image/*" multiple>
+        <br><br>
+        <button onclick="testUpload()">Upload Test Images</button>
+        <button onclick="listBuckets()">List Buckets</button>
+        <button onclick="listFiles()">List Files in listing-images</button>
+    </div>
+
+    <div class="preview" id="preview" style="display: none;">
+        <h3>Preview:</h3>
+        <div id="previewContent"></div>
+    </div>
+
+    <div class="log" id="log">
+        <div class="info">Console log will appear here...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(div);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        async function testUpload() {
+            const fileInput = document.getElementById('testImage');
+            const files = fileInput.files;
+
+            if (files.length === 0) {
+                log('Please select at least one image file!', 'error');
+                return;
+            }
+
+            log(`Selected ${files.length} file(s)`, 'info');
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                log(`Uploading ${file.name} (${(file.size / 1024).toFixed(2)} KB)...`, 'info');
+
+                try {
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `test-${Date.now()}-${i}.${fileExt}`;
+                    
+                    log(`Bucket: listing-images, File: ${fileName}`, 'info');
+
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from('listing-images')
+                        .upload(fileName, file);
+
+                    if (uploadError) {
+                        log(`Upload error: ${uploadError.message}`, 'error');
+                        log(`Error details: ${JSON.stringify(uploadError)}`, 'error');
+                        continue;
+                    }
+
+                    log(`Upload successful! Path: ${uploadData.path}`, 'success');
+
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('listing-images')
+                        .getPublicUrl(fileName);
+
+                    log(`Public URL: ${publicUrl}`, 'success');
+
+                    // Show preview
+                    const previewDiv = document.getElementById('preview');
+                    const previewContent = document.getElementById('previewContent');
+                    previewDiv.style.display = 'block';
+                    const img = document.createElement('img');
+                    img.src = publicUrl;
+                    img.alt = file.name;
+                    previewContent.appendChild(img);
+
+                } catch (e) {
+                    log(`Exception: ${e.message}`, 'error');
+                    console.error(e);
+                }
+            }
+
+            log('Upload test completed!', 'success');
+        }
+
+        async function listBuckets() {
+            log('Listing all buckets...', 'info');
+            try {
+                const { data, error } = await supabase.storage.listBuckets();
+                
+                if (error) {
+                    log(`Error listing buckets: ${error.message}`, 'error');
+                    return;
+                }
+
+                log(`Found ${data.length} bucket(s):`, 'success');
+                data.forEach(bucket => {
+                    log(`  - ${bucket.name} (${bucket.public ? 'public' : 'private'})`, 'info');
+                });
+            } catch (e) {
+                log(`Exception: ${e.message}`, 'error');
+            }
+        }
+
+        async function listFiles() {
+            log('Listing files in listing-images bucket...', 'info');
+            try {
+                const { data, error } = await supabase.storage
+                    .from('listing-images')
+                    .list('', {
+                        limit: 100,
+                        sortBy: { column: 'created_at', order: 'desc' }
+                    });
+                
+                if (error) {
+                    log(`Error listing files: ${error.message}`, 'error');
+                    return;
+                }
+
+                if (data.length === 0) {
+                    log('No files found in bucket', 'info');
+                    return;
+                }
+
+                log(`Found ${data.length} file(s):`, 'success');
+                data.forEach(file => {
+                    log(`  - ${file.name} (${(file.metadata?.size / 1024).toFixed(2)} KB)`, 'info');
+                });
+            } catch (e) {
+                log(`Exception: ${e.message}`, 'error');
+            }
+        }
+
+        // Auto-check on load
+        window.addEventListener('DOMContentLoaded', () => {
+            log('Page loaded, checking Supabase connection...', 'info');
+            if (typeof supabase !== 'undefined') {
+                log('✅ Supabase client initialized', 'success');
+                listBuckets();
+            } else {
+                log('❌ Supabase client not found!', 'error');
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -123,20 +123,24 @@ function renderFranchiseDetail(franchise) {
     
     // Social Media
     const socialLinks = []
-    if (franchise.instagram) socialLinks.push({ label: 'Instagram', url: franchise.instagram })
-    if (franchise.facebook) socialLinks.push({ label: 'Facebook', url: franchise.facebook })
-    if (franchise.linkedin) socialLinks.push({ label: 'LinkedIn', url: franchise.linkedin })
-    if (franchise.youtube) socialLinks.push({ label: 'YouTube', url: franchise.youtube })
-    if (franchise.twitter) socialLinks.push({ label: 'Twitter', url: franchise.twitter })
+    if (franchise.instagram) socialLinks.push({ label: 'Instagram', url: franchise.instagram, icon: '📷' })
+    if (franchise.facebook) socialLinks.push({ label: 'Facebook', url: franchise.facebook, icon: '👍' })
+    if (franchise.linkedin) socialLinks.push({ label: 'LinkedIn', url: franchise.linkedin, icon: '💼' })
+    if (franchise.youtube) socialLinks.push({ label: 'YouTube', url: franchise.youtube, icon: '▶️' })
+    if (franchise.twitter) socialLinks.push({ label: 'Twitter', url: franchise.twitter, icon: '🐦' })
+    if (franchise.website) socialLinks.push({ label: franchise.website.replace(/^https?:\/\/(www\.)?/, ''), url: franchise.website, icon: '🔗' })
     
+    const socialLinksList = document.getElementById('socialLinksList')
     if (socialLinks.length > 0) {
-        document.getElementById('socialSection').style.display = 'block'
-        const socialLinksList = document.getElementById('socialLinksList')
         socialLinksList.innerHTML = socialLinks.map(s =>
             `<a href="${s.url}" target="_blank" class="social-link-item">
-                <span>${s.label}</span>
+                <span>${s.icon} ${s.label}</span>
+                <span style="margin-left: auto;">↗</span>
             </a>`
         ).join('')
+    } else {
+        // Boş olsa bile section'ı göster
+        socialLinksList.innerHTML = '<p style="color: #9ca3af; font-size: 0.9rem; text-align: center; padding: 1rem;">Sosyal medya bağlantısı eklenmemiş</p>'
     }
     
     // Contact

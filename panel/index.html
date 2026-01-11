@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - Devredin</title>
+    <link rel="stylesheet" href="panel.css?v=3">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html" class="sidebar-logo">devredin</a>
+        </div>
+        
+        <div class="sidebar-content">
+            <a href="../add-listing.html" class="btn-create-listing">
+                <span class="btn-dot"></span>
+                İlan Oluştur
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+            </a>
+            
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Panel
+                </a>
+                <a href="#ilanlar" class="nav-item" data-page="listings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                    </svg>
+                    İlanlar
+                </a>
+                <a href="#franchiselar" class="nav-item" data-page="franchises">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Franchise'lar
+                </a>
+                <a href="#mesajlar" class="nav-item" data-page="messages">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Mesajlar
+                </a>
+                <a href="#teklifler" class="nav-item" data-page="offers">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    Teklifler
+                </a>
+                
+                <div class="nav-section-title">Yardım</div>
+                
+                <a href="#" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                    </svg>
+                    Blog
+                </a>
+                <a href="#" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    Sık Sorulan Sorular
+                </a>
+                <a href="#" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    İletişim
+                </a>
+            </nav>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar">AE</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">Kullanıcı</span>
+                    <span class="user-email" id="userEmail">email@example.com</span>
+                    <span class="user-role">Alıcı</span>
+                </div>
+                <button class="user-menu-btn" onclick="toggleUserMenu()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="toggle-sidebar-btn" onclick="toggleSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="9" y1="3" x2="9" y2="21"></line>
+                </svg>
+            </button>
+            <nav class="breadcrumb">
+                <span>Dashboard</span>
+            </nav>
+            <div class="topbar-actions">
+                <button class="topbar-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </button>
+                <button class="topbar-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Dashboard Page -->
+            <div class="page active" id="page-dashboard">
+                <h1 class="page-title">Tüm Analitikler</h1>
+                <p class="page-subtitle">Tüm ilanlarınızın toplam analitik verilerini görüntüleyin</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Bugün</span>
+                        <span class="stat-value" id="todayViews">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Toplam Görüntülenme</span>
+                        <span class="stat-value" id="totalViews">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Farklı Şehirler</span>
+                        <span class="stat-value" id="uniqueCities">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Ortalama Günlük Görüntülenme</span>
+                        <span class="stat-value" id="avgDailyViews">0</span>
+                    </div>
+                </div>
+                
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <h3>Toplam Ziyaretçi</h3>
+                        <p>Gerçek zamanlı veri (Son 30 gün)</p>
+                    </div>
+                    <div class="chart-tabs">
+                        <button class="chart-tab">24 Saat</button>
+                        <button class="chart-tab">3 Gün</button>
+                        <button class="chart-tab">7 Gün</button>
+                        <button class="chart-tab active">30 Gün</button>
+                        <button class="chart-tab">Özel</button>
+                    </div>
+                    <div class="chart-placeholder">
+                        <p>Grafik verisi yükleniyor...</p>
+                    </div>
+                </div>
+                
+                <div class="table-section">
+                    <div class="table-header">
+                        <button class="btn btn-outline">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="3" y1="9" x2="21" y2="9"></line>
+                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                            </svg>
+                            Kolonları Özelleştir
+                        </button>
+                        <a href="../add-listing.html" class="btn btn-primary">+ Yeni İlan Ekle</a>
+                    </div>
+                    <div class="empty-state">
+                        <p>Sonuç bulunamadı.</p>
+                        <a href="../add-listing.html" class="btn btn-primary">Yeni İlan Ekle</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Listings Page -->
+            <div class="page" id="page-listings">
+                <h1 class="page-title">İlanlarım</h1>
+                <p class="page-subtitle">Tüm ilanlarınızı görüntüleyin, düzenleyin ve yönetin</p>
+                
+                <div class="table-header">
+                    <button class="btn btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                        Kolonları Özelleştir
+                    </button>
+                    <a href="../add-listing.html" class="btn btn-primary">+ Yeni İlan Ekle</a>
+                </div>
+                
+                <div class="listings-list" id="userListings">
+                    <div class="empty-state">
+                        <p>Sonuç bulunamadı.</p>
+                        <a href="../add-listing.html" class="btn btn-primary">Yeni İlan Ekle</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Franchises Page -->
+            <div class="page" id="page-franchises">
+                <h1 class="page-title">Franchise'larım</h1>
+                <p class="page-subtitle">Oluşturduğunuz franchise markalarını burada yönetin</p>
+                
+                <div class="section-header">
+                    <div>
+                        <h3>Franchise Listesi</h3>
+                        <p>Markalarınızı düzenleyin, durumlarını takip edin ve gerekirse kaldırın</p>
+                    </div>
+                    <a href="../add-franchise.html" class="btn btn-primary">+ Yeni Franchise Oluştur</a>
+                </div>
+                
+                <div class="franchises-list" id="userFranchises">
+                    <div class="empty-state">
+                        <p>Henüz bir franchise oluşturmadınız.</p>
+                        <a href="../add-franchise.html" class="btn btn-primary">İlk franchise'ınızı oluştur</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Messages Page -->
+            <div class="page" id="page-messages">
+                <div class="messages-layout">
+                    <div class="messages-sidebar">
+                        <div class="messages-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <h3>Mesajlar</h3>
+                        </div>
+                        <p class="messages-count">Konuşma yok</p>
+                        <div class="conversations-list" id="conversationsList">
+                            <p class="no-conversations">Henüz konuşma bulunmuyor</p>
+                        </div>
+                    </div>
+                    <div class="messages-content">
+                        <div class="empty-state">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <h3>Mesajlarınız</h3>
+                            <p>Bir konuşma seçin veya yeni bir konuşma başlatın</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Offers Page -->
+            <div class="page" id="page-offers">
+                <h1 class="page-title">Teklifler</h1>
+                <p class="page-subtitle">Gelen ve gönderilen teklifleri yönetin</p>
+                
+                <div class="offers-tabs">
+                    <button class="offer-tab active" data-tab="incoming">Gelen Teklifler <span class="tab-count">0</span></button>
+                    <button class="offer-tab" data-tab="sent">Gönderilen Teklifler <span class="tab-count">0</span></button>
+                </div>
+                
+                <div class="table-header">
+                    <button class="btn btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                        Sütunları Özelleştir
+                    </button>
+                    <div class="filter-dropdown">
+                        <span>Durum filtrele</span>
+                        <select id="offerFilter">
+                            <option value="all">Tümü</option>
+                            <option value="pending">Beklemede</option>
+                            <option value="accepted">Kabul Edildi</option>
+                            <option value="rejected">Reddedildi</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="offers-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>İlan</th>
+                                <th>Teklif Gönderen</th>
+                                <th>Teklif Fiyatı</th>
+                                <th>Teklif Notu</th>
+                                <th>Durum</th>
+                                <th>Tarih</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offersTableBody">
+                            <tr class="empty-row">
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <p>Henüz gelen teklif bulunmuyor.</p>
+                                        <small>İlanlarınıza teklif geldiğinde burada görüntülenecektir.</small>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer">
+                        <span>0 / 0 satır seçildi</span>
+                        <div class="pagination">
+                            <button class="pagination-btn" disabled>‹</button>
+                            <span>1 / 1</span>
+                            <button class="pagination-btn" disabled>›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../backend/api.js"></script>
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await getCurrentUser();
+            if (!user) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Load user info
+            const profile = await fetchUserProfile(user.id);
+            if (profile) {
+                document.getElementById('userName').textContent = profile.full_name || 'Kullanıcı';
+                document.getElementById('userEmail').textContent = user.email;
+                const initials = profile.full_name?.split(' ').map(n => n[0]).join('').toUpperCase() || user.email[0].toUpperCase();
+                document.getElementById('userAvatar').textContent = initials;
+            }
+            
+            // Load data
+            await loadUserListings(user.id);
+            await loadUserFranchises(user.id);
+            
+            // Setup navigation
+            setupNavigation();
+        });
+
+        // Navigation
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item[data-page]');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = item.dataset.page;
+                    showPage(page);
+                    
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+            
+            // Check hash on load
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const pageMap = {
+                    'dashboard': 'dashboard',
+                    'ilanlar': 'listings',
+                    'franchiselar': 'franchises',
+                    'mesajlar': 'messages',
+                    'teklifler': 'offers'
+                };
+                if (pageMap[hash]) {
+                    showPage(pageMap[hash]);
+                    document.querySelector(`[data-page="${pageMap[hash]}"]`)?.classList.add('active');
+                }
+            }
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${pageId}`)?.classList.add('active');
+            
+            // Update breadcrumb
+            const breadcrumbMap = {
+                'dashboard': 'Dashboard',
+                'listings': 'İlanlarım',
+                'franchises': 'Franchise\'larım',
+                'messages': 'Mesajlar',
+                'offers': 'Teklifler'
+            };
+            document.querySelector('.breadcrumb span').textContent = breadcrumbMap[pageId] || 'Dashboard';
+            
+            // Load data for specific pages
+            if (pageId === 'listings') {
+                loadUserListings();
+            } else if (pageId === 'franchises') {
+                loadUserFranchises();
+            }
+        }
+
+        // Load user listings
+        async function loadUserListings() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+                
+                const { data, error } = await supabase
+                    .from('listings')
+                    .select('*, category:categories!category_id(name)')
+                    .eq('user_id', user.id)
+                    .order('created_at', { ascending: false });
+
+                const container = document.getElementById('userListings');
+                
+                if (data && data.length > 0) {
+                    container.innerHTML = data.map(listing => `
+                        <div class="listing-item">
+                            <div class="listing-info">
+                                <h4>${listing.title}</h4>
+                                <p>${listing.city || ''} • ${listing.category?.name || ''}</p>
+                            </div>
+                            <div class="listing-status">
+                                <span class="status-badge ${listing.status}">${getStatusText(listing.status)}</span>
+                            </div>
+                            <div class="listing-price">₺${listing.price?.toLocaleString('tr-TR') || 0}</div>
+                            <div class="listing-actions">
+                                <a href="../listing-detail.html?id=${listing.id}" class="btn btn-sm">Görüntüle</a>
+                                <button class="btn btn-sm btn-outline" onclick="editListing('${listing.id}')">Düzenle</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteListing('${listing.id}', '${listing.title.replace(/'/g, "\\'")}')">Sil</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>Sonuç bulunamadı.</p>
+                            <a href="../add-listing.html" class="btn btn-primary">Yeni İlan Ekle</a>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error('Error loading listings:', e);
+            }
+        }
+
+        // Load user franchises
+        async function loadUserFranchises() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+                
+                const { data, error } = await supabase
+                    .from('franchises')
+                    .select('*, sector:categories!sector_id(name)')
+                    .eq('user_id', user.id)
+                    .order('created_at', { ascending: false });
+
+                const container = document.getElementById('userFranchises');
+                
+                if (data && data.length > 0) {
+                    container.innerHTML = data.map(franchise => `
+                        <div class="franchise-item">
+                            <div class="franchise-logo">
+                                ${franchise.logo_url ? `<img src="${franchise.logo_url}" alt="${franchise.brand_name}">` : '<span>🏢</span>'}
+                            </div>
+                            <div class="franchise-info">
+                                <h4>${franchise.brand_name}</h4>
+                                <p>${franchise.sector?.name || ''}</p>
+                            </div>
+                            <div class="franchise-status">
+                                <span class="status-badge ${franchise.status}">${getStatusText(franchise.status)}</span>
+                            </div>
+                            <div class="franchise-actions">
+                                <a href="../franchise-detail.html?id=${franchise.id}" class="btn btn-sm">Görüntüle</a>
+                                <button class="btn btn-sm btn-outline" onclick="editFranchise('${franchise.id}')">Düzenle</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteFranchise('${franchise.id}', '${franchise.brand_name.replace(/'/g, "\\'")}')">Sil</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>Henüz bir franchise oluşturmadınız.</p>
+                            <a href="../add-franchise.html" class="btn btn-primary">İlk franchise'ınızı oluştur</a>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error('Error loading franchises:', e);
+            }
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'active': 'Aktif',
+                'pending': 'Onay Bekliyor',
+                'rejected': 'Reddedildi',
+                'draft': 'Taslak'
+            };
+            return statusMap[status] || status;
+        }
+
+        function editListing(id) {
+            window.location.href = `../add-listing.html?edit=${id}`;
+        }
+
+        async function deleteListing(id, title) {
+            if (!confirm(`"${title}" ilanını silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz!`)) {
+                return;
+            }
+
+            try {
+                // Delete listing images from storage first
+                const { data: images } = await supabase
+                    .from('listing_images')
+                    .select('image_url')
+                    .eq('listing_id', id);
+
+                if (images && images.length > 0) {
+                    for (const img of images) {
+                        const path = img.image_url.split('/').pop();
+                        await supabase.storage
+                            .from('listing-images')
+                            .remove([path]);
+                    }
+                }
+
+                // Delete listing images records
+                await supabase
+                    .from('listing_images')
+                    .delete()
+                    .eq('listing_id', id);
+
+                // Delete the listing
+                const { error } = await supabase
+                    .from('listings')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert('İlan başarıyla silindi!');
+                loadUserListings(); // Reload listings
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('İlan silinirken hata oluştu: ' + error.message);
+            }
+        }
+
+        function editFranchise(id) {
+            window.location.href = `../add-franchise.html?edit=${id}`;
+        }
+
+        async function deleteFranchise(id, name) {
+            if (!confirm(`"${name}" franchise'ını silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz!`)) {
+                return;
+            }
+
+            try {
+                // Delete franchise images from storage
+                const { data: franchise } = await supabase
+                    .from('franchises')
+                    .select('logo_url, gallery_images')
+                    .eq('id', id)
+                    .single();
+
+                if (franchise) {
+                    // Delete logo
+                    if (franchise.logo_url) {
+                        const logoPath = franchise.logo_url.split('/').pop();
+                        await supabase.storage
+                            .from('franchise-images')
+                            .remove([logoPath]);
+                    }
+
+                    // Delete gallery images
+                    if (franchise.gallery_images && franchise.gallery_images.length > 0) {
+                        for (const imgUrl of franchise.gallery_images) {
+                            const path = imgUrl.split('/').pop();
+                            await supabase.storage
+                                .from('franchise-images')
+                                .remove([path]);
+                        }
+                    }
+                }
+
+                // Delete the franchise
+                const { error } = await supabase
+                    .from('franchises')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert('Franchise başarıyla silindi!');
+                loadUserFranchises(); // Reload franchises
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Franchise silinirken hata oluştu: ' + error.message);
+            }
+        }
+
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+            document.querySelector('.main-content').classList.toggle('expanded');
+        }
+
+        function toggleUserMenu() {
+            // User menu toggle
+        }
+    </script>
+</body>
+</html>

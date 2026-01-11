@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Editörü - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #004E89;
+            --primary-dark: #003d6e;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-100);
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .editor-header {
+            background: #fff;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--gray-100);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--gray-600);
+            transition: all 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: var(--gray-200);
+        }
+        
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+        }
+        
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Main Content */
+        .editor-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+        }
+        
+        .editor-content {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .editor-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        /* Form Groups */
+        .form-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--gray-900);
+            background: #fff;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 78, 137, 0.1);
+        }
+        
+        .form-input.title-input {
+            font-size: 1.75rem;
+            font-weight: 700;
+            border: none;
+            padding: 0;
+        }
+        
+        .form-input.title-input:focus {
+            box-shadow: none;
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        /* Rich Text Editor */
+        .editor-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+        
+        .toolbar-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--gray-600);
+            transition: all 0.2s;
+        }
+        
+        .toolbar-btn:hover {
+            background: var(--gray-200);
+            color: var(--gray-900);
+        }
+        
+        .toolbar-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
+        
+        .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--gray-300);
+            margin: 6px 4px;
+        }
+        
+        .content-editor {
+            min-height: 400px;
+            padding: 1.5rem;
+            outline: none;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--gray-800);
+        }
+        
+        .content-editor:empty::before {
+            content: attr(data-placeholder);
+            color: var(--gray-400);
+        }
+        
+        /* Sidebar Cards */
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .sidebar-card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--gray-200);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .sidebar-card-body {
+            padding: 1.25rem;
+        }
+        
+        /* Cover Image Upload */
+        .cover-upload {
+            border: 2px dashed var(--gray-300);
+            border-radius: 8px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .cover-upload:hover {
+            border-color: var(--primary);
+            background: rgba(0, 78, 137, 0.02);
+        }
+        
+        .cover-upload.has-image {
+            padding: 0;
+            border: none;
+        }
+        
+        .cover-upload img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--gray-400);
+        }
+        
+        .upload-text {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+        
+        .upload-text strong {
+            color: var(--primary);
+        }
+        
+        /* Status Toggle */
+        .status-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .status-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            background: #fff;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .status-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        
+        /* Blog Posts List */
+        .posts-list {
+            margin-top: 2rem;
+        }
+        
+        .posts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .posts-header h3 {
+            font-size: 1rem;
+            color: var(--gray-900);
+        }
+        
+        .post-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .post-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        .post-info {
+            flex: 1;
+        }
+        
+        .post-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+        
+        .post-meta {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+        
+        .post-action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--gray-100);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: all 0.2s;
+        }
+        
+        .post-action-btn:hover {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+        
+        .post-action-btn.delete:hover {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+        
+        /* Language Selector */
+        .lang-selector {
+            position: relative;
+            margin-right: 1rem;
+        }
+        
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            transition: all 0.2s;
+        }
+        
+        .lang-btn:hover {
+            background: var(--gray-200);
+            border-color: var(--gray-400);
+        }
+        
+        .lang-btn img {
+            width: 20px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+        
+        .lang-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            min-width: 140px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .lang-dropdown.active {
+            display: block;
+        }
+        
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            transition: all 0.2s;
+        }
+        
+        .lang-option:hover {
+            background: var(--gray-50);
+        }
+        
+        .lang-option img {
+            width: 24px;
+            height: 18px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .editor-main {
+                grid-template-columns: 1fr;
+            }
+            
+            .editor-sidebar {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="editor-header">
+        <div class="header-left">
+            <button class="back-btn" onclick="window.location.href='../blog.html'">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+            </button>
+            <h1 class="header-title" id="pageTitle">Yeni Blog Yazısı</h1>
+        </div>
+        <div class="header-actions">
+            <!-- Language Selector -->
+            <div class="lang-selector">
+                <button class="lang-btn" onclick="toggleLangDropdown()">
+                    <span id="currentFlag">🇹🇷</span>
+                    <span id="currentLang">TR</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <div class="lang-option" onclick="changeLang('tr')">
+                        <span>🇹🇷</span>
+                        <span>Türkçe</span>
+                    </div>
+                    <div class="lang-option" onclick="changeLang('en')">
+                        <span>🇺🇸</span>
+                        <span>English</span>
+                    </div>
+                    <div class="lang-option" onclick="changeLang('de')">
+                        <span>🇩🇪</span>
+                        <span>Deutsch</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="saveDraft()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                <span data-i18n="draft">Taslak Kaydet</span>
+            </button>
+            <button class="btn btn-primary" onclick="publishPost()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 2L11 13"></path>
+                    <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+                </svg>
+                <span data-i18n="publish">Yayınla</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="editor-main">
+        <!-- Editor Content -->
+        <div class="editor-content">
+            <div class="form-section">
+                <input type="text" class="form-input title-input" id="postTitle" placeholder="Blog başlığını girin...">
+            </div>
+            
+            <div class="form-section">
+                <label class="form-label">Özet</label>
+                <textarea class="form-textarea" id="postExcerpt" placeholder="Kısa bir özet yazın (SEO için önemli)..." rows="3"></textarea>
+            </div>
+            
+            <div class="editor-toolbar">
+                <button class="toolbar-btn" onclick="formatText('bold')" title="Kalın">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                        <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('italic')" title="İtalik">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="4" x2="10" y2="4"></line>
+                        <line x1="14" y1="20" x2="5" y2="20"></line>
+                        <line x1="15" y1="4" x2="9" y2="20"></line>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('underline')" title="Altı Çizili">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"></path>
+                        <line x1="4" y1="21" x2="20" y2="21"></line>
+                    </svg>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" onclick="formatText('insertUnorderedList')" title="Liste">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="formatText('insertOrderedList')" title="Numaralı Liste">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="10" y1="6" x2="21" y2="6"></line>
+                        <line x1="10" y1="12" x2="21" y2="12"></line>
+                        <line x1="10" y1="18" x2="21" y2="18"></line>
+                        <path d="M4 6h1v4"></path>
+                        <path d="M4 10h2"></path>
+                        <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path>
+                    </svg>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" onclick="insertHeading()" title="Başlık">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 12h12"></path>
+                        <path d="M6 4v16"></path>
+                        <path d="M18 4v16"></path>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" onclick="insertLink()" title="Link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="content-editor" id="postContent" contenteditable="true" data-placeholder="Blog içeriğinizi buraya yazın..."></div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="editor-sidebar">
+            <!-- Cover Image -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-header" data-i18n="coverImage">Kapak Görseli</div>
+                <div class="sidebar-card-body">
+                    <div class="cover-upload" id="coverUpload" onclick="document.getElementById('coverInput').click()">
+                        <div class="upload-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </div>
+                        <p class="upload-text"><strong>Tıklayın</strong> veya sürükleyip bırakın</p>
+                    </div>
+                    <input type="file" id="coverInput" accept="image/*" style="display:none" onchange="previewCover(this)">
+                </div>
+            </div>
+
+            <!-- Category & Tags -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-header">Kategori & Etiketler</div>
+                <div class="sidebar-card-body">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="category">Kategori</label>
+                        <select class="form-select" id="postCategory">
+                            <option value="genel">Genel</option>
+                            <option value="devralanlar">Devralanlar İçin</option>
+                            <option value="devredenler">Devredenler İçin</option>
+                            <option value="franchise">Franchise ve Bayilik Rehberi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="tags">Etiketler (virgülle ayırın)</label>
+                        <input type="text" class="form-input" id="postTags" placeholder="E-ticaret, İş Fikirleri..." data-i18n-placeholder="tagsPlaceholder">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-header" data-i18n="status">Durum</div>
+                <div class="sidebar-card-body">
+                    <div class="status-toggle">
+                        <button class="status-btn" data-status="draft" onclick="setStatus('draft')" data-i18n="draftStatus">Taslak</button>
+                        <button class="status-btn active" data-status="published" onclick="setStatus('published')" data-i18n="publishedStatus">Yayında</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Existing Posts -->
+            <div class="posts-list" id="postsList">
+                <div class="posts-header">
+                    <h3 data-i18n="existingPosts">Mevcut Yazılar</h3>
+                </div>
+                <div id="existingPosts">
+                    <p style="color: #64748b; font-size: 0.875rem;">Yükleniyor...</p>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../backend/api.js"></script>
+    <script>
+        let currentStatus = 'published';
+        let editingPostId = null;
+        let coverImageUrl = null;
+        let currentLanguage = localStorage.getItem('language') || 'tr';
+
+        // Language translations
+        const translations = {
+            tr: {
+                pageTitle: 'Yeni Blog Yazısı',
+                editTitle: 'Yazıyı Düzenle',
+                draft: 'Taslak Kaydet',
+                publish: 'Yayınla',
+                titlePlaceholder: 'Blog başlığını girin...',
+                excerptLabel: 'Özet',
+                excerptPlaceholder: 'Kısa bir özet yazın (SEO için önemli)...',
+                contentPlaceholder: 'Blog içeriğinizi buraya yazın...',
+                coverImage: 'Kapak Görseli',
+                uploadText: 'Tıklayın',
+                category: 'Kategori',
+                tags: 'Etiketler (virgülle ayırın)',
+                tagsPlaceholder: 'E-ticaret, İş Fikirleri...',
+                status: 'Durum',
+                draftStatus: 'Taslak',
+                publishedStatus: 'Yayında',
+                existingPosts: 'Mevcut Yazılar'
+            },
+            en: {
+                pageTitle: 'New Blog Post',
+                editTitle: 'Edit Post',
+                draft: 'Save Draft',
+                publish: 'Publish',
+                titlePlaceholder: 'Enter blog title...',
+                excerptLabel: 'Excerpt',
+                excerptPlaceholder: 'Write a short excerpt (important for SEO)...',
+                contentPlaceholder: 'Write your blog content here...',
+                coverImage: 'Cover Image',
+                uploadText: 'Click',
+                category: 'Category',
+                tags: 'Tags (comma separated)',
+                tagsPlaceholder: 'E-commerce, Business Ideas...',
+                status: 'Status',
+                draftStatus: 'Draft',
+                publishedStatus: 'Published',
+                existingPosts: 'Existing Posts'
+            },
+            de: {
+                pageTitle: 'Neuer Blogbeitrag',
+                editTitle: 'Beitrag bearbeiten',
+                draft: 'Entwurf speichern',
+                publish: 'Veröffentlichen',
+                titlePlaceholder: 'Blog-Titel eingeben...',
+                excerptLabel: 'Auszug',
+                excerptPlaceholder: 'Kurzen Auszug schreiben (wichtig für SEO)...',
+                contentPlaceholder: 'Schreiben Sie Ihren Blog-Inhalt hier...',
+                coverImage: 'Titelbild',
+                uploadText: 'Klicken',
+                category: 'Kategorie',
+                tags: 'Tags (durch Komma getrennt)',
+                tagsPlaceholder: 'E-Commerce, Geschäftsideen...',
+                status: 'Status',
+                draftStatus: 'Entwurf',
+                publishedStatus: 'Veröffentlicht',
+                existingPosts: 'Vorhandene Beiträge'
+            }
+        };
+
+        // Toggle language dropdown
+        function toggleLangDropdown() {
+            document.getElementById('langDropdown').classList.toggle('active');
+        }
+
+        // Change language
+        function changeLang(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            
+            const flags = { tr: '🇹🇷', en: '🇺🇸', de: '🇩🇪' };
+            const names = { tr: 'TR', en: 'EN', de: 'DE' };
+            
+            document.getElementById('currentFlag').textContent = flags[lang];
+            document.getElementById('currentLang').textContent = names[lang];
+            document.getElementById('langDropdown').classList.remove('active');
+            
+            updateLanguage();
+        }
+
+        // Update page language
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            if (!editingPostId) {
+                document.getElementById('pageTitle').textContent = t.pageTitle;
+            }
+            
+            document.getElementById('postTitle').placeholder = t.titlePlaceholder;
+            document.getElementById('postExcerpt').placeholder = t.excerptPlaceholder;
+            document.getElementById('postContent').setAttribute('data-placeholder', t.contentPlaceholder);
+            
+            // Update all data-i18n elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.textContent = t[key];
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.lang-selector')) {
+                document.getElementById('langDropdown')?.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Set initial language
+            const savedLang = localStorage.getItem('language') || 'tr';
+            changeLang(savedLang);
+            
+            await checkAdminAccess();
+            await loadExistingPosts();
+            
+            // Check if editing existing post
+            const params = new URLSearchParams(window.location.search);
+            const postId = params.get('id');
+            if (postId) {
+                await loadPostForEdit(postId);
+            }
+        });
+
+        // Check admin access
+        async function checkAdminAccess() {
+            try {
+                const { data: { user }, error } = await supabase.auth.getUser();
+                
+                console.log('🔐 Auth check:', { user, error });
+                
+                if (error || !user) {
+                    console.error('❌ No user found');
+                    alert('Bu sayfaya erişim için giriş yapmalısınız.');
+                    window.location.href = '../login.html';
+                    return;
+                }
+                
+                console.log('👤 Current user email:', user.email);
+                
+                const adminEmails = [
+                    'admin@devredin.com', 
+                    'admin@devredinplatform.com',
+                    'ahmetserhatelmas@hotmail.com',
+                    'ahmetserhatelmas@gmail.com'
+                ];
+                
+                console.log('📋 Admin emails:', adminEmails);
+                console.log('✅ Is admin?', adminEmails.includes(user.email));
+                
+                if (!adminEmails.includes(user.email)) {
+                    console.error('❌ Access denied for:', user.email);
+                    alert('Bu sayfaya erişim yetkiniz yok. Email: ' + user.email);
+                    window.location.href = '../index.html';
+                    return;
+                }
+                
+                console.log('✅ Access granted!');
+            } catch (e) {
+                console.error('❌ Auth error:', e);
+                alert('Kimlik doğrulama hatası: ' + e.message);
+                window.location.href = '../login.html';
+            }
+        }
+
+        // Load existing posts
+        async function loadExistingPosts() {
+            try {
+                const { data: posts } = await supabase
+                    .from('blog_posts')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                const container = document.getElementById('existingPosts');
+                
+                if (!posts || posts.length === 0) {
+                    container.innerHTML = '<p style="color: #64748b; font-size: 0.875rem;">Henüz yazı yok</p>';
+                    return;
+                }
+
+                container.innerHTML = posts.map(post => `
+                    <div class="post-item">
+                        <img src="${post.cover_image || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=100&h=80&fit=crop'}" alt="">
+                        <div class="post-info">
+                            <div class="post-title">${post.title}</div>
+                            <div class="post-meta">${post.status === 'published' ? '🟢 Yayında' : '🟡 Taslak'} • ${new Date(post.created_at).toLocaleDateString('tr-TR')}</div>
+                        </div>
+                        <div class="post-actions">
+                            <button class="post-action-btn" onclick="editPost('${post.id}')" title="Düzenle">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                            <button class="post-action-btn delete" onclick="deletePost('${post.id}')" title="Sil">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (e) {
+                console.error('Posts yükleme hatası:', e);
+            }
+        }
+
+        // Load post for editing
+        async function loadPostForEdit(postId) {
+            try {
+                const { data: post, error } = await supabase
+                    .from('blog_posts')
+                    .select('*')
+                    .eq('id', postId)
+                    .single();
+
+                if (error || !post) {
+                    alert('Yazı bulunamadı');
+                    return;
+                }
+
+                editingPostId = postId;
+                document.getElementById('pageTitle').textContent = 'Yazıyı Düzenle';
+                document.getElementById('postTitle').value = post.title;
+                document.getElementById('postExcerpt').value = post.excerpt || '';
+                document.getElementById('postContent').innerHTML = post.content || '';
+                document.getElementById('postCategory').value = post.category || 'genel';
+                document.getElementById('postTags').value = post.tags || '';
+                
+                if (post.cover_image) {
+                    coverImageUrl = post.cover_image;
+                    const upload = document.getElementById('coverUpload');
+                    upload.innerHTML = `<img src="${post.cover_image}" alt="Cover">`;
+                    upload.classList.add('has-image');
+                }
+                
+                setStatus(post.status || 'draft');
+
+            } catch (e) {
+                console.error('Post yükleme hatası:', e);
+            }
+        }
+
+        // Edit post
+        function editPost(postId) {
+            window.location.href = `blog-editor.html?id=${postId}`;
+        }
+
+        // Delete post
+        async function deletePost(postId) {
+            if (!confirm('Bu yazıyı silmek istediğinize emin misiniz?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('blog_posts')
+                    .delete()
+                    .eq('id', postId);
+
+                if (error) throw error;
+
+                alert('Yazı silindi!');
+                loadExistingPosts();
+
+            } catch (e) {
+                alert('Silme hatası: ' + e.message);
+            }
+        }
+
+        // Preview cover image
+        function previewCover(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const upload = document.getElementById('coverUpload');
+                    upload.innerHTML = `<img src="${e.target.result}" alt="Cover">`;
+                    upload.classList.add('has-image');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Upload cover image to Supabase
+        async function uploadCoverImage() {
+            const input = document.getElementById('coverInput');
+            if (!input.files || !input.files[0]) return coverImageUrl;
+
+            const file = input.files[0];
+            const fileName = `blog-${Date.now()}-${file.name}`;
+
+            try {
+                const { data, error } = await supabase.storage
+                    .from('blog-images')
+                    .upload(fileName, file);
+
+                if (error) throw error;
+
+                const { data: { publicUrl } } = supabase.storage
+                    .from('blog-images')
+                    .getPublicUrl(fileName);
+
+                return publicUrl;
+            } catch (e) {
+                console.error('Upload hatası:', e);
+                return null;
+            }
+        }
+
+        // Set status
+        function setStatus(status) {
+            currentStatus = status;
+            document.querySelectorAll('.status-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.status === status);
+            });
+        }
+
+        // Format text
+        function formatText(command) {
+            document.execCommand(command, false, null);
+            document.getElementById('postContent').focus();
+        }
+
+        // Insert heading
+        function insertHeading() {
+            document.execCommand('formatBlock', false, 'h2');
+            document.getElementById('postContent').focus();
+        }
+
+        // Insert link
+        function insertLink() {
+            const url = prompt('Link URL girin:');
+            if (url) {
+                document.execCommand('createLink', false, url);
+            }
+        }
+
+        // Save draft
+        async function saveDraft() {
+            currentStatus = 'draft';
+            await savePost();
+        }
+
+        // Publish post
+        async function publishPost() {
+            currentStatus = 'published';
+            await savePost();
+        }
+
+        // Save post
+        async function savePost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const excerpt = document.getElementById('postExcerpt').value.trim();
+            const content = document.getElementById('postContent').innerHTML;
+            const category = document.getElementById('postCategory').value;
+            const tags = document.getElementById('postTags').value.trim();
+
+            if (!title) {
+                alert('Lütfen bir başlık girin');
+                return;
+            }
+
+            if (!content || content === '<br>') {
+                alert('Lütfen içerik girin');
+                return;
+            }
+
+            try {
+                // Upload cover if changed
+                const uploadedCover = await uploadCoverImage();
+                const finalCoverUrl = uploadedCover || coverImageUrl;
+
+                const postData = {
+                    title,
+                    excerpt,
+                    content,
+                    category,
+                    tags,
+                    status: currentStatus,
+                    cover_image: finalCoverUrl,
+                    slug: title.toLowerCase()
+                        .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                        .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                        .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+                };
+
+                let result;
+                if (editingPostId) {
+                    result = await supabase
+                        .from('blog_posts')
+                        .update(postData)
+                        .eq('id', editingPostId);
+                } else {
+                    result = await supabase
+                        .from('blog_posts')
+                        .insert([postData]);
+                }
+
+                if (result.error) throw result.error;
+
+                alert(currentStatus === 'published' ? 'Yazı yayınlandı!' : 'Taslak kaydedildi!');
+                window.location.href = '../blog.html';
+
+            } catch (e) {
+                alert('Kaydetme hatası: ' + e.message);
+                console.error(e);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -3,303 +3,648 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devren İlanları - DevredinPlatform</title>
-    <link rel="stylesheet" href="styles.css?v=5">
-    <link rel="stylesheet" href="listings.css?v=5">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Devren İlanları - Devredin</title>
+    <link rel="stylesheet" href="styles.css?v=10">
+    <link rel="stylesheet" href="listings.css?v=19">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="listings-page">
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar">
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <a href="index.html">devredin<span>platform</span></a>
+                    <a href="index.html" class="logo-main">devredin</a>
+                    <span class="logo-divider">|</span>
+                    <a href="franchise.html" class="logo-sub">fr.</a>
                 </div>
-                <ul class="nav-menu" id="navMenu">
+                
+                <ul class="nav-menu">
                     <li><a href="listings.html" class="nav-link active">İşletme Devral</a></li>
-                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
-                    <li><a href="#" class="nav-link">Blog</a></li>
+                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link">Panel</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
                 </ul>
-                <div class="nav-buttons">
-                    <!-- Yükleniyor -->
-                    <div id="navLoading" class="nav-loading">
-                        <div class="nav-skeleton"></div>
-                        <div class="nav-skeleton"></div>
+                
+                <div class="nav-actions">
+                    <button class="nav-icon-btn search-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Auth Menu -->
+                    <div class="auth-menu" id="authMenu">
+                        <button class="auth-icon-btn" id="authBtn" onclick="toggleAuthDropdown()">
+                            <svg id="authIconGuest" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span id="authIconUser" class="user-initials" style="display:none;">AE</span>
+                        </button>
+                        <div class="auth-dropdown" id="authDropdown">
+                            <!-- Not logged in -->
+                            <div id="authButtons">
+                                <a href="login.html" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                        <polyline points="10 17 15 12 10 7"></polyline>
+                                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                                    </svg>
+                                    Giriş Yap
+                                </a>
+                                <a href="login.html?register=true" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="8.5" cy="7" r="4"></circle>
+                                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                                    </svg>
+                                    Üye Ol
+                                </a>
+                            </div>
+                            <!-- Logged in -->
+                            <div id="userMenu" style="display: none;">
+                                <div class="dropdown-header">
+                                    <div class="dropdown-avatar" id="dropdownAvatar">AE</div>
+                                    <span class="dropdown-name" id="dropdownName">Kullanıcı</span>
+                                </div>
+                                <a href="profile.html" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    Profil
+                                </a>
+                                <a href="panel/" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                    Panel
+                                </a>
+                                <a href="settings.html" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                    </svg>
+                                    Ayarlar
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <button onclick="logout()" class="dropdown-item logout">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    Çıkış Yap
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
-                    <!-- Giriş Yapmamış -->
-                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
-                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
-                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
-                    </div>
-                    
-                    <!-- Giriş Yapmış -->
-                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
-                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
-                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
-                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
-                    </div>
-                </div>
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Page Header -->
-    <section class="page-header">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="index.html">Ana Sayfa</a> / <span>İlanlar</span>
-            </div>
-            <h1>Devren İlanları</h1>
-            <p>Toplam İlan Sayısı: <strong id="totalListingCount">0</strong></p>
-        </div>
-    </section>
-
-    <!-- Listings Section -->
-    <section class="listings-section">
-        <div class="container">
-            <div class="listings-layout">
-                <!-- Filters Sidebar - Modern Design -->
-                <aside class="filters-sidebar">
-                    <div class="filters-header">
-                        <h3>Filtreler</h3>
-                    </div>
-
-                    <!-- Saved Filters Dropdown -->
-                    <div class="saved-filters-dropdown">
-                        <button class="saved-filters-btn">
-                            <span class="saved-icon">📁</span>
-                            <span>Filtrelerim</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                    </div>
-
-                    <!-- Selected Filter Tags -->
-                    <div class="selected-filters" id="selectedFilters" style="display: none;">
-                        <!-- Seçili filtreler buraya eklenecek -->
-                    </div>
-
-                    <!-- Location Filter (Yer) -->
-                    <div class="filter-accordion" data-filter="location">
-                        <button class="accordion-header">
-                            <div class="accordion-title">
-                                <span class="accordion-icon">🌐</span>
-                                <span class="accordion-label">Yer</span>
-                            </div>
-                            <span class="accordion-value" id="locationValue">Belirlenmedi</span>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="filter-search-box">
-                                <span class="search-icon">🔍</span>
-                                <input type="text" id="locationSearch" placeholder="Lokasyon arayın">
-                            </div>
-                            <div class="location-suggestions" id="locationSuggestions">
-                                <p class="suggestions-title">Önerilen konumlar</p>
-                                <div class="suggestion-item nearby-item" onclick="useNearbyLocation()">
-                                    <div class="suggestion-icon-circle">📍</div>
-                                    <div class="suggestion-text">
-                                        <span class="suggestion-main">Yakınızda</span>
-                                        <span class="suggestion-sub">Çevrenizdeki ilanları bulun</span>
-                                    </div>
-                                </div>
-                                <div id="cityList" class="city-list">
-                                    <!-- Şehirler buraya yüklenecek -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sector Filter (Sektör) -->
-                    <div class="filter-accordion" data-filter="sector">
-                        <button class="accordion-header">
-                            <div class="accordion-title">
-                                <span class="accordion-icon">🏢</span>
-                                <span class="accordion-label">Sektör</span>
-                            </div>
-                            <span class="accordion-value" id="sectorValue">Belirlenmedi</span>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="filter-search-box">
-                                <input type="text" id="categorySearch" placeholder="Kategori, alt kategori veya sektör">
-                            </div>
-                            <div class="category-list" id="categoryList">
-                                <!-- Kategoriler buraya yüklenecek -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Price Filter (Fiyat) -->
-                    <div class="filter-accordion" data-filter="price">
-                        <button class="accordion-header">
-                            <div class="accordion-title">
-                                <span class="accordion-icon">💰</span>
-                                <span class="accordion-label">Fiyat</span>
-                            </div>
-                            <span class="accordion-value" id="priceValue">Belirlenmedi</span>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="price-histogram" id="priceHistogram">
-                                <!-- Histogram buraya çizilecek -->
-                            </div>
-                            <div class="price-range-slider">
-                                <div class="slider-track" id="sliderTrack"></div>
-                                <input type="range" id="minPriceSlider" min="0" max="10000000" value="0" class="range-slider range-min">
-                                <input type="range" id="maxPriceSlider" min="0" max="10000000" value="10000000" class="range-slider range-max">
-                            </div>
-                            <div class="slider-labels">
-                                <span>Minimum</span>
-                                <span>Maximum</span>
-                            </div>
-                            <div class="price-inputs-modern">
-                                <input type="text" id="minPriceInput" placeholder="En düşük">
-                                <span class="price-separator">-</span>
-                                <input type="text" id="maxPriceInput" placeholder="5.550.000">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Advanced Filter (Gelişmiş) -->
-                    <div class="filter-accordion" data-filter="advanced">
-                        <button class="accordion-header">
-                            <div class="accordion-title">
-                                <span class="accordion-icon">⚙️</span>
-                                <span class="accordion-label">Gelişmiş</span>
-                            </div>
-                            <span class="accordion-value" id="advancedValue">Belirlenmedi</span>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="advanced-filters">
-                                <label class="modern-checkbox">
-                                    <input type="checkbox" name="feature" value="franchise">
-                                    <span class="checkmark"></span>
-                                    <span>Franchise</span>
-                                </label>
-                                <label class="modern-checkbox">
-                                    <input type="checkbox" name="feature" value="established">
-                                    <span class="checkmark"></span>
-                                    <span>Köklü İşletme (5+ yıl)</span>
-                                </label>
-                                <label class="modern-checkbox">
-                                    <input type="checkbox" name="feature" value="profitable">
-                                    <span class="checkmark"></span>
-                                    <span>Kârlı İşletme</span>
-                                </label>
-                                
-                                <div class="area-filter">
-                                    <p class="filter-subtitle">Metrekare</p>
-                                    <div class="price-inputs-modern">
-                                        <input type="number" id="minArea" placeholder="Min m²">
-                                        <span class="price-separator">-</span>
-                                        <input type="number" id="maxArea" placeholder="Max m²">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Filter Action Buttons -->
-                    <div class="filter-actions">
-                        <button class="btn-apply-filters" id="applyFiltersBtn">
-                            Filtreleri Uygula
-                        </button>
-                        <button class="btn-clear-filters" id="clearFiltersBtn">
-                            Filtreleri Temizle
-                        </button>
-                    </div>
-                </aside>
-
-                <!-- Main Content -->
-                <main class="listings-main">
-                    <!-- Search and Sort Bar -->
-                    <div class="search-sort-bar">
-                        <div class="search-bar-compact">
-                            <span style="font-size: 1.2rem;">🔍</span>
-                            <input type="text" placeholder="İlan başlığı, ID, şehir, ilçe, sektör ile ara...">
-                            <button class="btn btn-search-compact">Ara</button>
-                        </div>
-                        <div class="sort-controls">
-                            <label>Sırala:</label>
-                            <select class="sort-select">
-                                <option value="newest">Tarih (Önce Yeni)</option>
-                                <option value="oldest">Tarih (Önce Eski)</option>
-                                <option value="price-high">Fiyat (Yüksekten Düşüğe)</option>
-                                <option value="price-low">Fiyat (Düşükten Yükseğe)</option>
-                                <option value="area-high">Metrekare (Büyükten Küçüğe)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- View Toggle -->
-                    <div class="view-toggle">
-                        <button class="view-btn active" data-view="grid">⊞</button>
-                        <button class="view-btn" data-view="list">☰</button>
-                        <button class="view-btn" data-view="map">📍 Harita</button>
-                    </div>
-
-                    <!-- Listings Grid -->
-                    <div class="listings-grid" id="listingsGrid">
-                        <!-- İlanlar dinamik olarak yüklenecek -->
-                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
-                            <p style="font-size: 1.2rem; color: #64748b;">⏳ İlanlar yükleniyor...</p>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="pagination">
-                        <!-- Sayfalama dinamik olarak oluşturulacak -->
-                    </div>
-                </main>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>devredinplatform</h3>
-                    <p>Türkiye'nin en büyük işletme devir platformu</p>
+    <!-- Main Content -->
+    <main class="listings-main">
+        <!-- Sidebar Filter -->
+        <aside class="filter-sidebar" id="filterSidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <a href="index.html" class="logo-main">devredin</a>
+                    <span class="logo-divider">|</span>
+                    <a href="franchise.html" class="logo-sub">fr.</a>
                 </div>
-                <div class="footer-section">
-                    <h4>Devredin</h4>
-                    <ul>
-                        <li><a href="#">Hakkımızda</a></li>
-                        <li><a href="#">Bize Ulaşın</a></li>
-                        <li><a href="#">İşlem Rehberi</a></li>
-                    </ul>
+                <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
+            </div>
+            
+            <div class="sidebar-search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" placeholder="Arama..." id="sidebarSearch">
+            </div>
+            
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" data-tab="filters" onclick="switchSidebarTab('filters')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    </svg>
+                </button>
+                <button class="sidebar-tab" data-tab="sort" onclick="switchSidebarTab('sort')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
+                </button>
+                <button class="sidebar-tab" data-tab="saved" onclick="switchSidebarTab('saved')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Filters Panel -->
+            <div class="sidebar-panel active" id="filtersPanel">
+                <h3 class="panel-title">Filtreler</h3>
+                
+                <div class="filter-group">
+                    <button class="filter-accordion" onclick="toggleAccordion(this)">
+                        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Yer</span>
+                        <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="filter-content">
+                        <select id="filterCity" onchange="applyFilters()">
+                            <option value="">Tüm Şehirler</option>
+                        </select>
+                        <select id="filterDistrict" onchange="applyFilters()">
+                            <option value="">Tüm İlçeler</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="footer-section">
-                    <h4>İşletme Devral</h4>
-                    <ul>
-                        <li><a href="#">Devren Kiralık İlanlar</a></li>
-                        <li><a href="#">Franchise Bul</a></li>
-                    </ul>
+                
+                <div class="filter-group">
+                    <button class="filter-accordion" onclick="toggleAccordion(this)">
+                        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg> Sektör</span>
+                        <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="filter-content">
+                        <select id="filterCategory" onchange="applyFilters()">
+                            <option value="">Tüm Sektörler</option>
+                        </select>
+                        <select id="filterSubcategory" onchange="applyFilters()">
+                            <option value="">Tüm Alt Kategoriler</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <button class="filter-accordion" onclick="toggleAccordion(this)">
+                        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg> Fiyat</span>
+                        <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="filter-content">
+                        <div class="price-inputs">
+                            <input type="number" id="minPrice" placeholder="Min ₺" onchange="applyFilters()">
+                            <span>-</span>
+                            <input type="number" id="maxPrice" placeholder="Max ₺" onchange="applyFilters()">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <button class="filter-accordion" onclick="toggleAccordion(this)">
+                        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line></svg> Gelişmiş</span>
+                        <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="filter-content">
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="filterFeatured" onchange="applyFilters()"> Öne Çıkan</label>
+                            <label><input type="checkbox" id="filterFranchise" onchange="applyFilters()"> Franchise</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-apply" onclick="applyFilters()">Filtreleri Uygula</button>
+            </div>
+            
+            <!-- Sort Panel -->
+            <div class="sidebar-panel" id="sortPanel">
+                <h3 class="panel-title">Sırala</h3>
+                <div class="sort-options">
+                    <button class="sort-option active" onclick="sortListings('date_desc')">
+                        Tarih (Önce Yeni) <span>→</span>
+                    </button>
+                    <button class="sort-option" onclick="sortListings('date_asc')">
+                        Tarih (Önce Eski) <span>→</span>
+                    </button>
+                    <button class="sort-option" onclick="sortListings('price_desc')">
+                        Fiyat (Yüksekten Düşüğe) <span>→</span>
+                    </button>
+                    <button class="sort-option" onclick="sortListings('price_asc')">
+                        Fiyat (Düşükten Yükseğe) <span>→</span>
+                    </button>
+                </div>
+                <button class="btn btn-close-panel" onclick="toggleSidebar()">Kapat</button>
+            </div>
+            
+            <!-- Saved Panel -->
+            <div class="sidebar-panel" id="savedPanel">
+                <h3 class="panel-title">Kayıtlı Filtrelerim</h3>
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <p>Henüz kayıtlı filtreniz yok</p>
+                    <span class="empty-hint">İlan arama sayfasında filtreleri uygulayıp kaydet butonuna tıklayarak filtre kaydedebilirsiniz.</span>
+                </div>
+                <button class="btn btn-close-panel" onclick="toggleSidebar()">Kapat</button>
+            </div>
+        </aside>
+
+        <!-- Listings Section -->
+        <section class="listings-section">
+            <div class="listings-header">
+                <div class="listings-title">
+                    <h1>Devren İlanları</h1>
+                    <span class="listings-count" id="listingsCount">0 sonuç gösteriliyor</span>
+                </div>
+                
+                <div class="listings-controls">
+                    <div class="search-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" placeholder="Arama..." id="searchInput" onkeyup="searchListings()">
+                        <button class="btn btn-search-small">Ara</button>
+                    </div>
+                    
+                    <div class="view-controls">
+                        <button class="view-btn" onclick="toggleSidebar()" title="Filtreler">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            </svg>
+                        </button>
+                        <button class="view-btn" onclick="toggleSidebar()" title="Sırala">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <polyline points="19 12 12 19 5 12"></polyline>
+                            </svg>
+                        </button>
+                        <button class="view-btn" title="Filtre Ayarları">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                            </svg>
+                        </button>
+                        <div class="view-divider"></div>
+                        <button class="view-btn active" onclick="setView('list')" title="Liste">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </button>
+                        <button class="view-btn" onclick="setView('grid')" title="Grid">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            
+            <div class="listings-container" id="listingsContainer">
+                <!-- Listings will be loaded here -->
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>İlanlar yükleniyor...</p>
+                </div>
             </div>
-        </div>
-    </footer>
+        </section>
 
-    <!-- Supabase JS -->
+        <!-- Map Section -->
+        <section class="map-section" id="mapSection">
+            <div id="map"></div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Global callback for Google Maps API
+        function initGoogleMapsListings() {
+            console.log('✅ Google Maps API loaded for listings!');
+            if (window.initListingsMap) {
+                window.initListingsMap();
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC4r_aAIPvRAEGPqARc-Y9s-UstldmSqk&language=tr&callback=initGoogleMapsListings" async defer></script>
+    <script src="listings-map.js?v=4"></script>
+    <script src="script.js"></script>
     
-    <!-- Backend API -->
-    <script src="backend/api.js?v=5"></script>
-    
-    <script src="script.js?v=5"></script>
-    <script src="listings.js?v=5"></script>
-    
-    <!-- Navbar management is handled by api.js automatically -->
+    <!-- Google Maps -->
+    <script>
+        // Global variables for listing state (map variables are in listings-map.js)
+        let currentListings = [];
+        let currentSort = 'date_desc';
+        let currentView = 'list';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('📋 İlanlar sayfası yükleniyor...');
+            // checkAuth removed - not needed for public listings page
+            await loadFilters();
+            await loadListings();
+            // Map is initialized by Google Maps callback (initListingsMap)
+        });
+        
+        // Auth functions loaded from js/auth.js
+        // Map is initialized by listings-map.js via Google Maps callback
+
+        // Load filters
+        async function loadFilters() {
+            try {
+                // Cities - use name as value since city is now TEXT in listings table
+                const { data: cities } = await supabase.from('cities').select('name').order('name');
+                const citySelect = document.getElementById('filterCity');
+                if (cities) {
+                    citySelect.innerHTML = '<option value="">Tüm Şehirler</option>' +
+                        cities.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+                }
+
+                // Categories
+                const { data: categories } = await supabase.from('categories').select('id, name, icon').is('parent_id', null).order('name');
+                const catSelect = document.getElementById('filterCategory');
+                if (categories) {
+                    catSelect.innerHTML = '<option value="">Tüm Sektörler</option>' +
+                        categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                }
+            } catch (e) {
+                console.error('Filter load error:', e);
+            }
+        }
+
+        // Load listings
+        async function loadListings() {
+            try {
+                console.log('🔄 loadListings() başladı');
+                const container = document.getElementById('listingsContainer');
+                if (!container) {
+                    console.error('❌ listingsContainer bulunamadı!');
+                    return;
+                }
+                container.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>İlanlar yükleniyor...</p></div>';
+
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                // URL'den parametreleri al
+                const urlCity = urlParams.get('city');
+                const urlSector = urlParams.get('sector');
+                const urlCategory = urlParams.get('category');
+                const urlMin = urlParams.get('min');
+                const urlMax = urlParams.get('max');
+                
+                // Get city name from filter (city is now TEXT in listings table)
+                let cityName = document.getElementById('filterCity').value;
+                if (urlCity && !cityName) {
+                    // Türkçe karakter dönüşümü
+                    const cityMap = {
+                        'istanbul': 'İstanbul',
+                        'ankara': 'Ankara',
+                        'izmir': 'İzmir',
+                        'bursa': 'Bursa',
+                        'antalya': 'Antalya',
+                        'kocaeli': 'Kocaeli',
+                        'adana': 'Adana',
+                        'gaziantep': 'Gaziantep',
+                        'konya': 'Konya',
+                        'mersin': 'Mersin'
+                    };
+                    cityName = cityMap[urlCity.toLowerCase()] || urlCity;
+                    document.getElementById('filterCity').value = cityName;
+                }
+                
+                // Kategori ID'sini bul (isim veya slug'dan)
+                let categoryId = urlCategory || document.getElementById('filterCategory').value;
+                if (urlSector && !categoryId) {
+                    // Sector slug'ını kategori adına çevir
+                    const sectorMap = {
+                        'yeme-icme': 'Yeme & İçme',
+                        'magaza': 'Mağaza & Perakende',
+                        'gida': 'Gıda Perakendesi',
+                        'hizmet': 'Hizmet',
+                        'uretim': 'Üretim & Atölye',
+                        'otomotiv': 'Otomotiv',
+                        'eglence': 'Eğlence & Hobi',
+                        'e-ticaret': 'E-Ticaret',
+                        'diger': 'Diğer'
+                    };
+                    const sectorName = sectorMap[urlSector];
+                    if (sectorName) {
+                        const { data: catData } = await supabase
+                            .from('categories')
+                            .select('id')
+                            .ilike('name', `%${sectorName.split(' ')[0]}%`)
+                            .is('parent_id', null)
+                            .single();
+                        if (catData) {
+                            categoryId = catData.id;
+                            document.getElementById('filterCategory').value = categoryId;
+                        }
+                    }
+                }
+                
+                // Fiyat aralığını URL'den veya sidebar'dan al
+                const minPrice = urlMin || document.getElementById('minPrice').value;
+                const maxPrice = urlMax || document.getElementById('maxPrice').value;
+                
+                if (urlMin) document.getElementById('minPrice').value = urlMin;
+                if (urlMax) document.getElementById('maxPrice').value = urlMax;
+
+                let query = supabase
+                    .from('listings')
+                    .select(`
+                        id, title, slug, price, monthly_rent, created_at, area_sqm, city, district,
+                        category:categories!category_id(name, icon),
+                        images:listing_images(image_url, is_primary)
+                    `)
+                    .eq('status', 'active');
+
+                // Filtreleri uygula
+                if (categoryId) query = query.eq('category_id', categoryId);
+                if (cityName) query = query.eq('city', cityName);
+                if (minPrice) query = query.gte('price', parseInt(minPrice));
+                if (maxPrice) query = query.lte('price', parseInt(maxPrice));
+
+                // Sort
+                if (currentSort === 'date_desc') query = query.order('created_at', { ascending: false });
+                else if (currentSort === 'date_asc') query = query.order('created_at', { ascending: true });
+                else if (currentSort === 'price_desc') query = query.order('price', { ascending: false });
+                else if (currentSort === 'price_asc') query = query.order('price', { ascending: true });
+
+                const { data, error, count } = await query.limit(50);
+
+                console.log('📊 Query sonucu:', { data, error, count });
+
+                if (error) throw error;
+
+                currentListings = data || [];
+                console.log('✅ currentListings set edildi:', currentListings.length);
+                
+                // Filtre bilgisini göster
+                let filterInfo = '';
+                if (urlCity) filterInfo += ` - ${urlCity.charAt(0).toUpperCase() + urlCity.slice(1)}`;
+                if (urlSector) {
+                    const sectorNames = {
+                        'yeme-icme': 'Yeme & İçme',
+                        'magaza': 'Mağaza & Perakende',
+                        'gida': 'Gıda Perakendesi',
+                        'hizmet': 'Hizmet',
+                        'uretim': 'Üretim & Atölye',
+                        'otomotiv': 'Otomotiv',
+                        'eglence': 'Eğlence & Hobi',
+                        'e-ticaret': 'E-Ticaret',
+                        'diger': 'Diğer'
+                    };
+                    filterInfo += ` - ${sectorNames[urlSector] || urlSector}`;
+                }
+                if (urlMin || urlMax) {
+                    const minStr = urlMin ? `₺${parseInt(urlMin).toLocaleString('tr-TR')}` : '₺0';
+                    const maxStr = urlMax ? `₺${parseInt(urlMax).toLocaleString('tr-TR')}` : '+';
+                    filterInfo += ` - ${minStr} - ${maxStr}`;
+                }
+                
+                document.getElementById('listingsCount').textContent = `${currentListings.length} sonuç gösteriliyor${filterInfo}`;
+                console.log('✅ listingsCount güncellendi');
+
+                if (currentListings.length === 0) {
+                    console.log('⚠️ İlan yok, empty state gösteriliyor');
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔍</div>
+                            <h3>İlan bulunamadı</h3>
+                            <p>Farklı filtreler deneyebilirsiniz</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                console.log('✅ İlanlar render ediliyor:', currentListings.length);
+                const listingItems = currentListings.map((listing, index) => {
+                    try {
+                        return createListingItem(listing);
+                    } catch (e) {
+                        console.error(`❌ Listing ${index} render hatası:`, e, listing);
+                        return '';
+                    }
+                }).join('');
+                
+                container.innerHTML = listingItems;
+                console.log('✅ İlanlar başarıyla render edildi');
+
+            } catch (e) {
+                console.error('Load listings error:', e);
+                document.getElementById('listingsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h3>Hata oluştu</h3>
+                        <p>${e.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Create listing item
+        function createListingItem(listing) {
+            const img = listing.images?.find(i => i.is_primary) || listing.images?.[0];
+            const imgUrl = img?.image_url || '';
+            const location = listing.district && listing.city ?
+                `${listing.district} / ${listing.city}` : listing.city || '-';
+            const category = listing.category?.name || '';
+
+            return `
+                <a href="listing-detail.html?slug=${listing.slug}" class="listing-item">
+                    <div class="listing-item-image" ${imgUrl ? `style="background-image: url('${imgUrl}')"` : ''}>
+                        ${!imgUrl ? '<span class="no-img">🏪</span>' : ''}
+                        <button class="favorite-btn" onclick="event.preventDefault(); toggleFavorite('${listing.id}')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="listing-item-content">
+                        <h3 class="listing-item-title">${listing.title}</h3>
+                        <p class="listing-item-location">${location}</p>
+                        <div class="listing-item-meta">
+                            <span class="listing-item-category">${category}</span>
+                            ${listing.area_sqm ? `<span class="listing-item-area">${listing.area_sqm} m²</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="listing-item-price">
+                        ${listing.monthly_rent ? `<span class="rent">Kira: ₺${listing.monthly_rent.toLocaleString('tr-TR')}</span>` : ''}
+                        <span class="price">₺${listing.price?.toLocaleString('tr-TR') || '0'}</span>
+                    </div>
+                </a>
+            `;
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('filterSidebar').classList.toggle('active');
+        }
+
+        // Switch sidebar tab
+        function switchSidebarTab(tab) {
+            document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(`${tab}Panel`).classList.add('active');
+        }
+
+        // Toggle accordion
+        function toggleAccordion(btn) {
+            btn.classList.toggle('active');
+            btn.nextElementSibling.classList.toggle('active');
+        }
+
+        // Apply filters
+        function applyFilters() {
+            loadListings();
+        }
+
+        // Sort listings
+        function sortListings(sort) {
+            currentSort = sort;
+            document.querySelectorAll('.sort-option').forEach(o => o.classList.remove('active'));
+            event.target.classList.add('active');
+            loadListings();
+        }
+
+        // Search listings
+        function searchListings() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const items = document.querySelectorAll('.listing-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // Set view
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            event.target.closest('.view-btn').classList.add('active');
+            document.getElementById('listingsContainer').className = `listings-container ${view}-view`;
+        }
+
+        // Toggle favorite
+        function toggleFavorite(id) {
+            // Implement favorite functionality
+            console.log('Toggle favorite:', id);
+        }
+    </script>
 </body>
 </html>
-

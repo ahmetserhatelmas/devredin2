@@ -107,6 +107,16 @@ function renderListingDetail(listing) {
     const priceEl = document.querySelector('.detail-price')
     if (priceEl) priceEl.textContent = formatPrice(listing.price)
     
+    // Konum bilgisi (sidebar)
+    const locationInfo = document.querySelector('.info-location')
+    if (locationInfo) {
+        locationInfo.innerHTML = '' // Skeleton temizle
+        const locText = listing.district?.name && listing.city?.name ? 
+            `${listing.district.name} / ${listing.city.name}` : 
+            listing.city?.name || 'Konum belirtilmemiş'
+        locationInfo.textContent = locText
+    }
+    
     // ⚡ Ana görsel - hızlı yükleme
     const mainImage = document.querySelector('.main-image')
     if (mainImage) {
@@ -189,18 +199,17 @@ function renderListingDetail(listing) {
     const detailsTable = document.querySelector('.listing-details-table')
     if (detailsTable) {
         detailsTable.innerHTML = `
-            <tr><td>Kategori</td><td>${listing.category?.name || '-'}</td></tr>
-            <tr><td>Sektör</td><td>${listing.subcategory?.name || '-'}</td></tr>
-            <tr><td>Metrekare</td><td>${listing.area_sqm ? listing.area_sqm + ' m²' : '-'}</td></tr>
-            <tr><td>Kuruluş Yılı</td><td>${listing.establishment_year || '-'}</td></tr>
-            <tr><td>Çalışan Sayısı</td><td>${listing.employee_count || '-'}</td></tr>
-            <tr><td>Franchise</td><td>${listing.is_franchise ? 'Evet' : 'Hayır'}</td></tr>
-            <tr><td>Aylık Kira</td><td>${listing.monthly_rent ? formatPrice(listing.monthly_rent) : '-'}</td></tr>
-            <tr><td>Aylık Ciro</td><td>${listing.monthly_revenue ? formatPrice(listing.monthly_revenue) : '-'}</td></tr>
-            <tr><td>Aylık Net Kâr</td><td>${listing.monthly_profit ? formatPrice(listing.monthly_profit) : '-'}</td></tr>
-            <tr><td>Envanter Değeri</td><td>${listing.inventory_value ? formatPrice(listing.inventory_value) : '-'}</td></tr>
-            <tr><td>Ekipman Değeri</td><td>${listing.equipment_value ? formatPrice(listing.equipment_value) : '-'}</td></tr>
-            <tr><td>Devir Sebebi</td><td>${listing.transfer_reason || '-'}</td></tr>
+            <tr><td>İlan Tarihi:</td><td>${listing.created_at ? formatDate(listing.created_at) : '-'}</td></tr>
+            <tr><td>Kategori:</td><td>${listing.category?.icon || ''} ${listing.category?.name || '-'}</td></tr>
+            <tr><td>Sektör:</td><td>${listing.sector || '-'}</td></tr>
+            <tr><td>Envanter:</td><td>${listing.inventory_value ? formatPrice(listing.inventory_value) : 'Belirtilmemiş'}</td></tr>
+            <tr><td>Demirbaş:</td><td>${listing.equipment_value ? formatPrice(listing.equipment_value) : 'Belirtilmemiş'}</td></tr>
+            <tr><td>Mobilya, Demirbaş ve Ekipman (FF&E):</td><td>Belirtilmemiş</td></tr>
+            <tr><td>Destek ve Eğitim:</td><td>${listing.includes_training ? 'Evet' : 'Hayır'}</td></tr>
+            <tr><td>Satış Sebebi:</td><td>${listing.transfer_reason || 'Sektör Değişikliği'}</td></tr>
+            <tr><td>Kuruluş Tarihi:</td><td>${listing.establishment_year || 'Belirtilmemiş'}</td></tr>
+            <tr><td>Franchise:</td><td>${listing.is_franchise ? 'Evet' : 'Hayır'}</td></tr>
+            <tr><td>Kontrat Bitiş Tarihi:</td><td>${listing.lease_end_date ? formatDate(listing.lease_end_date) : 'Belirtilmemiş'}</td></tr>
         `
     }
     
@@ -244,6 +253,14 @@ function setupContactButtons(listing) {
     if (callBtn && cleanPhone) {
         callBtn.onclick = () => {
             window.location.href = `tel:+90${cleanPhone}`
+        }
+    }
+    
+    const offerBtn = document.querySelector('.btn-offer')
+    if (offerBtn) {
+        offerBtn.onclick = () => {
+            alert('Teklif gönderme özelliği yakında eklenecek!')
+            // TODO: Teklif formu modal açılacak
         }
     }
 }

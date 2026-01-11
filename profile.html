@@ -3,223 +3,384 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profilim - DevredinPlatform</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="profile.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Profil - Devredin</title>
+    <link rel="stylesheet" href="styles.css?v=6">
+    <link rel="stylesheet" href="profile.css?v=3">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar">
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <a href="index.html">devredin<span>platform</span></a>
+                    <a href="index.html" class="logo-main">devredin</a>
+                    <span class="logo-divider">|</span>
+                    <a href="franchise.html" class="logo-sub">fr.</a>
                 </div>
-                <ul class="nav-menu" id="navMenu">
+                
+                <ul class="nav-menu">
                     <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
-                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
-                    <li><a href="#" class="nav-link">Blog</a></li>
+                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li id="panelLink"><a href="panel/" class="nav-link">Panel</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
                 </ul>
-                <div class="nav-buttons">
-                    <!-- Yükleniyor -->
-                    <div id="navLoading" class="nav-loading">
-                        <div class="nav-skeleton"></div>
-                        <div class="nav-skeleton"></div>
+                
+                <div class="nav-actions">
+                    <button class="nav-icon-btn" onclick="toggleSearch()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                    
+                    <div class="auth-menu" id="authMenu">
+                        <button class="auth-icon-btn" id="authBtn" onclick="toggleAuthDropdown()">
+                            <span id="authIconUser" class="user-initials">AE</span>
+                        </button>
+                        <div class="auth-dropdown" id="authDropdown">
+                            <div class="dropdown-header">
+                                <div class="dropdown-avatar" id="dropdownAvatar">AE</div>
+                                <span class="dropdown-name" id="dropdownName">Kullanıcı</span>
+                            </div>
+                            <a href="profile.html" class="dropdown-item">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Profil
+                            </a>
+                            <a href="panel/" class="dropdown-item">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                                Panel
+                            </a>
+                            <a href="settings.html" class="dropdown-item">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                Ayarlar
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button onclick="logout()" class="dropdown-item logout">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Çıkış Yap
+                            </button>
+                        </div>
                     </div>
                     
-                    <!-- Giriş Yapmamış -->
-                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
-                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
-                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
-                    </div>
-                    
-                    <!-- Giriş Yapmış -->
-                    <div id="loggedInButtons" style="display: none; gap: 1rem; align-items: center;">
-                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
-                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
-                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
-                    </div>
-                </div>
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Profile Section -->
-    <section class="profile-section">
+    <!-- Profile Content -->
+    <main class="profile-main">
         <div class="container">
             <!-- Profile Header -->
             <div class="profile-header">
-                <div class="profile-avatar">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                </div>
+                <div class="profile-avatar" id="profileAvatar">AE</div>
                 <div class="profile-info">
-                    <h1 id="profileName">Yükleniyor...</h1>
-                    <p id="profileEmail">email@example.com</p>
-                    <p id="profilePhone">0532 123 45 67</p>
+                    <div class="profile-name-row">
+                        <h1 id="profileName">Kullanıcı</h1>
+                        <span class="account-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Bireysel Hesap
+                        </span>
+                    </div>
+                    <div class="profile-contact">
+                        <span class="contact-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                            <span id="profilePhone">-</span>
+                        </span>
+                        <span class="contact-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <span id="profileEmail">-</span>
+                        </span>
+                    </div>
                 </div>
-                <button class="btn btn-outline" onclick="showEditProfile()">Profili Düzenle</button>
+                <a href="settings.html" class="btn btn-edit-profile">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    Profili Düzenle
+                </a>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-icon">📋</div>
-                    <div class="stat-content">
-                        <h3 id="totalListings">0</h3>
-                        <p>Toplam İlan</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-content">
-                        <h3 id="activeListings">0</h3>
-                        <p>Aktif İlan</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⏳</div>
-                    <div class="stat-content">
-                        <h3 id="pendingListings">0</h3>
-                        <p>Bekleyen İlan</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">❤️</div>
-                    <div class="stat-content">
-                        <h3 id="favoriteCount">0</h3>
-                        <p>Favori İlan</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabs -->
+            <!-- Profile Tabs -->
             <div class="profile-tabs">
-                <button class="profile-tab active" data-tab="my-listings">İlanlarım</button>
-                <button class="profile-tab" data-tab="favorites">Favorilerim</button>
-                <button class="profile-tab" data-tab="settings">Ayarlar</button>
+                <button class="tab-btn active" data-tab="listings">Devren İlanlar</button>
             </div>
 
-            <!-- Tab Contents -->
+            <!-- Listings Section -->
             <div class="profile-content">
-                <!-- My Listings Tab -->
-                <div class="tab-pane active" id="my-listings">
-                    <div class="content-header">
-                        <h2>İlanlarım</h2>
-                        <a href="add-listing.html" class="btn btn-primary">+ Yeni İlan</a>
+                <div class="listings-toolbar">
+                    <div class="search-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" placeholder="İlan ara..." id="searchListings">
+                        <button class="btn btn-search-sm">Ara</button>
                     </div>
-                    
-                    <!-- Filter Buttons -->
-                    <div class="listing-filters">
-                        <button class="filter-btn active" data-status="all">Tümü</button>
-                        <button class="filter-btn" data-status="active">Aktif</button>
-                        <button class="filter-btn" data-status="pending">Bekleyen</button>
-                        <button class="filter-btn" data-status="sold">Satılan</button>
-                    </div>
-
-                    <div id="myListingsGrid" class="profile-listings-grid">
-                        <div class="loading">İlanlar yükleniyor...</div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-filter">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                            </svg>
+                            Filtrele
+                        </button>
+                        <div class="sort-dropdown">
+                            <button class="btn btn-sort">
+                                Sırala
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="view-toggle">
+                            <button class="view-btn" data-view="map">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                                </svg>
+                            </button>
+                            <button class="view-btn active" data-view="list">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                </svg>
+                            </button>
+                            <button class="view-btn" data-view="grid">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Favorites Tab -->
-                <div class="tab-pane" id="favorites">
-                    <div class="content-header">
-                        <h2>Favori İlanlarım</h2>
-                    </div>
-                    
-                    <div id="favoritesGrid" class="profile-listings-grid">
-                        <div class="loading">Favoriler yükleniyor...</div>
-                    </div>
-                </div>
-
-                <!-- Settings Tab -->
-                <div class="tab-pane" id="settings">
-                    <div class="content-header">
-                        <h2>Hesap Ayarları</h2>
-                    </div>
-
-                    <!-- Edit Profile Form -->
-                    <div class="settings-card">
-                        <h3>Profil Bilgileri</h3>
-                        <form id="editProfileForm" class="settings-form">
-                            <div class="form-group">
-                                <label>Ad Soyad</label>
-                                <input type="text" name="full_name" id="editFullName" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Telefon</label>
-                                <input type="tel" name="phone" id="editPhone">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Güncelle</button>
-                        </form>
-                    </div>
-
-                    <!-- Change Password -->
-                    <div class="settings-card">
-                        <h3>Şifre Değiştir</h3>
-                        <form id="changePasswordForm" class="settings-form">
-                            <div class="form-group">
-                                <label>Yeni Şifre</label>
-                                <input type="password" name="new_password" placeholder="En az 6 karakter" required minlength="6">
-                            </div>
-                            <div class="form-group">
-                                <label>Yeni Şifre (Tekrar)</label>
-                                <input type="password" name="confirm_password" placeholder="Şifreyi tekrar girin" required minlength="6">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Şifreyi Güncelle</button>
-                        </form>
-                    </div>
-
-                    <!-- Danger Zone -->
-                    <div class="settings-card danger-card">
-                        <h3>Tehlikeli Bölge</h3>
-                        <p>Hesabınızı kalıcı olarak silmek isterseniz:</p>
-                        <button class="btn btn-danger" onclick="deleteAccount()">Hesabı Sil</button>
+                <div class="listings-container" id="userListings">
+                    <div class="empty-state">
+                        <h3>Henüz ilan bulunmamaktadır.</h3>
+                        <p>Bu kullanıcıya ait ilan bulunmamaktadır.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>devredinplatform</h3>
-                    <p>Türkiye'nin en büyük işletme devir platformu</p>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">d.</a>
+                    <p>Copyright © 2025<br>Devredin Bilgi Teknolojileri<br>Yazılım ve Ticaret A.Ş.<br>Tüm Hakları Saklıdır.</p>
+                    <div class="social-links">
+                        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                    </div>
                 </div>
-                <div class="footer-section">
+                <div class="footer-links">
                     <h4>Devredin</h4>
-                    <ul>
-                        <li><a href="#">Hakkımızda</a></li>
-                        <li><a href="#">Bize Ulaşın</a></li>
-                    </ul>
+                    <a href="#">Hakkımızda</a>
+                    <a href="#">Bize Ulaşın</a>
+                    <a href="#">İşlem Rehberi</a>
+                    <a href="#">Sıkça Sorulan Sorular</a>
+                    <a href="#">Blog</a>
                 </div>
-            </div>
-            <div class="footer-bottom">
-                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+                <div class="footer-links">
+                    <h4>İşletme Devral</h4>
+                    <a href="listings.html">Devren Kiralık İlanlar</a>
+                    <a href="franchise.html">Franchise Bul</a>
+                    <a href="#">İlan Verme Kuralları</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Diğer</h4>
+                    <a href="#">Kullanım Koşulları</a>
+                    <a href="#">Aydınlatma Metni</a>
+                    <a href="#">KVKK</a>
+                    <a href="#">Gizlilik Sözleşmesi</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Supabase JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Backend API -->
     <script src="backend/api.js"></script>
-    
-    <script src="script.js"></script>
-    <script src="profile.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load profile
+            await loadProfile(user);
+            await loadUserListings(user.id);
+        });
+
+        async function loadProfile(user) {
+            try {
+                // Try to get profile from users table
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+
+                const name = profile?.full_name || user.email.split('@')[0];
+                const phone = profile?.phone || '-';
+                const email = user.email;
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+                document.getElementById('profileName').textContent = name;
+                document.getElementById('profilePhone').textContent = phone;
+                document.getElementById('profileEmail').textContent = email;
+                document.getElementById('profileAvatar').textContent = initials;
+                document.getElementById('authIconUser').textContent = initials;
+                document.getElementById('dropdownAvatar').textContent = initials;
+                document.getElementById('dropdownName').textContent = name;
+            } catch (e) {
+                console.error('Profile load error:', e);
+            }
+        }
+
+        async function loadUserListings(userId) {
+            try {
+                const { data: listings } = await supabase
+                    .from('listings')
+                    .select('*, category:categories!category_id(name), city:cities!city_id(name), district:districts!district_id(name), images:listing_images(*)')
+                    .eq('user_id', userId)
+                    .order('created_at', { ascending: false });
+
+                const container = document.getElementById('userListings');
+
+                if (listings && listings.length > 0) {
+                    container.innerHTML = listings.map(listing => {
+                        const img = listing.images?.find(i => i.is_primary) || listing.images?.[0];
+                        const location = listing.district?.name && listing.city?.name ? 
+                            `${listing.district.name} / ${listing.city.name}` : listing.city?.name || '';
+                        
+                        return `
+                            <div class="listing-card-horizontal">
+                                <div class="listing-image" ${img?.image_url ? `style="background-image: url('${img.image_url}')"` : ''}>
+                                    ${!img?.image_url ? '<span class="no-image">🏪</span>' : ''}
+                                </div>
+                                <div class="listing-details">
+                                    <h3><a href="listing-detail.html?id=${listing.id}">${listing.title}</a></h3>
+                                    <p class="listing-location">${location}</p>
+                                    <div class="listing-meta">
+                                        <span class="meta-item">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                <circle cx="12" cy="10" r="3"></circle>
+                                            </svg>
+                                            Devren Kiralık
+                                        </span>
+                                        <span class="meta-item">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                            </svg>
+                                            ${listing.category?.name || ''}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="listing-price-col">
+                                    ${listing.monthly_rent ? `<span class="rent">Kira: ₺${listing.monthly_rent.toLocaleString('tr-TR')}</span>` : ''}
+                                    <span class="price">₺${listing.price?.toLocaleString('tr-TR') || 0}</span>
+                                </div>
+                                <button class="btn-delete" onclick="deleteListing('${listing.id}')">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    Sil
+                                </button>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>Henüz ilan bulunmamaktadır.</h3>
+                            <p>Bu kullanıcıya ait ilan bulunmamaktadır.</p>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error('Listings load error:', e);
+            }
+        }
+
+        async function deleteListing(id) {
+            if (!confirm('Bu ilanı silmek istediğinizden emin misiniz?')) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('listings')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                window.location.reload();
+            } catch (e) {
+                alert('Silme hatası: ' + e.message);
+            }
+        }
+
+        function toggleAuthDropdown() {
+            document.getElementById('authDropdown').classList.toggle('active');
+        }
+
+        async function logout() {
+            await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.auth-menu')) {
+                document.getElementById('authDropdown')?.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
-

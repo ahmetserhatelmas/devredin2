@@ -3,187 +3,398 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevredinPlatform - Türkiye'nin Şirket ve Franchise Pazaryeri</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Devredin - Türkiye'nin En Güvenilir İşletme Pazaryeri</title>
+    <link rel="stylesheet" href="styles.css?v=13">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Top Banner -->
-    <div class="top-banner">
-        <span>●</span> Kısa bir süreliğine ilanlarınızı ÜCRETSİZ şekilde yayınlayabilirsiniz. 
-        <a href="create-listing.html">Hemen ilan başlat</a>
-    </div>
-
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar">
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <a href="index.html">devredin<span>platform</span></a>
+                    <a href="index.html" class="logo-main">devredin</a>
+                    <span class="logo-divider">|</span>
+                    <a href="franchise.html" class="logo-sub">fr.</a>
                 </div>
-                <ul class="nav-menu" id="navMenu">
+                
+                <ul class="nav-menu">
                     <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
-                    <li><a href="create-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
-                    <li><a href="#" class="nav-link">Blog</a></li>
+                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link">Panel</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
                 </ul>
-                <div class="nav-buttons">
-                    <div id="navLoading" class="nav-loading">
-                        <div class="nav-skeleton"></div>
-                        <div class="nav-skeleton"></div>
+                
+                <div class="nav-actions">
+                    <button class="nav-icon-btn" onclick="toggleSearch()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Auth Menu -->
+                    <div class="auth-menu" id="authMenu">
+                        <button class="auth-icon-btn" id="authBtn" onclick="toggleAuthDropdown()">
+                            <svg id="authIconGuest" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span id="authIconUser" class="user-initials" style="display:none;">AE</span>
+                        </button>
+                        <div class="auth-dropdown" id="authDropdown">
+                            <!-- Not logged in -->
+                            <div id="authButtons">
+                                <a href="login.html" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                        <polyline points="10 17 15 12 10 7"></polyline>
+                                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                                    </svg>
+                                    Giriş Yap
+                                </a>
+                                <a href="login.html?register=true" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="8.5" cy="7" r="4"></circle>
+                                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                                    </svg>
+                                    Üye Ol
+                                </a>
+                            </div>
+                            <!-- Logged in -->
+                            <div id="userMenu" style="display: none;">
+                                <div class="dropdown-header">
+                                    <div class="dropdown-avatar" id="dropdownAvatar">AE</div>
+                                    <span class="dropdown-name" id="dropdownName">Kullanıcı</span>
+                                </div>
+                                <a href="profile.html" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    Profil
+                                </a>
+                                <a href="panel/" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                    Panel
+                                </a>
+                                <a href="settings.html" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    Ayarlar
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <button onclick="logout()" class="dropdown-item logout">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    Çıkış Yap
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
-                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
-                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
+                    
+                    <div class="lang-selector" onclick="toggleLangDropdown(event)">
+                        <span class="flag" id="currentFlag">🇹🇷</span>
+                        <span id="currentLang">TR</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <div class="lang-option" onclick="changeLang(event, 'tr')">
+                                <span>🇹🇷</span>
+                                <span>Türkçe</span>
+                            </div>
+                            <div class="lang-option" onclick="changeLang(event, 'en')">
+                                <span>🇺🇸</span>
+                                <span>English</span>
+                            </div>
+                            <div class="lang-option" onclick="changeLang(event, 'de')">
+                                <span>🇩🇪</span>
+                                <span>Deutsch</span>
+                            </div>
+                        </div>
                     </div>
-                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
-                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
-                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
-                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
-                    </div>
+                    
+                    <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
                 </div>
+                
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-new">
-        <div class="container">
-            <div class="hero-grid">
-                <div class="hero-content">
-                    <h1>Türkiye'nin Şirket ve<br><span class="highlight">Franchise Pazaryeri</span></h1>
-                    
-                    <!-- Search Tabs -->
-                    <div class="search-tabs-new">
-                        <button class="search-tab-new active" data-type="business">
-                            🏪 İşletme
-                        </button>
-                        <button class="search-tab-new" data-type="franchise">
-                            🏢 Franchise
-                        </button>
-                    </div>
-
-                    <!-- Search Filters -->
-                    <div class="search-filters">
-                        <div class="filter-dropdown">
-                            <span class="filter-icon">📁</span>
-                            <select id="heroCategory">
-                                <option value="">Kategori</option>
-                            </select>
-                        </div>
-                        <div class="filter-dropdown">
-                            <span class="filter-icon">📍</span>
-                            <select id="heroCity">
-                                <option value="">İl</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-search-hero" onclick="searchListings()">İşletme Ara</button>
-                    </div>
-                </div>
-            </div>
+    <section class="hero">
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80" alt="İşletme" />
+            <div class="hero-overlay"></div>
         </div>
-    </section>
-
-    <!-- Statistics Section -->
-    <section class="stats-section">
         <div class="container">
-            <div class="stats-grid">
-                <!-- Left Stats -->
-                <div class="stats-card stats-main">
-                    <h3>Devredin'den İstatistikler</h3>
-                    <div class="stat-item-large">
-                        <span class="stat-number" id="totalListings">0</span>
-                        <span class="stat-label">Toplam İlan Sayısı</span>
+            <div class="hero-content">
+                <span class="hero-subtitle">FIRSATLARIN YENİ ADRESİ</span>
+                <h1>Türkiye'nin En Güvenilir İşletme<br><span class="highlight">Pazaryeri</span></h1>
+                
+                <div class="hero-search">
+                    <div class="search-field">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        </svg>
+                        <select id="heroSector">
+                            <option value="">Sektör Seçiniz</option>
+                        </select>
                     </div>
-                    <div class="stat-item-large">
-                        <span class="stat-number" id="totalValue">₺0</span>
-                        <span class="stat-label">Toplam İlan Değeri</span>
-                    </div>
-                    <div class="stat-item-large">
-                        <span class="stat-number" id="avgValue">₺0</span>
-                        <span class="stat-label">Ortalama İşletme Değeri</span>
-                    </div>
-                </div>
-
-                <!-- Top Sectors -->
-                <div class="stats-card">
-                    <h4>● En Çok İlan Olan Sektörler</h4>
-                    <div class="stats-list" id="topSectors">
-                        <div class="stats-list-item"><span class="rank">1</span> Yükleniyor... <span class="count">0</span></div>
-                    </div>
-                </div>
-
-                <!-- Top Regions -->
-                <div class="stats-card">
-                    <h4>● En Çok İlan Olan Bölgeler</h4>
-                    <div class="stats-list" id="topRegions">
-                        <div class="stats-list-item"><span class="rank">1</span> Yükleniyor... <span class="count">0</span></div>
-                    </div>
+                    <button class="btn btn-search" onclick="searchListings()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        İşletme Ara
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Featured Listings -->
-    <section class="listings-section-new">
+    <section class="section featured-section">
         <div class="container">
             <div class="section-header">
-                <h2>⭐ Öne Çıkan İlanlar</h2>
-                <a href="listings.html?featured=true" class="view-all">Tüm Öne Çıkanlar</a>
+                <div>
+                    <span class="section-subtitle">Hayalinizdeki işletmeyi bulun</span>
+                    <h2 class="section-title">Öne Çıkan İlanlar</h2>
+                </div>
+                <a href="listings.html?featured=true" class="view-all-link">Tümünü Gör <span>→</span></a>
             </div>
-            <div class="listings-carousel" id="featuredListings">
-                <!-- Listings will be loaded dynamically -->
-                <div class="listing-card-placeholder">Yükleniyor...</div>
+            
+            <div class="listings-slider" id="featuredListings">
+                <button class="slider-btn prev" onclick="slidePrev('featuredListings')">‹</button>
+                <div class="slider-track">
+                    <!-- Listings will be loaded -->
+                    <div class="listing-card skeleton"></div>
+                    <div class="listing-card skeleton"></div>
+                    <div class="listing-card skeleton"></div>
+                    <div class="listing-card skeleton"></div>
+                </div>
+                <button class="slider-btn next" onclick="slideNext('featuredListings')">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="section stats-section">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <span class="section-subtitle">Pazaryerinin nabzı: gerçek zamanlı veriler</span>
+                    <h2 class="section-title">Devredin'den güncel istatistikler</h2>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Toplam İlan Sayısı</span>
+                    <span class="stat-value" id="totalListings">...</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Toplam İlan Değeri</span>
+                    <span class="stat-value" id="totalValue">...</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Ortalama İşletme Değeri</span>
+                    <span class="stat-value" id="avgValue">...</span>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Recent Listings -->
-    <section class="listings-section-new">
+    <section class="section recent-section">
         <div class="container">
             <div class="section-header">
-                <h2>🕐 Son İlanlar</h2>
-                <a href="listings.html" class="view-all">Tüm İlanlar</a>
+                <div>
+                    <span class="section-subtitle">Güncel fırsatlara göz atın</span>
+                    <h2 class="section-title">Son Yayınlanan İlanlar</h2>
+                </div>
+                <a href="listings.html" class="view-all-link">Tümünü Gör <span>→</span></a>
             </div>
-            <div class="listings-carousel" id="recentListings">
-                <!-- Listings will be loaded dynamically -->
-                <div class="listing-card-placeholder">Yükleniyor...</div>
+            
+            <div class="listings-slider" id="recentListings">
+                <button class="slider-btn prev" onclick="slidePrev('recentListings')">‹</button>
+                <div class="slider-track">
+                    <!-- Listings will be loaded -->
+                </div>
+                <button class="slider-btn next" onclick="slideNext('recentListings')">›</button>
             </div>
         </div>
     </section>
 
-    <!-- Categories Section -->
-    <section class="categories-section">
+    <!-- Filter Tabs Section -->
+    <section class="section filter-section">
         <div class="container">
-            <div class="section-header">
-                <h2>📁 Kategoriler</h2>
+            <div class="section-header center">
+                <span class="section-subtitle">Arama kriterlerinizi daraltın</span>
+                <h2 class="section-title">Sonuca daha hızlı ulaşın</h2>
             </div>
-            <div class="categories-grid" id="categoriesGrid">
-                <!-- Categories will be loaded dynamically -->
+            
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-tab="sector">Sektör</button>
+                <button class="filter-tab" data-tab="location">Lokasyon</button>
+                <button class="filter-tab" data-tab="investment">Yatırım Aralığı</button>
+            </div>
+            
+            <div class="filter-content" id="filterContent">
+                <!-- Sector Tab -->
+                <div class="filter-panel active" data-panel="sector">
+                    <div class="filter-tags" id="sectorTags">
+                        <a href="listings.html?sector=yeme-icme" class="filter-tag">Yeme - İçme <span>↗</span></a>
+                        <a href="listings.html?sector=magaza" class="filter-tag">Mağaza & Perakende <span>↗</span></a>
+                        <a href="listings.html?sector=gida" class="filter-tag">Gıda Perakendesi <span>↗</span></a>
+                        <a href="listings.html?sector=hizmet" class="filter-tag">Hizmet <span>↗</span></a>
+                        <a href="listings.html?sector=uretim" class="filter-tag">Üretim & Atölye <span>↗</span></a>
+                        <a href="listings.html?sector=otomotiv" class="filter-tag">Otomotiv <span>↗</span></a>
+                        <a href="listings.html?sector=diger" class="filter-tag">Diğer <span>↗</span></a>
+                        <a href="listings.html?sector=eglence" class="filter-tag">Eğlence & Hobi <span>↗</span></a>
+                        <a href="listings.html?sector=e-ticaret" class="filter-tag">E-Ticaret <span>↗</span></a>
+                    </div>
+                </div>
+                
+                <!-- Location Tab -->
+                <div class="filter-panel" data-panel="location">
+                    <div class="filter-tags">
+                        <a href="listings.html?city=istanbul" class="filter-tag">İstanbul <span>↗</span></a>
+                        <a href="listings.html?city=ankara" class="filter-tag">Ankara <span>↗</span></a>
+                        <a href="listings.html?city=izmir" class="filter-tag">İzmir <span>↗</span></a>
+                        <a href="listings.html?city=bursa" class="filter-tag">Bursa <span>↗</span></a>
+                        <a href="listings.html?city=antalya" class="filter-tag">Antalya <span>↗</span></a>
+                        <a href="listings.html?city=kocaeli" class="filter-tag">Kocaeli <span>↗</span></a>
+                        <a href="listings.html?city=adana" class="filter-tag">Adana <span>↗</span></a>
+                        <a href="listings.html?city=gaziantep" class="filter-tag">Gaziantep <span>↗</span></a>
+                        <a href="listings.html?city=konya" class="filter-tag">Konya <span>↗</span></a>
+                        <a href="listings.html?city=mersin" class="filter-tag">Mersin <span>↗</span></a>
+                    </div>
+                </div>
+                
+                <!-- Investment Tab -->
+                <div class="filter-panel" data-panel="investment">
+                    <div class="filter-tags">
+                        <a href="listings.html?min=0&max=500000" class="filter-tag">₺0 - ₺500.000 <span>↗</span></a>
+                        <a href="listings.html?min=500000&max=1000000" class="filter-tag">₺500.000 - ₺1.000.000 <span>↗</span></a>
+                        <a href="listings.html?min=1000000&max=2500000" class="filter-tag">₺1.000.000 - ₺2.500.000 <span>↗</span></a>
+                        <a href="listings.html?min=2500000&max=5000000" class="filter-tag">₺2.500.000 - ₺5.000.000 <span>↗</span></a>
+                        <a href="listings.html?min=5000000&max=10000000" class="filter-tag">₺5.000.000 - ₺10.000.000 <span>↗</span></a>
+                        <a href="listings.html?min=10000000" class="filter-tag">₺10.000.000+ <span>↗</span></a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works -->
-    <section class="how-it-works" id="about">
+    <!-- Franchise Section -->
+    <section class="section franchise-section">
         <div class="container">
-            <h2>Nasıl Çalışır?</h2>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-icon">📝</div>
-                    <h3>1. İlan Oluştur</h3>
-                    <p>İşletmenizi detaylı bilgilerle tanıtın</p>
+            <div class="section-header">
+                <div>
+                    <span class="section-subtitle">Stratejik yatırım fırsatlarını keşfedin</span>
+                    <h2 class="section-title">Franchise ilanları</h2>
                 </div>
-                <div class="step-card">
-                    <div class="step-icon">👀</div>
-                    <h3>2. Görünürlük Kazan</h3>
-                    <p>Binlerce potansiyel alıcıya ulaşın</p>
+                <a href="franchise.html" class="view-all-link">Tümünü Gör <span>→</span></a>
+            </div>
+            
+            <div class="listings-slider" id="franchiseListings">
+                <button class="slider-btn prev" onclick="slidePrev('franchiseListings')">‹</button>
+                <div class="slider-track">
+                    <!-- Franchise listings will be loaded -->
                 </div>
-                <div class="step-card">
-                    <div class="step-icon">🤝</div>
-                    <h3>3. Anlaşma Yap</h3>
-                    <p>Doğru alıcıyla buluşun ve devredin</p>
-                </div>
+                <button class="slider-btn next" onclick="slideNext('franchiseListings')">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="section contact-section">
+        <div class="container">
+            <div class="section-header center">
+                <span class="section-subtitle">Bize Ulaşın</span>
+                <h2 class="section-title">En kısa sürede geri dönüş yapacağız</h2>
+            </div>
+            
+            <div class="contact-form-wrapper">
+                <form class="contact-form" onsubmit="handleContactSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ad</label>
+                            <input type="text" name="firstName" placeholder="Adınızı yazın" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Soyad</label>
+                            <input type="text" name="lastName" placeholder="Soyadınızı yazın" required>
+                        </div>
+                        <div class="form-group form-group-large">
+                            <label>Mesaj</label>
+                            <textarea name="message" placeholder="Mesajınızı yazın" rows="4" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Telefon Numarası</label>
+                            <div class="phone-input">
+                                <div class="phone-prefix">
+                                    <span class="flag">🇹🇷</span>
+                                    <span>+90</span>
+                                </div>
+                                <input type="tel" name="phone" placeholder="+90" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>E-posta Adresi</label>
+                            <input type="email" name="email" placeholder="E-posta adresinizi yazın" required>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-submit">Gönder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <span class="cta-subtitle">Kolay kullanım, hızlı sonuç, tam destek</span>
+                <h2 class="cta-title">İşletmenizi Devredin'le Satın</h2>
+                <a href="add-listing.html" class="btn btn-cta">Devredin ile Sat</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-content">
+                <span class="newsletter-subtitle">Öne çıkan veriler ve ilanlar</span>
+                <h2 class="newsletter-title">Devredin bültenine abone olun</h2>
+                <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+                    <input type="email" placeholder="E-posta adresinizi yazın..." required>
+                    <button type="submit" class="btn btn-newsletter">Abone Ol</button>
+                </form>
             </div>
         </div>
     </section>
@@ -192,308 +403,372 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-section">
-                    <h3>devredin<span>platform</span></h3>
-                    <p>Türkiye'nin en büyük işletme devir platformu</p>
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">d.</a>
+                    <p class="footer-copyright">
+                        Copyright © 2025<br>
+                        Devredin Bilgi Teknolojileri<br>
+                        Yazılım ve Ticaret A.Ş.<br>
+                        Tüm Hakları Saklıdır.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="#" class="social-link">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="#" class="social-link">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                    </div>
                 </div>
-                <div class="footer-section">
+                
+                <div class="footer-links">
                     <h4>Devredin</h4>
                     <ul>
                         <li><a href="#">Hakkımızda</a></li>
                         <li><a href="#">Bize Ulaşın</a></li>
                         <li><a href="#">İşlem Rehberi</a></li>
+                        <li><a href="#">Sıkça Sorulan Sorular</a></li>
+                        <li><a href="blog.html">Blog</a></li>
                     </ul>
                 </div>
-                <div class="footer-section">
+                
+                <div class="footer-links">
                     <h4>İşletme Devral</h4>
                     <ul>
                         <li><a href="listings.html">Devren Kiralık İlanlar</a></li>
-                        <li><a href="listings.html?type=franchise">Franchise Bul</a></li>
+                        <li><a href="franchise.html">Franchise Bul</a></li>
+                        <li><a href="#">İlan Verme Kuralları</a></li>
                     </ul>
                 </div>
-                <div class="footer-section">
+                
+                <div class="footer-links">
                     <h4>Diğer</h4>
                     <ul>
                         <li><a href="#">Kullanım Koşulları</a></li>
-                        <li><a href="#">Gizlilik Politikası</a></li>
+                        <li><a href="#">Aydınlatma Metni</a></li>
+                        <li><a href="#">KVKK</a></li>
+                        <li><a href="#">Gizlilik Sözleşmesi</a></li>
+                        <li><a href="#">Gizlilik ve Kişisel Verilerin İşlenmesi Politikası</a></li>
                     </ul>
                 </div>
             </div>
+            
             <div class="footer-bottom">
-                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+                <p>Devredin.com, işletme devri ve yatırım ilanlarının güvenli şekilde paylaşılmasını amaçlayan bir platformdur.</p>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="backend/api.js?v=5"></script>
-    <script src="script.js?v=5"></script>
+    <script src="backend/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="script.js"></script>
     
     <script>
-        // Sayfa yüklendiğinde
+        // Filter tabs functionality
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.filter-panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelector(`[data-panel="${tab.dataset.tab}"]`).classList.add('active');
+            });
+        });
+
+        // Slider functionality
+        function slidePrev(sliderId) {
+            const track = document.querySelector(`#${sliderId} .slider-track`);
+            track.scrollBy({ left: -320, behavior: 'smooth' });
+        }
+        
+        function slideNext(sliderId) {
+            const track = document.querySelector(`#${sliderId} .slider-track`);
+            track.scrollBy({ left: 320, behavior: 'smooth' });
+        }
+
+        // Mobile menu
+        function toggleMobileMenu() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        }
+
+        // Language selector
+        function toggleLangDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('langDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function changeLang(event, lang) {
+            event.stopPropagation();
+            
+            const flags = {
+                'tr': '🇹🇷',
+                'en': '🇺🇸',
+                'de': '🇩🇪'
+            };
+            
+            const names = {
+                'tr': 'TR',
+                'en': 'EN',
+                'de': 'DE'
+            };
+            
+            document.getElementById('currentFlag').textContent = flags[lang];
+            document.getElementById('currentLang').textContent = names[lang];
+            document.getElementById('langDropdown').classList.remove('active');
+            
+            // Store language preference
+            localStorage.setItem('language', lang);
+            
+            // Here you can add translation logic or page redirect if needed
+            console.log('Language changed to:', lang);
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const langDropdown = document.getElementById('langDropdown');
+            if (langDropdown && !event.target.closest('.lang-selector')) {
+                langDropdown.classList.remove('active');
+            }
+        });
+
+        // Page load
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🏠 Ana sayfa yükleniyor...')
-            
-            // Navbar is managed by api.js automatically
-            await loadHeroFilters()
-            await loadStatistics()
-            await loadFeaturedListings()
-            await loadRecentListings()
-            await loadCategories()
-        })
+            console.log('🏠 Ana sayfa yükleniyor...');
+            await loadHeroSectors();
+            await loadFeaturedListings();
+            await loadRecentListings();
+            await loadFranchiseListings();
+            await loadStatistics();
+            checkAuth();
+        });
 
-        // Hero filtreleri yükle
-        async function loadHeroFilters() {
-            // Kategoriler
-            const { data: categories } = await supabase
-                .from('categories')
-                .select('id, name, icon')
-                .is('parent_id', null)
-                .order('name')
-            
-            const categorySelect = document.getElementById('heroCategory')
-            if (categories) {
-                categorySelect.innerHTML = '<option value="">Kategori</option>' +
-                    categories.map(c => `<option value="${c.id}">${c.icon || ''} ${c.name}</option>`).join('')
-            }
-
-            // Şehirler
-            const { data: cities } = await supabase
-                .from('cities')
-                .select('id, name')
-                .order('name')
-            
-            const citySelect = document.getElementById('heroCity')
-            if (cities) {
-                citySelect.innerHTML = '<option value="">İl</option>' +
-                    cities.map(c => `<option value="${c.id}">${c.name}</option>`).join('')
-            }
-        }
-
-        // İstatistikleri yükle
-        async function loadStatistics() {
+        // Load hero sectors
+        async function loadHeroSectors() {
             try {
-                // Toplam ilan sayısı ve değeri
-                const { data: listings, count } = await supabase
-                    .from('listings')
-                    .select('price', { count: 'exact' })
-                    .in('status', ['active', 'pending'])
-                
-                const totalCount = count || 0
-                const totalValue = listings?.reduce((sum, l) => sum + (l.price || 0), 0) || 0
-                const avgValue = totalCount > 0 ? totalValue / totalCount : 0
-
-                document.getElementById('totalListings').textContent = totalCount.toLocaleString('tr-TR') + '+'
-                document.getElementById('totalValue').textContent = '₺' + totalValue.toLocaleString('tr-TR') + '+'
-                document.getElementById('avgValue').textContent = '₺' + Math.round(avgValue).toLocaleString('tr-TR')
-
-                // En çok ilan olan kategoriler
-                const { data: sectorStats } = await supabase
-                    .from('listings')
-                    .select('category_id, category:categories!category_id(name)')
-                    .in('status', ['active', 'pending'])
-                
-                if (sectorStats) {
-                    const sectorCounts = {}
-                    sectorStats.forEach(l => {
-                        const name = l.category?.name || 'Diğer'
-                        sectorCounts[name] = (sectorCounts[name] || 0) + 1
-                    })
-                    
-                    const topSectors = Object.entries(sectorCounts)
-                        .sort((a, b) => b[1] - a[1])
-                        .slice(0, 5)
-                    
-                    document.getElementById('topSectors').innerHTML = topSectors.map((s, i) => `
-                        <div class="stats-list-item">
-                            <span class="rank">${i + 1}</span> ${s[0]} 
-                            <span class="count">${s[1]}</span>
-                        </div>
-                    `).join('')
+                const { data } = await supabase.from('categories').select('id, name, icon').is('parent_id', null).order('name');
+                const select = document.getElementById('heroSector');
+                if (data) {
+                    select.innerHTML = '<option value="">Sektör Seçiniz</option>' + 
+                        data.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
                 }
-
-                // En çok ilan olan bölgeler
-                const { data: regionStats } = await supabase
-                    .from('listings')
-                    .select('city_id, city:cities(name), district:districts(name)')
-                    .in('status', ['active', 'pending'])
-                
-                if (regionStats) {
-                    const regionCounts = {}
-                    regionStats.forEach(l => {
-                        const name = l.district?.name && l.city?.name ? 
-                            `${l.district.name}, ${l.city.name}` : 
-                            l.city?.name || 'Bilinmiyor'
-                        regionCounts[name] = (regionCounts[name] || 0) + 1
-                    })
-                    
-                    const topRegions = Object.entries(regionCounts)
-                        .sort((a, b) => b[1] - a[1])
-                        .slice(0, 5)
-                    
-                    document.getElementById('topRegions').innerHTML = topRegions.map((r, i) => `
-                        <div class="stats-list-item">
-                            <span class="rank">${i + 1}</span> ${r[0]} 
-                            <span class="count">${r[1]}</span>
-                        </div>
-                    `).join('')
-                }
-
-            } catch (error) {
-                console.error('İstatistik yükleme hatası:', error)
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // Öne çıkan ilanları yükle
+        // Search listings
+        function searchListings() {
+            const sector = document.getElementById('heroSector').value;
+            window.location.href = sector ? `listings.html?category=${sector}` : 'listings.html';
+        }
+
+        // Load featured listings
         async function loadFeaturedListings() {
             try {
                 const { data } = await supabase
                     .from('listings')
-                    .select(`
-                        id, title, price, created_at,
-                        category:categories!category_id(name),
-                        city:cities(name),
-                        district:districts(name),
-                        images:listing_images(image_url, is_primary)
-                    `)
-                    .in('status', ['active', 'pending'])
-                    .eq('is_featured', true)
+                    .select('id, title, price, created_at, city, district, slug, category:categories!category_id(name), images:listing_images(image_url, is_primary)')
+                    .eq('status', 'active')
                     .order('created_at', { ascending: false })
-                    .limit(8)
+                    .limit(8);
                 
-                const container = document.getElementById('featuredListings')
-                
+                const track = document.querySelector('#featuredListings .slider-track');
                 if (data && data.length > 0) {
-                    container.innerHTML = data.map(listing => createListingCard(listing, true)).join('')
+                    track.innerHTML = data.map(l => createListingCard(l, true)).join('');
                 } else {
-                    // Öne çıkan yoksa son ilanları göster
-                    const { data: recent } = await supabase
-                        .from('listings')
-                        .select(`
-                            id, title, price, created_at,
-                            category:categories!category_id(name),
-                            city:cities(name),
-                            district:districts(name),
-                            images:listing_images(image_url, is_primary)
-                        `)
-                        .in('status', ['active', 'pending'])
-                        .order('created_at', { ascending: false })
-                        .limit(4)
-                    
-                    if (recent && recent.length > 0) {
-                        container.innerHTML = recent.map(listing => createListingCard(listing, true)).join('')
-                    } else {
-                        container.innerHTML = '<p style="text-align: center; color: #94a3b8;">Henüz ilan yok</p>'
-                    }
+                    track.innerHTML = '<p class="no-data">Henüz ilan yok</p>';
                 }
-            } catch (error) {
-                console.error('Öne çıkan ilanlar yükleme hatası:', error)
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // Son ilanları yükle
+        // Load recent listings
         async function loadRecentListings() {
             try {
                 const { data } = await supabase
                     .from('listings')
-                    .select(`
-                        id, title, price, created_at,
-                        category:categories!category_id(name),
-                        city:cities(name),
-                        district:districts(name),
-                        images:listing_images(image_url, is_primary)
-                    `)
-                    .in('status', ['active', 'pending'])
+                    .select('id, title, price, created_at, city, district, slug, category:categories!category_id(name), images:listing_images(image_url, is_primary)')
+                    .eq('status', 'active')
                     .order('created_at', { ascending: false })
-                    .limit(8)
+                    .limit(8);
                 
-                const container = document.getElementById('recentListings')
-                
+                const track = document.querySelector('#recentListings .slider-track');
                 if (data && data.length > 0) {
-                    container.innerHTML = data.map(listing => createListingCard(listing, false)).join('')
+                    track.innerHTML = data.map(l => createListingCard(l, false)).join('');
                 } else {
-                    container.innerHTML = '<p style="text-align: center; color: #94a3b8;">Henüz ilan yok</p>'
+                    track.innerHTML = '<p class="no-data">Henüz ilan yok</p>';
                 }
-            } catch (error) {
-                console.error('Son ilanlar yükleme hatası:', error)
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // İlan kartı oluştur
-        function createListingCard(listing, featured = false) {
-            const primaryImage = listing.images?.find(img => img.is_primary) || listing.images?.[0]
-            const imageStyle = primaryImage ? 
-                `background-image: url('${primaryImage.image_url}'); background-size: cover; background-position: center;` :
-                `background: #f1f5f9; display: flex; align-items: center; justify-content: center;`
-            const noImageIcon = !primaryImage ? '<span style="font-size: 3rem; opacity: 0.3;">🏪</span>' : ''
-            
-            const location = listing.district?.name && listing.city?.name ? 
-                `${listing.district.name}, ${listing.city.name}` : 
-                listing.city?.name || ''
+        // Load franchise listings
+        async function loadFranchiseListings() {
+            try {
+                const { data } = await supabase
+                    .from('franchises')
+                    .select('id, brand_name, logo_url, min_investment, max_investment, sector:categories!sector_id(name)')
+                    .eq('status', 'active')
+                    .order('created_at', { ascending: false })
+                    .limit(8);
+                
+                const track = document.querySelector('#franchiseListings .slider-track');
+                if (data && data.length > 0) {
+                    track.innerHTML = data.map(f => createFranchiseCard(f)).join('');
+                } else {
+                    track.innerHTML = '<p class="no-data">Henüz franchise ilanı yok</p>';
+                }
+            } catch (e) { console.error(e); }
+        }
 
+        // Create listing card
+        function createListingCard(listing, featured = false) {
+            const img = listing.images?.find(i => i.is_primary) || listing.images?.[0];
+            const imgUrl = img?.image_url || '';
+            const location = listing.district && listing.city 
+                ? `${listing.district} / ${listing.city}` 
+                : listing.city || '';
+            
+            // Use slug if available, otherwise use id
+            const detailUrl = listing.slug 
+                ? `listing-detail.html?slug=${listing.slug}` 
+                : `listing-detail.html?id=${listing.id}`;
+            
             return `
-                <a href="listing-detail.html?id=${listing.id}" class="listing-card-new">
-                    <div class="listing-image-new" style="${imageStyle}">
-                        ${noImageIcon}
-                        ${featured ? '<span class="featured-badge">⭐ ÖNE ÇIKAN</span>' : ''}
+                <a href="${detailUrl}" class="listing-card">
+                    <div class="listing-image" ${imgUrl ? `style="background-image: url('${imgUrl}')"` : ''}>
+                        ${!imgUrl ? '<span class="no-image">Resim Yok</span>' : ''}
+                        ${featured ? '<span class="badge featured">Öne Çıkan</span>' : ''}
                     </div>
-                    <div class="listing-content-new">
-                        <h3>${listing.title}</h3>
-                        <p class="listing-location-new">📍 ${location}</p>
-                        <p class="listing-price-new">${formatPrice(listing.price)}</p>
-                        <div class="listing-footer-new">
-                            <span>${formatDate(listing.created_at)}</span>
-                            <span class="view-details">Detayları görün →</span>
+                    <div class="listing-info">
+                        <h3 class="listing-title">${listing.title}</h3>
+                        ${location ? `
+                        <p class="listing-location">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            ${location}
+                        </p>
+                        ` : ''}
+                        <p class="listing-price">${formatPrice(listing.price)}</p>
+                        <div class="listing-footer">
+                            <span class="listing-date">${formatDate(listing.created_at)}</span>
+                            <span class="listing-link">Detayları görün →</span>
                         </div>
                     </div>
                 </a>
-            `
+            `;
         }
 
-        // Kategorileri yükle
-        async function loadCategories() {
-            try {
-                const { data } = await supabase
-                    .from('categories')
-                    .select('id, name, slug, icon')
-                    .is('parent_id', null)
-                    .order('name')
+        // Create franchise card
+        function createFranchiseCard(franchise) {
+            return `
+                <a href="franchise-detail.html?id=${franchise.id}" class="franchise-card">
+                    <div class="franchise-logo">
+                        ${franchise.logo_url ? `<img src="${franchise.logo_url}" alt="${franchise.brand_name}">` : '<span>Logo</span>'}
+                    </div>
+                    <div class="franchise-info">
+                        <h3 class="franchise-name">${franchise.brand_name}</h3>
+                        <span class="franchise-sector">${franchise.sector?.name || ''}</span>
+                        <p class="franchise-price">${formatPrice(franchise.min_investment)} - ${formatPrice(franchise.max_investment)}</p>
+                    </div>
+                </a>
+            `;
+        }
+
+        // Count up animation function
+        function animateCount(element, target, duration = 2000, prefix = '', suffix = '') {
+            const start = 0;
+            const startTime = performance.now();
+            
+            function updateCount(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
                 
-                const container = document.getElementById('categoriesGrid')
+                // Easing function for smooth animation
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const current = Math.floor(start + (target - start) * easeOutQuart);
                 
-                if (data && data.length > 0) {
-                    container.innerHTML = data.map(cat => `
-                        <a href="listings.html?category=${cat.id}" class="category-card">
-                            <span class="category-icon">${cat.icon || '📁'}</span>
-                            <span class="category-name">${cat.name}</span>
-                        </a>
-                    `).join('')
+                element.textContent = prefix + current.toLocaleString('tr-TR') + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCount);
                 }
+            }
+            
+            requestAnimationFrame(updateCount);
+        }
+
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                const { data, count } = await supabase
+                    .from('listings')
+                    .select('price', { count: 'exact' })
+                    .eq('status', 'active');
+                
+                const total = count || 0;
+                const totalVal = data?.reduce((s, l) => s + (l.price || 0), 0) || 0;
+                const avg = total > 0 ? totalVal / total : 0;
+
+                // Animate the counts
+                animateCount(document.getElementById('totalListings'), total, 2000, '', '+');
+                animateCount(document.getElementById('totalValue'), totalVal, 2500, '₺', '+');
+                animateCount(document.getElementById('avgValue'), Math.round(avg), 2000, '₺', '');
+            } catch (e) { console.error(e); }
+        }
+
+        // Auth functions are loaded from js/auth.js
+
+        // Form handlers
+        async function handleContactSubmit(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            // Disable button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Gönderiliyor...';
+            
+            const formData = new FormData(form);
+            const messageData = {
+                name: formData.get('firstName'),
+                surname: formData.get('lastName'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                message: formData.get('message'),
+                status: 'new'
+            };
+            
+            try {
+                const { data, error } = await supabase
+                    .from('contact_messages')
+                    .insert([messageData])
+                    .select()
+                    .single();
+                
+                if (error) throw error;
+                
+                alert('✅ Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız.');
+                form.reset();
             } catch (error) {
-                console.error('Kategori yükleme hatası:', error)
+                console.error('Mesaj gönderme hatası:', error);
+                alert('❌ Mesaj gönderilemedi. Lütfen tekrar deneyin.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             }
         }
 
-        // Arama fonksiyonu
-        function searchListings() {
-            const category = document.getElementById('heroCategory').value
-            const city = document.getElementById('heroCity').value
-            
-            let url = 'listings.html?'
-            if (category) url += `category=${category}&`
-            if (city) url += `city=${city}&`
-            
-            window.location.href = url
+        function handleNewsletterSubmit(e) {
+            e.preventDefault();
+            alert('✅ Bültene abone oldunuz!');
+            e.target.reset();
         }
-
-        // Search tab switching
-        document.querySelectorAll('.search-tab-new').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.search-tab-new').forEach(t => t.classList.remove('active'))
-                tab.classList.add('active')
-            })
-        })
     </script>
 </body>
 </html>

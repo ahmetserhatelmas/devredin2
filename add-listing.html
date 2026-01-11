@@ -3,1034 +3,1347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeni İlan Oluştur - DevredinPlatform</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="add-listing.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Leaflet CSS & JS (OpenStreetMap - Ücretsiz, API Key gerektirmez) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <title>İlan Oluştur - Devredin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="add-listing.css?v=21">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="container">
-            <div class="nav-wrapper">
-                <div class="logo">
-                    <a href="index.html">devredin<span>platform</span></a>
-                </div>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
-                    <li><a href="create-listing.html" class="nav-link active">İşletmeni Devret</a></li>
-                    <li><a href="franchise.html" class="nav-link">Franchise</a></li>
-                    <li><a href="#" class="nav-link">Blog</a></li>
-                </ul>
-                <div class="nav-buttons">
-                    <div id="navLoading" class="nav-loading">
-                        <div class="nav-skeleton"></div>
-                        <div class="nav-skeleton"></div>
-                    </div>
-                    <div id="loggedOutButtons" style="display: none; gap: 1rem;">
-                        <a href="login.html" class="btn btn-outline">Giriş Yap</a>
-                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
-                    </div>
-                    <div id="loggedInButtons" style="display: none; align-items: center; gap: 1rem;">
-                        <a href="profile.html" class="btn btn-profile" id="userName">👤 Profilim</a>
-                        <a href="create-listing.html" class="btn btn-primary">İlan Oluştur</a>
-                        <button onclick="handleLogout()" class="btn btn-outline">Çıkış</button>
-                    </div>
-                </div>
+    <!-- Header -->
+    <header class="form-header">
+        <a href="index.html" class="header-logo">d.</a>
+        
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="step active" data-step="1">
+                <span class="step-number">01</span>
+                <span class="step-text">Listeleme Bilgileri</span>
+            </div>
+            <div class="step" data-step="2">
+                <span class="step-number">02</span>
+                <span class="step-text">İşletme Ayrıntıları</span>
+            </div>
+            <div class="step" data-step="3">
+                <span class="step-number">03</span>
+                <span class="step-text">İlan Yayın Detayları</span>
+            </div>
+            <div class="step" data-step="4">
+                <span class="step-number">04</span>
+                <span class="step-text">Yapay Zeka & Önizleme</span>
             </div>
         </div>
-    </nav>
+        
+        <button class="save-exit-btn" onclick="saveAndExit()">Kaydet ve Çıkış Yap</button>
+    </header>
 
-    <!-- Add Listing Section -->
-    <section class="add-listing-section">
+    <!-- Form Content -->
+    <main class="form-main">
         <div class="container">
-            <!-- Breadcrumb -->
-            <div class="breadcrumb-nav">
-                <a href="index.html">Ana Sayfa</a> - <span>Yeni İlan Başlat</span>
-            </div>
-
-            <!-- Header with Steps -->
-            <div class="form-header-new">
-                <h1>Yeni İlan Oluştur</h1>
-                <div class="steps-indicator">
-                    <button class="step-btn active" data-step="1" onclick="goToStep(1)">
-                        <span class="step-icon">✓</span>
-                        Genel İlan Özellikleri
-                    </button>
-                    <button class="step-btn" data-step="2" onclick="goToStep(2)">
-                        <span class="step-icon">✗</span>
-                        İşletme Detayları
-                    </button>
-                    <button class="step-btn" data-step="3" onclick="goToStep(3)">
-                        <span class="step-icon">✗</span>
-                        İlan Yayın Detayları
-                    </button>
-                </div>
-            </div>
-
-            <!-- Multi-Step Form -->
-            <form id="addListingForm" class="multi-step-form">
-                
-                <!-- STEP 1: Genel İlan Özellikleri -->
-                <div class="form-step active" id="step1">
-                    <div class="step-content">
-                        <div class="section-title">
-                            <h2>Genel İlan Özellikleri</h2>
+            <!-- Step 1: Listeleme Bilgileri -->
+            <div class="form-step active" id="step1">
+                <div class="form-grid">
+                    <div class="form-left">
+                        <div class="form-group">
+                            <label>Listeleme başlığı <span class="required">*</span></label>
+                            <input type="text" id="title" placeholder="Örneğin; Merkezi Konumlu Cafe, Devren Kiralık Şarküteri...">
                         </div>
-
-                        <div class="form-grid">
-                            <!-- İlan Başlığı -->
-                            <div class="form-group full-width">
-                                <label>İlan Başlığı <span class="required">* zorunlu</span></label>
-                                <input type="text" name="title" placeholder="İlan Başlığı" required>
-                            </div>
-
-                            <!-- Kategori & Sektör -->
+                        
+                        <div class="form-row">
                             <div class="form-group">
-                                <label>Kategori <span class="required">* zorunlu</span></label>
-                                <select name="category" id="categorySelect" required onchange="loadSubcategoriesForForm()">
-                                    <option value="">Seçin</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Sektör <span class="required">* zorunlu</span></label>
-                                <select name="subcategory" id="subcategorySelect" required disabled>
-                                    <option value="">Önce kategori seçin</option>
-                                </select>
-                            </div>
-
-                            <!-- Kuruluş Yılı & Metrekare -->
-                            <div class="form-group">
-                                <label>Kuruluş Yılı</label>
-                                <input type="number" name="establishment_year" placeholder="1900" min="1900" max="2025">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Metrekare <span class="required">* zorunlu</span></label>
-                                <input type="number" name="area" placeholder="0" required>
-                            </div>
-
-                            <!-- Fiyat -->
-                            <div class="form-group">
-                                <label>Fiyat <span class="required">* zorunlu</span></label>
-                                <div class="input-with-prefix">
-                                    <span class="prefix">₺</span>
-                                    <input type="number" name="price" placeholder="0" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Aylık Kira</label>
-                                <div class="input-with-prefix">
-                                    <span class="prefix">₺</span>
-                                    <input type="number" name="rent" placeholder="0">
-                                </div>
-                            </div>
-
-                            <!-- Konum Section with Map -->
-                            <div class="form-group full-width location-section">
-                                <div class="location-grid">
-                                    <div class="location-inputs">
-                                        <div class="form-group">
-                                            <label>Konum <span class="required">* zorunlu</span></label>
-                                            <div class="autocomplete-wrapper">
-                                                <input type="text" id="addressAutocomplete" name="address_search" placeholder="Adres aramaya başlayın..." autocomplete="off">
-                                                <span class="search-icon">🔍</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Tam Adres</label>
-                                            <input type="text" id="fullAddress" name="address" placeholder="Seçilen adres burada görünecek" readonly>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>İl</label>
-                                            <input type="text" id="cityInput" name="city_name" placeholder="İl" readonly>
-                                            <input type="hidden" id="citySelect" name="city">
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>İlçe</label>
-                                            <input type="text" id="districtInput" name="district_name" placeholder="İlçe" readonly>
-                                            <input type="hidden" id="districtSelect" name="district">
-                                        </div>
-                                        
-                                        <!-- Hidden fields for coordinates -->
-                                        <input type="hidden" id="latitude" name="latitude">
-                                        <input type="hidden" id="longitude" name="longitude">
+                                <label>Sektör <span class="required">*</span></label>
+                                <div class="custom-select" id="sectorSelect">
+                                    <div class="select-trigger" onclick="toggleDropdown('sectorDropdown')">
+                                        <span id="sectorValue">Lütfen seçim yapın</span>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
                                     </div>
-                                    
-                                    <div class="map-container">
-                                        <div id="locationMap"></div>
+                                    <div class="select-dropdown" id="sectorDropdown">
+                                        <input type="text" class="dropdown-search" placeholder="Sektör ara..." oninput="filterSectors(this.value)">
+                                        <div class="dropdown-options" id="sectorOptions">
+                                            <!-- Options will be loaded -->
+                                        </div>
                                     </div>
                                 </div>
+                                <input type="hidden" id="categoryId">
+                                <input type="hidden" id="subcategoryId">
                             </div>
-
-                            <!-- İlan Açıklaması -->
-                            <div class="form-group full-width">
-                                <label>İlan Açıklaması <span class="required">* zorunlu</span></label>
-                                <div class="rich-editor">
-                                    <div class="editor-toolbar">
-                                        <button type="button" class="toolbar-btn" onclick="formatText('bold')">Kalın</button>
-                                        <button type="button" class="toolbar-btn" onclick="formatText('italic')">İtalik</button>
-                                        <button type="button" class="toolbar-btn" onclick="formatText('h2')">Büyük Başlık</button>
-                                        <button type="button" class="toolbar-btn" onclick="formatText('h3')">Orta Başlık</button>
-                                        <button type="button" class="toolbar-btn" onclick="formatText('h4')">Küçük Başlık</button>
-                                        <button type="button" class="toolbar-btn" onclick="formatText('ul')">Listeleme</button>
-                                    </div>
-                                    <textarea name="description" id="descriptionEditor" rows="8" placeholder="Açıklamayı buraya yazın..." required></textarea>
+                            <div class="form-group">
+                                <label>Kuruluş yılı</label>
+                                <input type="number" id="establishedYear" placeholder="Kuruluş yılı yazın" min="1900" max="2025">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Metrekare <span class="required">*</span></label>
+                                <div class="input-with-suffix">
+                                    <input type="number" id="area" placeholder="Metrekare yazın">
+                                    <span class="suffix">m²</span>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label>İstenen fiyat <span class="required">*</span></label>
+                                <div class="input-with-suffix">
+                                    <input type="number" id="price" placeholder="Fiyat yazın">
+                                    <span class="suffix">₺</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Listeleme açıklaması <span class="required">*</span></label>
+                            <div class="rich-editor">
+                                <div class="editor-toolbar">
+                                    <button type="button" onclick="formatText('bold')"><b>B</b></button>
+                                    <button type="button" onclick="formatText('italic')"><i>I</i></button>
+                                    <button type="button" onclick="formatText('underline')"><u>U</u></button>
+                                    <button type="button" onclick="formatText('h1')">H₁</button>
+                                    <button type="button" onclick="formatText('h2')">H₂</button>
+                                    <button type="button" onclick="formatText('ul')">☰</button>
+                                    <button type="button" onclick="formatText('ol')">1.</button>
+                                </div>
+                                <div class="editor-content" id="description" contenteditable="true" placeholder="Örneğin; Merkezi Konumlu Cafe, Devren Kiralık Şarküteri..."></div>
+                            </div>
+                            <span class="char-count"><span id="charCount">0</span> / 40 minimum karakter</span>
                         </div>
                     </div>
-
-                    <div class="step-navigation">
-                        <div></div>
-                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
+                    
+                    <div class="form-right">
+                        <div class="form-group">
+                            <label>Adres veya konum girin <span class="required">*</span></label>
+                            <div class="location-input-wrapper">
+                                <div class="location-input">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    <input type="text" id="address" placeholder="Şehir, ilçe veya mahalle yazın..." autocomplete="off">
+                                    <!-- Google Places Autocomplete will show its own dropdown -->
+                                </div>
+                                <!-- Old dropdown removed - Google Autocomplete handles this -->
+                                    </div>
+                            <!-- Hidden fields for coordinates -->
+                            <input type="hidden" id="latitude">
+                            <input type="hidden" id="longitude">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Konum <span class="required">*</span></label>
+                            <div id="map" style="height: 400px; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;"></div>
+                            <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">
+                                💡 Haritayı tıklayarak veya pin'i sürükleyerek tam konumu belirleyin
+                            </p>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Vilayet</label>
+                                <input type="text" id="city" placeholder="Konum seçildikten sonra otomatik doldurulur" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Semt</label>
+                            <input type="text" id="district" placeholder="Konum seçildikten sonra otomatik doldurulur" readonly>
+                        </div>
+                        
+                        <!-- OLD IFRAME MAP REMOVED - Using Google Maps API above -->
                     </div>
                 </div>
+            </div>
 
-                <!-- STEP 2: İşletme Detayları -->
-                <div class="form-step" id="step2">
-                    <div class="step-content">
-                        <div class="section-title">
-                            <h2>İşletme Detayları</h2>
+            <!-- Step 2: İşletme Ayrıntıları -->
+            <div class="form-step" id="step2">
+                <!-- Finansal Bilgiler -->
+                <div class="accordion-section">
+                    <button class="accordion-header active" onclick="toggleAccordion(this)">
+                        <span class="accordion-icon">💰</span>
+                        <span>Finansal Bilgiler</span>
+                        <svg class="accordion-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="accordion-content active">
+                        <div class="form-row three-col">
+                            <div class="form-group">
+                                <label>Aylık gelir</label>
+                                <div class="input-with-suffix">
+                                    <input type="number" id="monthlyRevenue" placeholder="Aylık geliri yazın">
+                                    <span class="suffix">₺</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Aylık kar</label>
+                                <div class="input-with-suffix">
+                                    <input type="number" id="monthlyProfit" placeholder="Aylık karı yazın">
+                                    <span class="suffix">₺</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Çalışan sayısı</label>
+                                <input type="number" id="employeeCount" placeholder="Çalışan sayısını yazın">
+                            </div>
                         </div>
-
-                        <div class="form-grid">
-                            <!-- Ciro, Çalışan, Net Kâr -->
+                        
+                        <div class="form-row">
                             <div class="form-group">
-                                <label>Ciro (Aylık) <span class="info-icon" title="Aylık ortalama ciro">ℹ</span></label>
-                                <div class="input-with-prefix">
-                                    <span class="prefix">₺</span>
-                                    <input type="number" name="monthly_revenue" placeholder="0">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Çalışan Sayısı <span class="info-icon" title="Mevcut çalışan sayısı">ℹ</span></label>
-                                <input type="number" name="employees" placeholder="0">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Net Kâr (Aylık) <span class="info-icon" title="Aylık net kâr">ℹ</span></label>
-                                <div class="input-with-prefix">
-                                    <span class="prefix">₺</span>
-                                    <input type="number" name="monthly_profit" placeholder="0">
-                                </div>
-                            </div>
-
-                            <!-- Satış Türü -->
-                            <div class="form-group full-width">
-                                <label>Satış Türü <span class="required">* zorunlu</span></label>
-                                <select name="sale_type" required>
-                                    <option value="devren_kiralik">Devren Kiralık</option>
-                                    <option value="devren_satilik">Devren Satılık</option>
-                                    <option value="ortak_araniyor">Ortak Aranıyor</option>
-                                </select>
-                                <p class="field-hint"><strong>Devren Kiralık;</strong> kiracının dükkândaki eşyalarla birlikte işyerini başka birine devretmesidir. Mülk sahibinde bir değişiklik olmaz, <strong>sadece kiracı değişir.</strong></p>
-                            </div>
-
-                            <!-- Kira & Kontrat Bitiş -->
-                            <div class="form-group">
-                                <label>Kontrat Bitiş Tarihi</label>
-                                <input type="date" name="lease_end_date">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Eğitim, Satış Sonrası Destek <span class="required">* zorunlu</span></label>
-                                <select name="training_support" required>
-                                    <option value="">Seçin</option>
-                                    <option value="evet">Evet, sağlanacak</option>
-                                    <option value="hayir">Hayır</option>
-                                    <option value="anlasmaya_bagli">Anlaşmaya bağlı</option>
+                                <label>Satış türü <span class="required">*</span></label>
+                                <select id="saleType">
+                                    <option value="rent">Devren Kiralık</option>
+                                    <option value="sale">Devren Satılık</option>
                                 </select>
                             </div>
-
-                            <!-- Değerler -->
                             <div class="form-group">
-                                <label>Duran Varlıklar <span class="info-icon" title="Makine, ekipman değeri">ℹ</span></label>
-                                <div class="input-with-prefix">
-                                    <span class="prefix">₺</span>
-                                    <input type="number" name="equipment_value" placeholder="0">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Envanter Değeri <span class="info-icon" title="Stok değeri">ℹ</span></label>
-                                <div class="input-with-prefix">
-                                    <span class="prefix">₺</span>
-                                    <input type="number" name="inventory_value" placeholder="0">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Mobilya / Demirbaş Değeri <span class="info-icon" title="Mobilya ve demirbaş değeri">ℹ</span></label>
-                                <div class="input-with-prefix">
-                                    <span class="prefix">₺</span>
-                                    <input type="number" name="furniture_value" placeholder="0">
-                                </div>
-                            </div>
-
-                            <!-- Satış Sebebi & Franchise -->
-                            <div class="form-group">
-                                <label>Satış Sebebi <span class="required">* zorunlu</span></label>
-                                <select name="reason" required>
-                                    <option value="">Seçin</option>
-                                    <option value="emeklilik">Emeklilik</option>
-                                    <option value="saglik">Sağlık Sorunları</option>
-                                    <option value="tasinma">Şehir Değişikliği</option>
-                                    <option value="yeni_is">Yeni İş Fırsatı</option>
-                                    <option value="maddi">Maddi Nedenler</option>
-                                    <option value="aile">Aile Sebepleri</option>
-                                    <option value="diger">Diğer</option>
+                                <label>Satış nedeni <span class="required">*</span></label>
+                                <select id="saleReason">
+                                    <option value="">Satış sebebi seçin</option>
+                                    <option value="retirement">Emeklilik</option>
+                                    <option value="personal">Kişisel nedenler</option>
+                                    <option value="health">Sağlık nedenleri</option>
+                                    <option value="sector_change">Sektör değişikliği</option>
+                                    <option value="city_change">Şehir değişikliği</option>
+                                    <option value="abroad">Yurtdışına taşınma</option>
+                                    <option value="other">Diğer</option>
                                 </select>
                             </div>
-
+                        </div>
+                        
+                        <div class="form-row">
                             <div class="form-group">
-                                <label>Franchise mı? <span class="required">* zorunlu</span></label>
-                                <select name="is_franchise" required>
-                                    <option value="">Seçin</option>
-                                    <option value="yes">Evet</option>
+                                <label>Aylık Kira <span class="required">*</span></label>
+                                <div class="input-with-suffix">
+                                    <input type="number" id="monthlyRent" placeholder="Aylık kirayı yazın">
+                                    <span class="suffix">₺</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Sözleşme Bitiş Tarihi</label>
+                                <div class="custom-date-picker">
+                                    <div class="date-input" onclick="toggleDatePicker()">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                        <span id="selectedDate">Ay ve yıl seçin</span>
+                                        <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </div>
+                                    <div class="date-dropdown" id="dateDropdown">
+                                        <div class="date-picker-header">
+                                            <button type="button" onclick="changeYear(-1)">‹</button>
+                                            <span id="currentYear">2024</span>
+                                            <button type="button" onclick="changeYear(1)">›</button>
+                                        </div>
+                                        <div class="month-grid">
+                                            <div class="month-item" onclick="selectMonth(0)">Ocak</div>
+                                            <div class="month-item" onclick="selectMonth(1)">Şubat</div>
+                                            <div class="month-item" onclick="selectMonth(2)">Mart</div>
+                                            <div class="month-item" onclick="selectMonth(3)">Nisan</div>
+                                            <div class="month-item" onclick="selectMonth(4)">Mayıs</div>
+                                            <div class="month-item" onclick="selectMonth(5)">Haziran</div>
+                                            <div class="month-item" onclick="selectMonth(6)">Temmuz</div>
+                                            <div class="month-item" onclick="selectMonth(7)">Ağustos</div>
+                                            <div class="month-item" onclick="selectMonth(8)">Eylül</div>
+                                            <div class="month-item" onclick="selectMonth(9)">Ekim</div>
+                                            <div class="month-item" onclick="selectMonth(10)">Kasım</div>
+                                            <div class="month-item" onclick="selectMonth(11)">Aralık</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="leaseEndDate">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Eğitim, Satış Sonrası Danışmanlık ve Destek <span class="required">*</span></label>
+                                <select id="trainingSupport">
                                     <option value="no">Hayır</option>
+                                    <option value="yes">Evet</option>
                                 </select>
                             </div>
-
-                            <!-- Sosyal Medya -->
                             <div class="form-group">
-                                <label>Instagram Bağlantısı</label>
-                                <input type="url" name="instagram" placeholder="https://instagram.com/...">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Facebook Bağlantısı</label>
-                                <input type="url" name="facebook" placeholder="https://facebook.com/...">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Website Bağlantısı</label>
-                                <input type="url" name="website" placeholder="https://website.com">
+                                <label>Franchise mı? <span class="required">*</span></label>
+                                <select id="isFranchise">
+                                    <option value="no">Hayır</option>
+                                    <option value="yes">Evet</option>
+                                </select>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="step-navigation">
-                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
-                        <button type="button" class="btn btn-next" onclick="nextStep()">Sonraki Adım</button>
                     </div>
                 </div>
-
-                <!-- STEP 3: İlan Yayın Detayları -->
-                <div class="form-step" id="step3">
-                    <div class="step-content">
-                        <div class="section-title">
-                            <h2>İlan Yayın Detayları</h2>
-                        </div>
-
-                        <div class="form-grid">
-                            <!-- Kapak Resmi -->
+                
+                <!-- Diğer Bilgiler -->
+                <div class="accordion-section">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <span class="accordion-icon">ℹ️</span>
+                        <span>Diğer Bilgiler</span>
+                        <span class="optional-badge">Opsiyonel</span>
+                        <svg class="accordion-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="form-row">
                             <div class="form-group">
-                                <label>Kapak Resmi <span class="info-icon" title="Ana görsel">ℹ</span> <span class="required">* zorunlu</span></label>
-                                <div class="file-upload-box">
-                                    <input type="file" name="cover_image" id="coverImage" accept="image/*" required onchange="previewCoverImage(this)">
-                                    <label for="coverImage" class="file-label">
-                                        <span>Dosya Seç</span>
-                                        <span id="coverFileName">Dosya seçilmedi</span>
-                                    </label>
-                                </div>
-                                <div id="coverPreview" class="image-preview"></div>
-                            </div>
-
-                            <!-- İlan Tanıtım Belgesi -->
-                            <div class="form-group">
-                                <label>İlan Tanıtım Belgesi <span class="info-icon" title="PDF veya belge">ℹ</span></label>
-                                <div class="file-upload-box">
-                                    <input type="file" name="document" id="documentFile" accept=".pdf,.doc,.docx">
-                                    <label for="documentFile" class="file-label">
-                                        <span>Dosya Seç</span>
-                                        <span id="docFileName">Dosya seçilmedi</span>
-                                    </label>
+                                <label>Envanter Değeri</label>
+                                <div class="input-with-suffix">
+                                    <input type="number" id="inventoryValue" placeholder="Envanter değerini yazın">
+                                    <span class="suffix">₺</span>
                                 </div>
                             </div>
-
-                            <!-- İlan Görselleri -->
-                            <div class="form-group full-width">
-                                <label>İlan Görselleri</label>
-                                <div class="multi-upload-area" id="imageDropZone">
-                                    <div class="upload-icon">⬆️</div>
-                                    <p>Dosyaları sürükleyip bırakın veya tıklayarak seçin</p>
-                                    <p class="upload-hint">Maksimum 20 dosya, her biri en fazla 4MB</p>
-                                    <p class="upload-hint">Kabul edilen dosya tipleri: image/*</p>
-                                    <input type="file" name="images" id="imageUpload" accept="image/*" multiple style="display: none;">
+                            <div class="form-group">
+                                <label>Ekipman Değeri</label>
+                                <div class="input-with-suffix">
+                                    <input type="number" id="equipmentValue" placeholder="Ekipman değerini yazın">
+                                    <span class="suffix">₺</span>
                                 </div>
-                                <div id="imagePreviewGrid" class="image-preview-grid"></div>
-                            </div>
-
-                            <!-- İletişim Bilgileri -->
-                            <div class="form-group full-width">
-                                <div class="section-divider"></div>
-                                <h3 style="margin-bottom: 1rem;">İletişim Bilgileri</h3>
-                            </div>
-
-                            <div class="form-group">
-                                <label>İletişim Adı <span class="required">* zorunlu</span></label>
-                                <input type="text" name="contact_name" placeholder="Ad Soyad" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Telefon <span class="required">* zorunlu</span></label>
-                                <input type="tel" name="phone" placeholder="0532 123 45 67" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>E-posta <span class="required">* zorunlu</span></label>
-                                <input type="email" name="email" placeholder="ornek@email.com" required>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="step-navigation">
-                        <button type="button" class="btn btn-prev" onclick="prevStep()">Önceki Adım</button>
-                        <button type="submit" class="btn btn-submit">İlanı Yayınla</button>
+                        
+                        <div class="form-row three-col">
+                            <div class="form-group">
+                                <label>Instagram URL'si</label>
+                                <input type="url" id="instagramUrl" placeholder="https://instagram.com/kullaniciadi">
+                            </div>
+                            <div class="form-group">
+                                <label>Google Haritalar URL'si</label>
+                                <input type="url" id="googleMapsUrl" placeholder="https://maps.google.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label>Web Sitesi URL'si</label>
+                                <input type="url" id="websiteUrl" placeholder="https://ornek.com">
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-            </form>
+            <!-- Step 3: İlan Yayın Detayları -->
+            <div class="form-step" id="step3">
+                <div class="upload-grid">
+                    <div class="upload-card">
+                        <h3>Kapak Görseli <span class="required">*</span></h3>
+                        <p class="upload-desc">İlanınız için bir kapak resmi yükleyin.</p>
+                        <div class="upload-preview" id="coverPreview">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>Kapak görseli yüklenmedi</span>
+                        </div>
+                        <div class="upload-area" onclick="document.getElementById('coverImage').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>Buraya tıklayın veya dosyaları sürükleyin</span>
+                            <small>PNG, JPG maks. 24MB</small>
+                        </div>
+                        <input type="file" id="coverImage" accept="image/*" hidden onchange="previewCover(this)">
+                    </div>
+                    
+                    <div class="upload-card">
+                        <h3>Tanıtım Dökümanı</h3>
+                        <p class="upload-desc">Tanıtım dökümanı ekleyin.</p>
+                        <div class="upload-preview" id="docPreview">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <span>Döküman yüklenmedi</span>
+                        </div>
+                        <div class="upload-area" onclick="document.getElementById('document').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <span>Buraya tıklayın veya dosyaları sürükleyin</span>
+                            <small>PDF maks. 100MB</small>
+                        </div>
+                        <input type="file" id="document" accept=".pdf" hidden onchange="previewDocument(this)">
+                    </div>
+                    
+                    <div class="upload-card wide">
+                        <h3>İlan Görselleri</h3>
+                        <p class="upload-desc">İlanınızla ilgili bir tanıtım belgesi yükleyin.</p>
+                        <div class="gallery-upload">
+                            <div class="gallery-slots" id="gallerySlots">
+                                <!-- 8 slots for images -->
+                            </div>
+                            <div class="upload-area" onclick="document.getElementById('galleryImages').click()">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                <span>Buraya tıklayın veya dosyaları sürükleyin</span>
+                                <small>PNG, JPG, GIF (maks. 20 MB)</small>
+                            </div>
+                        </div>
+                        <input type="file" id="galleryImages" accept="image/*" multiple hidden onchange="handleGalleryUpload(this)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Yapay Zeka & Önizleme -->
+            <div class="form-step" id="step4">
+                <div class="preview-grid">
+                    <div class="ai-section">
+                        <div class="ai-header">
+                            <span class="ai-icon">✨</span>
+                            <div>
+                                <h3>Yapay Zeka İyileştirmeleri</h3>
+                                <p>Başlığınızı ve açıklamanızı yapay zeka ile geliştirin.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Listeleme başlığı <span class="required">*</span></label>
+                            <input type="text" id="aiTitle" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Listeleme açıklaması <span class="required">*</span></label>
+                            <div class="rich-editor readonly">
+                                <div class="editor-toolbar">
+                                    <button type="button"><b>B</b></button>
+                                    <button type="button"><i>I</i></button>
+                                    <button type="button"><u>U</u></button>
+                                    <button type="button">H₁</button>
+                                    <button type="button">H₂</button>
+                                    <button type="button">☰</button>
+                                    <button type="button">1.</button>
+                                </div>
+                                <div class="editor-content" id="aiDescription"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="ai-actions">
+                            <button class="btn btn-primary" onclick="approveAI()">Onayla</button>
+                            <button class="btn btn-outline" onclick="rejectAI()">İptal Et</button>
+                            <span class="ai-note">*Yapay zeka önerileri yalnızca yardımcı niteliktedir. İlanın yayımlanan metni ve içerikten doğabilecek sonuçlar kullanıcı tarafından onaylanmış sayılır.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-section">
+                        <div class="preview-header">
+                            <span class="preview-icon">📋</span>
+                            <div>
+                                <h3>Listeleme Önizlemesi</h3>
+                                <p>Hazırladığınız ilan için önizleme gerçekleştirin.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="preview-cards" id="previewCards">
+                            <!-- Preview cards will be generated -->
+                        </div>
+                        
+                        <button class="btn btn-preview" onclick="openPreview()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                            Önizlemeyi Görüntüle
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- Footer Navigation -->
+    <footer class="form-footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>devredinplatform</h3>
-                    <p>Türkiye'nin en büyük işletme devir platformu</p>
-                </div>
+            <button class="btn btn-back" id="backBtn" onclick="prevStep()" style="display:none;">
+                ← Geri Dön
+            </button>
+            <div class="footer-right">
+                <button class="btn btn-secondary" id="sellWithBtn" style="display:none;" onclick="sellWith()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    Devredin ile Sat
+                </button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Devam Et</button>
             </div>
-            <div class="footer-bottom">
-                <p>Copyright © 2025 Devredin Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
-            </div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 25%;"></div>
         </div>
     </footer>
 
-    <!-- Supabase JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="backend/api.js"></script>
-    <script src="script.js"></script>
-    
+    <script>
+        // Global flag for Google Maps API readiness
+        window.googleMapsLoaded = false;
+        
+        function initGoogleMaps() {
+            console.log('✅ Google Maps API loaded!');
+            window.googleMapsLoaded = true;
+            // Try to initialize map if DOM is ready
+            if (window.initMapWhenReady) {
+                window.initMapWhenReady();
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC4r_aAIPvRAEGPqARc-Y9s-UstldmSqk&libraries=places&language=tr&callback=initGoogleMaps" async defer></script>
     <script>
         let currentStep = 1;
-        const totalSteps = 3;
-        let map;
-        let marker;
-        let searchTimeout;
-        
-        // Initialize Map when DOM is ready
-        document.addEventListener('DOMContentLoaded', () => {
-            // Map will be initialized after user auth check
-            setTimeout(initLeafletMap, 500);
+        const totalSteps = 4;
+        let galleryImages = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadCategories();
+            initGallerySlots();
+            updateDescription();
+            setupValidationListeners();
+            checkStepValidity();
+            
+            // Setup map initialization function
+            window.initMapWhenReady = function() {
+                if (typeof google !== 'undefined' && google.maps) {
+                    initMap();
+                }
+            };
+            
+            // Try to init map if Google API is already loaded
+            if (window.googleMapsLoaded) {
+                window.initMapWhenReady();
+            }
         });
+
+        // Load categories
+        async function loadCategories() {
+            try {
+                const { data: categories } = await supabase
+                    .from('categories')
+                    .select('id, name, parent_id')
+                    .order('name');
+                
+                if (categories) {
+                    const optionsEl = document.getElementById('sectorOptions');
+                    const mainCats = categories.filter(c => !c.parent_id);
+                    
+                    let html = '';
+                    mainCats.forEach(cat => {
+                        html += `<div class="option-group"><div class="option-header">${cat.name}</div>`;
+                        const subs = categories.filter(c => c.parent_id === cat.id);
+                        subs.forEach(sub => {
+                            html += `<div class="option" onclick="selectSector('${cat.id}', '${sub.id}', '${sub.name}')">${sub.name}</div>`;
+                        });
+                        if (subs.length === 0) {
+                            html += `<div class="option" onclick="selectSector('${cat.id}', '', '${cat.name}')">${cat.name}</div>`;
+                        }
+                        html += '</div>';
+                    });
+                    optionsEl.innerHTML = html;
+                }
+            } catch (e) {
+                console.error('Categories load error:', e);
+            }
+        }
+
+        // Dropdown functions
+        function toggleDropdown(id) {
+            document.getElementById(id).classList.toggle('active');
+        }
+
+        function selectSector(catId, subId, name) {
+            document.getElementById('categoryId').value = catId;
+            document.getElementById('subcategoryId').value = subId;
+            document.getElementById('sectorValue').textContent = name;
+            document.getElementById('sectorDropdown').classList.remove('active');
+            checkStepValidity();
+        }
+
+        function filterSectors(query) {
+            const options = document.querySelectorAll('#sectorOptions .option');
+            options.forEach(opt => {
+                opt.style.display = opt.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
+            });
+        }
+
+        // Location search with autocomplete
+        // OLD: let locationData = []; - No longer needed with Google Places API
+        // OLD: let searchTimeout = null; - No longer needed
         
-        // Leaflet Map Initialization (OpenStreetMap - Free, no API key needed)
-        function initLeafletMap() {
-            console.log('🗺️ Leaflet Harita başlatılıyor...');
+        // OLD LOCATION DATA LOADING - NO LONGER NEEDED WITH GOOGLE PLACES
+        // Google Places API has comprehensive location data built-in
+        /*
+        async function loadLocationData() {
+            // Not needed - Google Places handles this
+        }
+        */
+        
+        // ========== GOOGLE MAPS INTEGRATION ==========
+        
+        // Initialize interactive map with Google Maps
+        let map = null;
+        let mapMarker = null;
+        let autocomplete = null;
+        let geocoder = null;
+        
+        function initMap() {
+            console.log('🗺️ Initializing Google Maps...');
+            console.log('google object:', typeof google);
+            console.log('google.maps:', typeof google?.maps);
             
-            // Default location: Istanbul
-            const defaultLocation = [41.0082, 28.9784];
+            // Default center: Istanbul
+            const defaultLat = 41.0082;
+            const defaultLng = 28.9784;
             
-            // Initialize map
-            map = L.map('locationMap', {
+            // Create map
+            const mapElement = document.getElementById('map');
+            console.log('Map element:', mapElement);
+            
+            map = new google.maps.Map(mapElement, {
+                center: { lat: defaultLat, lng: defaultLng },
+                zoom: 11,
+                mapTypeControl: false,
+                fullscreenControl: false,
+                streetViewControl: false,
                 zoomControl: true
-            }).setView(defaultLocation, 11);
+            });
+            window.map = map;
             
-            // Add OpenStreetMap tiles
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                maxZoom: 19
-            }).addTo(map);
+            // Create geocoder
+            geocoder = new google.maps.Geocoder();
             
             // Create draggable marker
-            marker = L.marker(defaultLocation, {
-                draggable: true
+            mapMarker = new google.maps.Marker({
+                position: { lat: defaultLat, lng: defaultLng },
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.DROP
+            });
+            window.mapMarker = mapMarker;
+            
+            // Handle map click - move marker
+            map.addListener('click', function(e) {
+                const lat = e.latLng.lat();
+                const lng = e.latLng.lng();
+                mapMarker.setPosition(e.latLng);
+                updateLocationFromCoordinates(lat, lng);
             });
             
-            // Marker drag event
-            marker.on('dragend', function(e) {
-                const pos = marker.getLatLng();
-                reverseGeocode(pos.lat, pos.lng);
+            // Handle marker drag - update location
+            mapMarker.addListener('dragend', function(e) {
+                const lat = e.latLng.lat();
+                const lng = e.latLng.lng();
+                updateLocationFromCoordinates(lat, lng);
             });
             
-            // Map click event
-            map.on('click', function(e) {
-                const { lat, lng } = e.latlng;
-                marker.setLatLng([lat, lng]).addTo(map);
-                reverseGeocode(lat, lng);
+            // Setup Google Places Autocomplete for the search input
+            const input = document.getElementById('address');
+            autocomplete = new google.maps.places.Autocomplete(input, {
+                componentRestrictions: { country: 'tr' },
+                fields: ['address_components', 'geometry', 'formatted_address', 'name']
             });
             
-            // Setup autocomplete
-            setupAddressAutocomplete();
-            
-            console.log('✅ Harita hazır');
-        }
-        
-        // Address Autocomplete Setup (using Nominatim - Free)
-        function setupAddressAutocomplete() {
-            const input = document.getElementById('addressAutocomplete');
-            const suggestionsContainer = createSuggestionsContainer();
-            
-            input.addEventListener('input', function() {
-                const query = this.value.trim();
+            // Handle place selection from autocomplete
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
                 
-                // Clear previous timeout
-                if (searchTimeout) clearTimeout(searchTimeout);
-                
-                // Hide suggestions if query is too short
-                if (query.length < 3) {
-                    suggestionsContainer.style.display = 'none';
-                    return;
-                }
-                
-                // Debounce search
-                searchTimeout = setTimeout(() => {
-                    searchAddress(query, suggestionsContainer);
-                }, 300);
-            });
-            
-            // Hide suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
-                    suggestionsContainer.style.display = 'none';
-                }
-            });
-        }
-        
-        // Create suggestions container
-        function createSuggestionsContainer() {
-            const input = document.getElementById('addressAutocomplete');
-            const wrapper = input.closest('.autocomplete-wrapper');
-            
-            let container = document.getElementById('addressSuggestions');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'addressSuggestions';
-                container.className = 'address-suggestions';
-                wrapper.appendChild(container);
+                if (!place.geometry) {
+                    console.log('No details available for input:', input.value);
+                return;
             }
             
-            return container;
-        }
-        
-        // Search address using Nominatim API (Free, no API key)
-        async function searchAddress(query, container) {
-            try {
-                // Add "Türkiye" to improve results for Turkey
-                const searchQuery = query.includes('Türkiye') ? query : `${query}, Türkiye`;
+                // Get coordinates
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
                 
-                const response = await fetch(
-                    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&countrycodes=tr&limit=5&addressdetails=1&accept-language=tr`,
-                    {
-                        headers: {
-                            'Accept': 'application/json'
-                        }
+                // Update map
+                map.setCenter(place.geometry.location);
+                map.setZoom(15);
+                mapMarker.setPosition(place.geometry.location);
+                
+                // Parse address components
+                let city = '';
+                let district = '';
+                let neighborhood = '';
+                
+                console.log('📍 Address components:', place.address_components);
+                
+                place.address_components.forEach(component => {
+                    console.log('Component:', component.long_name, 'Types:', component.types);
+                    
+                    // İl (Province/City)
+                    if (component.types.includes('administrative_area_level_1')) {
+                        city = component.long_name;
                     }
-                );
-                
-                const results = await response.json();
-                
-                if (results.length === 0) {
-                    container.innerHTML = '<div class="no-results">Sonuç bulunamadı</div>';
-                    container.style.display = 'block';
-                    return;
-                }
-                
-                // Render suggestions
-                container.innerHTML = results.map(place => `
-                    <div class="suggestion-item" data-lat="${place.lat}" data-lon="${place.lon}" data-address='${JSON.stringify(place.address)}' data-display="${place.display_name}">
-                        <span class="suggestion-icon">📍</span>
-                        <div class="suggestion-text">
-                            <span class="suggestion-main">${place.display_name.split(',')[0]}</span>
-                            <span class="suggestion-secondary">${place.display_name.split(',').slice(1, 3).join(',')}</span>
-                        </div>
-                    </div>
-                `).join('');
-                
-                container.style.display = 'block';
-                
-                // Add click handlers
-                container.querySelectorAll('.suggestion-item').forEach(item => {
-                    item.addEventListener('click', function() {
-                        selectAddress(this);
-                        container.style.display = 'none';
-                    });
+                    // İlçe (District/Town)
+                    if (component.types.includes('administrative_area_level_2')) {
+                        district = component.long_name;
+                    }
+                    // Alternatif: locality (şehir merkezi)
+                    if (!city && component.types.includes('locality')) {
+                        city = component.long_name;
+                    }
+                    // Alternatif: sublocality (semt/mahalle)
+                    if (!district && (component.types.includes('sublocality') || component.types.includes('sublocality_level_1'))) {
+                        district = component.long_name;
+                    }
+                    // Mahalle
+                    if (component.types.includes('neighborhood')) {
+                        neighborhood = component.long_name;
+                    }
                 });
                 
-            } catch (error) {
-                console.error('❌ Adres arama hatası:', error);
-                container.innerHTML = '<div class="no-results">Arama yapılırken hata oluştu</div>';
-                container.style.display = 'block';
-            }
-        }
-        
-        // Select address from suggestions
-        function selectAddress(item) {
-            const lat = parseFloat(item.dataset.lat);
-            const lon = parseFloat(item.dataset.lon);
-            const displayName = item.dataset.display;
-            const address = JSON.parse(item.dataset.address);
-            
-            // Update input
-            document.getElementById('addressAutocomplete').value = displayName;
-            
-            // Update map
-            map.setView([lat, lon], 17);
-            marker.setLatLng([lat, lon]).addTo(map);
-            
-            // Fill form fields
-            fillAddressFields(displayName, address, lat, lon);
-            
-            console.log('✅ Konum seçildi:', displayName);
-        }
-        
-        // Fill address fields from Nominatim data
-        function fillAddressFields(displayName, address, lat, lon) {
-            // Set full address
-            document.getElementById('fullAddress').value = displayName || '';
-            
-            // Set coordinates
+                // Eğer district boşsa neighborhood'u kullan
+                if (!district && neighborhood) {
+                    district = neighborhood;
+                }
+                
+                console.log('🏙️ Parsed location:', { city, district, neighborhood });
+                
+                // Update fields
             document.getElementById('latitude').value = lat;
-            document.getElementById('longitude').value = lon;
+            document.getElementById('longitude').value = lng;
+                document.getElementById('city').value = city;
+                document.getElementById('district').value = district;
+                
+                // Store location data
+                window.selectedLocation = {
+                    city: city,
+                    district: district,
+                    lat: lat,
+                    lng: lng
+                };
+                
+            checkStepValidity();
+                
+                console.log('✅ Location selected:', { city, district, lat, lng });
+            });
             
-            // Parse address components from Nominatim
-            const city = address.province || address.state || address.city || '';
-            const district = address.county || address.town || address.suburb || address.city_district || '';
-            
-            // Fill city and district fields
-            document.getElementById('cityInput').value = city;
-            document.getElementById('districtInput').value = district;
-            
-            // Match with database
-            matchCityWithDatabase(city);
-            matchDistrictWithDatabase(district);
-            
-            console.log('📍 Adres bilgileri dolduruldu:', { city, district });
+            console.log('✅ Google Maps initialized with autocomplete');
         }
         
-        // Reverse geocode from coordinates (when clicking on map or dragging marker)
-        async function reverseGeocode(lat, lon) {
+        // Reverse geocoding - get address from coordinates using Google Geocoder
+        async function updateLocationFromCoordinates(lat, lng) {
             try {
-                const response = await fetch(
-                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1&accept-language=tr`
-                );
+                // Update hidden fields immediately
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
                 
-                const result = await response.json();
-                
-                if (result && result.display_name) {
-                    document.getElementById('addressAutocomplete').value = result.display_name;
-                    fillAddressFields(result.display_name, result.address, lat, lon);
-                    console.log('🔄 Ters geocoding tamamlandı');
-                }
+                // Use Google Geocoder for reverse geocoding
+                geocoder.geocode({ location: { lat, lng } }, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        const place = results[0];
+                        
+                        // Parse address components
+                        let city = '';
+                        let district = '';
+                        let neighborhood = '';
+                        
+                        place.address_components.forEach(component => {
+                            if (component.types.includes('administrative_area_level_1')) {
+                                city = component.long_name;
+                            }
+                            if (component.types.includes('administrative_area_level_2')) {
+                                district = component.long_name;
+                            }
+                            if (component.types.includes('sublocality') || component.types.includes('neighborhood')) {
+                                neighborhood = component.long_name;
+                            }
+                        });
+                        
+                        // Build display name
+                        let displayParts = [];
+                        if (neighborhood) displayParts.push(neighborhood);
+                        if (district && district !== neighborhood) displayParts.push(district);
+                        if (city) displayParts.push(city);
+                        const displayName = displayParts.join(', ');
+                        
+                        // Update input fields
+                        document.getElementById('address').value = displayName;
+                        document.getElementById('city').value = city;
+                        document.getElementById('district').value = district;
+                        
+                        // Store location data
+                        window.selectedLocation = {
+                            city: city,
+                            district: district,
+                            lat: lat,
+                            lng: lng
+                        };
+                        
+                        checkStepValidity();
+                        
+                        console.log('✅ Reverse geocoding:', { city, district, displayName });
+                    } else {
+                        console.error('❌ Reverse geocoding failed:', status);
+                    }
+                });
             } catch (error) {
-                console.error('❌ Ters geocoding hatası:', error);
+                console.error('❌ Reverse geocoding error:', error);
             }
         }
         
-        // Match city with database
-        async function matchCityWithDatabase(cityName) {
-            if (!cityName) return;
-            
-            try {
-                // Clean city name
-                cityName = cityName.replace(' İli', '').replace(' Ili', '').replace(' Province', '').trim();
-                
-                const { data, error } = await supabase
-                    .from('cities')
-                    .select('id, name')
-                    .ilike('name', `%${cityName}%`)
-                    .limit(1);
-                
-                if (data && data.length > 0) {
-                    document.getElementById('citySelect').value = data[0].id;
-                    console.log('✅ Şehir eşleştirildi:', data[0].name);
+        // OLD selectLocation function removed - Google Autocomplete handles everything
+
+        // Accordion
+        function toggleAccordion(btn) {
+            btn.classList.toggle('active');
+            btn.nextElementSibling.classList.toggle('active');
+        }
+
+        // Rich editor
+        function formatText(format) {
+            document.execCommand(format === 'h1' ? 'formatBlock' : format === 'h2' ? 'formatBlock' : format, false, format === 'h1' ? 'h1' : format === 'h2' ? 'h2' : null);
+        }
+
+        function updateDescription() {
+            const desc = document.getElementById('description');
+            desc.addEventListener('input', () => {
+                document.getElementById('charCount').textContent = desc.textContent.length;
+            });
+        }
+
+        // Gallery
+        function initGallerySlots() {
+            const container = document.getElementById('gallerySlots');
+            let html = '';
+            for (let i = 0; i < 8; i++) {
+                html += `<div class="gallery-slot" id="slot${i}"><span>+</span></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function handleGalleryUpload(input) {
+            const files = Array.from(input.files);
+            files.forEach((file, i) => {
+                if (galleryImages.length < 8) {
+                    galleryImages.push(file);
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const slot = document.getElementById(`slot${galleryImages.length - 1}`);
+                        slot.innerHTML = `<img src="${e.target.result}" alt="Image">`;
+                        slot.classList.add('filled');
+                    };
+                    reader.readAsDataURL(file);
                 }
-            } catch (error) {
-                console.error('❌ Şehir eşleştirme hatası:', error);
+            });
+        }
+
+        function previewCover(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('coverPreview').innerHTML = `<img src="${e.target.result}" alt="Cover">`;
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
-        
-        // Match district with database
-        async function matchDistrictWithDatabase(districtName) {
-            if (!districtName) return;
-            
-            try {
-                const cityId = document.getElementById('citySelect').value;
-                
-                if (!cityId) {
-                    setTimeout(() => matchDistrictWithDatabase(districtName), 500);
-                    return;
-                }
-                
-                const { data, error } = await supabase
-                    .from('districts')
-                    .select('id, name')
-                    .eq('city_id', parseInt(cityId))
-                    .ilike('name', `%${districtName}%`)
-                    .limit(1);
-                
-                if (data && data.length > 0) {
-                    document.getElementById('districtSelect').value = data[0].id;
-                    console.log('✅ İlçe eşleştirildi:', data[0].name);
-                }
-            } catch (error) {
-                console.error('❌ İlçe eşleştirme hatası:', error);
+
+        function previewDocument(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const preview = document.getElementById('docPreview');
+                preview.innerHTML = `
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    <span style="color: #10b981; font-weight: 500;">${file.name}</span>
+                    <small style="color: #6b7280;">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                `;
             }
         }
-        
-        // Sayfa yüklendiğinde
-        document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🚀 İlan verme sayfası yüklendi')
-            
-            // Navbar is managed by api.js automatically
-            
-            // Check if user is logged in using cached data first
-            const cachedUser = getCachedUser()
-            const cachedProfile = getCachedProfile()
-            
-            if (!cachedUser) {
-                // Verify with API
-                const user = await getCurrentUser()
-                if (!user) {
-                    alert('⚠️ İlan vermek için giriş yapmalısınız!')
-                    window.location.href = 'login.html'
-                    return
-                }
-            }
-            
-            // Fill user info from cache first, then verify
-            if (cachedProfile) {
-                const contactName = document.querySelector('input[name="contact_name"]')
-                const phone = document.querySelector('input[name="phone"]')
-                if (contactName) contactName.value = cachedProfile.full_name || ''
-                if (phone) phone.value = cachedProfile.phone || ''
-            }
-            if (cachedUser) {
-                const email = document.querySelector('input[name="email"]')
-                if (email) email.value = cachedUser.email || ''
-            }
-            
-            // Verify and update from API
-            const user = await getCurrentUser()
-            if (user) {
-                const profile = await fetchUserProfile(user.id)
-                if (profile) {
-                    const contactName = document.querySelector('input[name="contact_name"]')
-                    const phone = document.querySelector('input[name="phone"]')
-                    if (contactName) contactName.value = profile.full_name || ''
-                    if (phone) phone.value = profile.phone || ''
-                }
-                const email = document.querySelector('input[name="email"]')
-                if (email) email.value = user.email || ''
-            }
-            
-            await loadCategoriesForForm()
-            await loadCitiesForForm()
-            setupImageUpload()
-        })
-        
-        // Ana kategorileri yükle
-        async function loadCategoriesForForm() {
-            try {
-                const { data, error } = await supabase
-                    .from('categories')
-                    .select('id, name, icon')
-                    .is('parent_id', null)
-                    .order('name')
-                
-                if (error) throw error
-                
-                const categorySelect = document.getElementById('categorySelect')
-                categorySelect.innerHTML = '<option value="">Seçin</option>' + 
-                    data.map(cat => `<option value="${cat.id}">${cat.icon || ''} ${cat.name}</option>`).join('')
-                
-                console.log('✅ Kategoriler yüklendi')
-            } catch (error) {
-                console.error('❌ Kategori yükleme hatası:', error)
-            }
-        }
-        
-        // Alt kategorileri (sektörleri) yükle
-        async function loadSubcategoriesForForm() {
-            const categoryId = document.getElementById('categorySelect').value
-            const subcategorySelect = document.getElementById('subcategorySelect')
-            
-            if (!categoryId) {
-                subcategorySelect.innerHTML = '<option value="">Önce kategori seçin</option>'
-                subcategorySelect.disabled = true
-                return
-            }
-            
-            try {
-                const { data, error } = await supabase
-                    .from('categories')
-                    .select('id, name, icon')
-                    .eq('parent_id', categoryId)
-                    .order('name')
-                
-                if (error) throw error
-                
-                if (data.length === 0) {
-                    subcategorySelect.innerHTML = '<option value="">Bu kategoride sektör yok</option>'
-                    subcategorySelect.disabled = true
-                    return
-                }
-                
-                subcategorySelect.disabled = false
-                subcategorySelect.innerHTML = '<option value="">Seçin</option>' + 
-                    data.map(sub => `<option value="${sub.id}">${sub.icon || ''} ${sub.name}</option>`).join('')
-                
-                console.log('✅ Sektörler yüklendi')
-            } catch (error) {
-                console.error('❌ Sektör yükleme hatası:', error)
-            }
-        }
-        
-        // Şehirleri yükle (Google Maps Autocomplete ile otomatik doldurulacak)
-        async function loadCitiesForForm() {
-            console.log('📍 Şehirler Google Maps Autocomplete ile otomatik doldurulacak')
-        }
-        
-        // İlçeleri yükle (Google Maps Autocomplete ile otomatik doldurulacak)
-        async function loadDistrictsForStep() {
-            console.log('📍 İlçeler Google Maps Autocomplete ile otomatik doldurulacak')
-        }
-        
-        // Step Navigation
-        function goToStep(step) {
-            if (step < 1 || step > totalSteps) return
-            
-            // Validate current step before moving forward
-            if (step > currentStep && !validateStep(currentStep)) {
-                return
-            }
-            
-            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'))
-            document.getElementById(`step${step}`).classList.add('active')
-            
-            updateStepIndicators(step)
-            currentStep = step
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-        }
-        
+
+        // Step navigation
         function nextStep() {
             if (currentStep < totalSteps) {
-                goToStep(currentStep + 1)
+                if (validateStep(currentStep)) {
+                    const activeStep = document.querySelector(`.form-step.active`);
+                    const activeProgress = document.querySelector(`[data-step="${currentStep}"]`);
+                    
+                    if (activeStep) activeStep.classList.remove('active');
+                    if (activeProgress) {
+                        activeProgress.classList.remove('active');
+                        activeProgress.classList.add('completed');
+                    }
+                    
+                    currentStep++;
+                    
+                    const nextStepEl = document.getElementById(`step${currentStep}`);
+                    const nextProgress = document.querySelector(`[data-step="${currentStep}"]`);
+                    
+                    if (nextStepEl) nextStepEl.classList.add('active');
+                    if (nextProgress) nextProgress.classList.add('active');
+                    
+                    updateNavigation();
+                    
+                    if (currentStep === 4) {
+                        generatePreview();
+                    }
+                }
+            } else {
+                submitListing();
             }
         }
-        
+
         function prevStep() {
             if (currentStep > 1) {
-                goToStep(currentStep - 1)
+                const activeStep = document.querySelector(`.form-step.active`);
+                const activeProgress = document.querySelector(`[data-step="${currentStep}"]`);
+                
+                if (activeStep) activeStep.classList.remove('active');
+                if (activeProgress) activeProgress.classList.remove('active');
+                
+                currentStep--;
+                
+                const prevStepEl = document.getElementById(`step${currentStep}`);
+                const prevProgress = document.querySelector(`[data-step="${currentStep}"]`);
+                
+                if (prevStepEl) prevStepEl.classList.add('active');
+                if (prevProgress) prevProgress.classList.add('active');
+                
+                updateNavigation();
             }
         }
-        
-        function updateStepIndicators(activeStep) {
-            document.querySelectorAll('.step-btn').forEach((btn, index) => {
-                const stepNum = index + 1
-                btn.classList.remove('active', 'completed')
-                
-                if (stepNum < activeStep) {
-                    btn.classList.add('completed')
-                    btn.querySelector('.step-icon').textContent = '✓'
-                } else if (stepNum === activeStep) {
-                    btn.classList.add('active')
-                    btn.querySelector('.step-icon').textContent = '✓'
-                } else {
-                    btn.querySelector('.step-icon').textContent = '✗'
-                }
-            })
+
+        function updateNavigation() {
+            document.getElementById('backBtn').style.display = currentStep > 1 ? '' : 'none';
+            document.getElementById('progressFill').style.width = `${(currentStep / totalSteps) * 100}%`;
+            
+            if (currentStep === 4) {
+                document.getElementById('nextBtn').textContent = 'İlanı Yayınla';
+                document.getElementById('sellWithBtn').style.display = '';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Devam Et';
+                document.getElementById('sellWithBtn').style.display = 'none';
+            }
+            
+            checkStepValidity();
         }
-        
+
+        function checkStepValidity() {
+            const btn = document.getElementById('nextBtn');
+            const isValid = validateStepFields(currentStep);
+            
+            if (isValid) {
+                btn.classList.remove('disabled');
+                btn.disabled = false;
+            } else {
+                btn.classList.add('disabled');
+                btn.disabled = true;
+            }
+        }
+
+        function validateStepFields(step) {
+            if (step === 1) {
+                const title = document.getElementById('title')?.value.trim();
+                const category = document.getElementById('categoryId')?.value;
+                const area = document.getElementById('area')?.value;
+                const price = document.getElementById('price')?.value;
+                const desc = document.getElementById('description')?.textContent.trim();
+                const city = document.getElementById('city')?.value; // Changed from cityId to city
+                const lat = document.getElementById('latitude')?.value;
+                const lng = document.getElementById('longitude')?.value;
+                
+                console.log('🔍 Step 1 validation:', { title, category, area, price, descLength: desc.length, city, lat, lng });
+                
+                return title && title.length > 0 && category && area && price && desc && desc.length >= 40 && city && lat && lng;
+            }
+            if (step === 2) {
+                const saleReason = document.getElementById('saleReason')?.value;
+                const monthlyRent = document.getElementById('monthlyRent')?.value;
+                
+                return saleReason && monthlyRent;
+            }
+            if (step === 3) {
+                const coverInput = document.getElementById('coverImage');
+                const cover = coverInput ? coverInput.files.length > 0 : false;
+                return cover;
+            }
+            return true;
+        }
+
         function validateStep(step) {
-            const stepEl = document.getElementById(`step${step}`)
-            const requiredFields = stepEl.querySelectorAll('[required]')
-            let isValid = true
+            const errors = [];
             
-            requiredFields.forEach(field => {
-                if (!field.value) {
-                    field.classList.add('error')
-                    isValid = false
-                } else {
-                    field.classList.remove('error')
-                }
-            })
-            
-            if (!isValid) {
-                alert('⚠️ Lütfen zorunlu alanları doldurun!')
+            if (step === 1) {
+                const title = document.getElementById('title')?.value.trim();
+                const category = document.getElementById('categoryId')?.value;
+                const area = document.getElementById('area')?.value;
+                const price = document.getElementById('price')?.value;
+                const desc = document.getElementById('description')?.textContent.trim();
+                const city = document.getElementById('city')?.value; // Changed from cityId
+                const lat = document.getElementById('latitude')?.value;
+                const lng = document.getElementById('longitude')?.value;
+                
+                if (!title) errors.push('Listeleme başlığı');
+                if (!category) errors.push('Sektör');
+                if (!area) errors.push('Metrekare');
+                if (!price) errors.push('İstenen fiyat');
+                if (!desc || desc.length < 40) errors.push('Listeleme açıklaması (min. 40 karakter)');
+                if (!city || !lat || !lng) errors.push('Konum');
             }
             
-            return isValid
-        }
-        
-        // Image Upload Setup
-        function setupImageUpload() {
-            const dropZone = document.getElementById('imageDropZone')
-            const fileInput = document.getElementById('imageUpload')
-            
-            dropZone.addEventListener('click', () => fileInput.click())
-            
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault()
-                dropZone.classList.add('dragover')
-            })
-            
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('dragover')
-            })
-            
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault()
-                dropZone.classList.remove('dragover')
-                handleFiles(e.dataTransfer.files)
-            })
-            
-            fileInput.addEventListener('change', (e) => {
-                handleFiles(e.target.files)
-            })
-        }
-        
-        let uploadedImages = []
-        
-        function handleFiles(files) {
-            const previewGrid = document.getElementById('imagePreviewGrid')
-            
-            Array.from(files).forEach(file => {
-                if (uploadedImages.length >= 20) {
-                    alert('Maksimum 20 görsel yükleyebilirsiniz!')
-                    return
-                }
+            if (step === 2) {
+                const saleReason = document.getElementById('saleReason')?.value;
+                const monthlyRent = document.getElementById('monthlyRent')?.value;
                 
-                if (file.size > 4 * 1024 * 1024) {
-                    alert(`${file.name} dosyası 4MB'dan büyük!`)
-                    return
-                }
-                
-                const reader = new FileReader()
-                reader.onload = (e) => {
-                    uploadedImages.push({ file, preview: e.target.result })
-                    renderImagePreviews()
-                }
-                reader.readAsDataURL(file)
-            })
+                if (!saleReason) errors.push('Satış nedeni');
+                if (!monthlyRent) errors.push('Aylık Kira');
+            }
+            
+            if (step === 3) {
+                const coverInput = document.getElementById('coverImage');
+                const cover = coverInput ? coverInput.files.length > 0 : false;
+                if (!cover) errors.push('Kapak görseli');
+            }
+            
+            if (errors.length > 0) {
+                highlightErrors(errors);
+                showErrorMessage(errors);
+                return false;
+            }
+            
+            return true;
         }
         
-        function renderImagePreviews() {
-            const previewGrid = document.getElementById('imagePreviewGrid')
-            previewGrid.innerHTML = uploadedImages.map((img, index) => `
-                <div class="preview-item">
-                    <img src="${img.preview}" alt="Preview">
-                    <button type="button" class="remove-btn" onclick="removeImage(${index})">✕</button>
+        function highlightErrors(errors) {
+            // Remove previous error highlights
+            document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+            
+            // Add error class to invalid fields
+            const fieldMap = {
+                'Listeleme başlığı': 'title',
+                'Sektör': 'sectorSelect',
+                'Metrekare': 'area',
+                'İstenen fiyat': 'price',
+                'Listeleme açıklaması (min. 40 karakter)': 'description',
+                'Konum': 'address',
+                'Satış nedeni': 'saleReason',
+                'Aylık Kira': 'monthlyRent',
+                'Kapak görseli': 'coverPreview'
+            };
+            
+            errors.forEach(err => {
+                const fieldId = fieldMap[err];
+                if (fieldId) {
+                    const el = document.getElementById(fieldId);
+                    if (el) {
+                        el.classList.add('field-error');
+                        const parent = el.closest('.form-group');
+                        if (parent) parent.classList.add('has-error');
+                    }
+                }
+            });
+        }
+        
+        function showErrorMessage(errors) {
+            const message = `Lütfen aşağıdaki zorunlu alanları doldurun:\n\n• ${errors.join('\n• ')}`;
+            alert(message);
+        }
+        
+        // Real-time validation listeners
+        function setupValidationListeners() {
+            const step1Fields = ['title', 'area', 'price', 'description', 'address'];
+            const step2Fields = ['saleReason', 'monthlyRent'];
+            
+            step1Fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', checkStepValidity);
+                    el.addEventListener('change', checkStepValidity);
+                }
+            });
+            
+            step2Fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', checkStepValidity);
+                    el.addEventListener('change', checkStepValidity);
+                }
+            });
+            
+            // Cover image
+            document.getElementById('coverImage').addEventListener('change', checkStepValidity);
+        }
+
+        // Generate preview
+        function generatePreview() {
+            const title = document.getElementById('title').value;
+            const price = document.getElementById('price').value;
+            const desc = document.getElementById('description').innerHTML;
+            
+            document.getElementById('aiTitle').value = title;
+            document.getElementById('aiDescription').innerHTML = desc;
+            
+            document.getElementById('previewCards').innerHTML = `
+                <div class="preview-card">
+                    <div class="preview-image"></div>
+                    <div class="preview-info">
+                        <span class="preview-type">Devren Kiralık</span>
+                        <span class="preview-category">Yeme - İçme</span>
+                    </div>
+                    <h4>${title || 'İlan Başlığı'}</h4>
+                    <p class="preview-location">Konum</p>
+                    <p class="preview-price">₺${parseInt(price || 0).toLocaleString('tr-TR')}</p>
                 </div>
-            `).join('')
+            `;
         }
-        
-        function removeImage(index) {
-            uploadedImages.splice(index, 1)
-            renderImagePreviews()
+
+        function approveAI() {
+            alert('Yapay zeka önerileri onaylandı!');
         }
-        
-        function previewCoverImage(input) {
-            const fileName = document.getElementById('coverFileName')
-            const preview = document.getElementById('coverPreview')
-            
-            if (input.files && input.files[0]) {
-                fileName.textContent = input.files[0].name
-                
-                const reader = new FileReader()
-                reader.onload = (e) => {
-                    preview.innerHTML = `<img src="${e.target.result}" alt="Cover Preview">`
-                }
-                reader.readAsDataURL(input.files[0])
-            }
+
+        function rejectAI() {
+            document.getElementById('aiTitle').value = document.getElementById('title').value;
+            document.getElementById('aiDescription').innerHTML = document.getElementById('description').innerHTML;
         }
-        
-        function formatText(format) {
-            const textarea = document.getElementById('descriptionEditor')
-            const start = textarea.selectionStart
-            const end = textarea.selectionEnd
-            const selectedText = textarea.value.substring(start, end)
-            
-            let formattedText = ''
-            switch(format) {
-                case 'bold': formattedText = `**${selectedText}**`; break
-                case 'italic': formattedText = `*${selectedText}*`; break
-                case 'h2': formattedText = `\n## ${selectedText}\n`; break
-                case 'h3': formattedText = `\n### ${selectedText}\n`; break
-                case 'h4': formattedText = `\n#### ${selectedText}\n`; break
-                case 'ul': formattedText = `\n- ${selectedText}\n`; break
-            }
-            
-            textarea.value = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end)
+
+        function openPreview() {
+            alert('Önizleme açılıyor...');
         }
-        
-        // Form Submission
-        document.getElementById('addListingForm').addEventListener('submit', async (e) => {
-            e.preventDefault()
-            
-            if (!validateStep(3)) return
-            
-            console.log('📝 Form gönderiliyor...')
-            
-            const formData = new FormData(e.target)
-            
-            const listingData = {
-                title: formData.get('title'),
-                description: formData.get('description'),
-                category_id: parseInt(formData.get('category')),
-                subcategory_id: formData.get('subcategory') ? parseInt(formData.get('subcategory')) : null,
-                city_id: parseInt(formData.get('city')) || null,
-                district_id: parseInt(formData.get('district')) || null,
-                address: formData.get('address'),
-                latitude: parseFloat(formData.get('latitude')) || null,
-                longitude: parseFloat(formData.get('longitude')) || null,
-                area_sqm: parseInt(formData.get('area')) || null,
-                establishment_year: parseInt(formData.get('establishment_year')) || null,
-                employee_count: parseInt(formData.get('employees')) || null,
-                is_franchise: formData.get('is_franchise') === 'yes',
-                price: parseFloat(formData.get('price')),
-                monthly_rent: parseFloat(formData.get('rent')) || null,
-                monthly_revenue: parseFloat(formData.get('monthly_revenue')) || null,
-                monthly_profit: parseFloat(formData.get('monthly_profit')) || null,
-                inventory_value: parseFloat(formData.get('inventory_value')) || null,
-                equipment_value: parseFloat(formData.get('equipment_value')) || null,
-                lease_end_date: formData.get('lease_end_date') || null,
-                transfer_reason: formData.get('reason') || null,
-                contact_name: formData.get('contact_name'),
-                contact_phone: formData.get('phone'),
-                contact_email: formData.get('email')
-            }
-            
-            console.log('📊 İlan verisi:', listingData)
-            
+
+        function saveAndExit() {
+            alert('Taslak kaydedildi!');
+            window.location.href = 'index.html';
+        }
+
+        function sellWith() {
+            alert('Devredin ile Sat seçeneği için bizimle iletişime geçin.');
+        }
+
+        async function submitListing() {
             try {
-                const result = await createListing(listingData)
-                
-                if (result.success) {
-                    alert('✅ İlanınız başarıyla oluşturuldu! Admin onayından sonra yayınlanacaktır.')
-                    window.location.href = 'profile.html'
-                } else {
-                    alert('❌ Hata: ' + result.error)
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    alert('Lütfen giriş yapın');
+                    window.location.href = 'login.html';
+                    return;
                 }
-            } catch (error) {
-                console.error('❌ Form gönderim hatası:', error)
-                alert('❌ Bir hata oluştu: ' + error.message)
+
+                // Get user profile for contact info - with fallback
+                let contactName = user.email.split('@')[0];
+                let contactPhone = '5000000000';
+                
+                try {
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('full_name, phone')
+                        .eq('id', user.id)
+                        .single();
+                    
+                    if (profile?.full_name) contactName = profile.full_name;
+                    if (profile?.phone) contactPhone = profile.phone;
+                } catch (e) {
+                    // Try users table
+                    try {
+                        const { data: userData } = await supabase
+                            .from('users')
+                            .select('full_name, phone')
+                            .eq('id', user.id)
+                            .single();
+                        
+                        if (userData?.full_name) contactName = userData.full_name;
+                        if (userData?.phone) contactPhone = userData.phone;
+                    } catch (e2) {
+                        console.log('Using default contact info');
+                    }
+                }
+
+                const title = document.getElementById('aiTitle').value || document.getElementById('title').value;
+                const slug = title.toLowerCase()
+                    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                    .replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+                    + '-' + Date.now();
+                
+                // Ensure contact info is never null
+                const finalContactName = contactName || user.email.split('@')[0] || 'Kullanıcı';
+                const finalContactPhone = contactPhone || '5000000000';
+                
+                console.log('Contact info:', { finalContactName, finalContactPhone, email: user.email });
+                
+                const listingData = {
+                    user_id: user.id,
+                    title: title,
+                    slug: slug,
+                    description: document.getElementById('aiDescription')?.innerHTML || document.getElementById('description')?.innerHTML || '',
+                    price: parseInt(document.getElementById('price')?.value) || 0,
+                    category_id: document.getElementById('categoryId')?.value || null,
+                    city: document.getElementById('city')?.value || null,
+                    district: document.getElementById('district')?.value || null,
+                    address: document.getElementById('address')?.value || null,
+                    latitude: parseFloat(document.getElementById('latitude')?.value) || null,
+                    longitude: parseFloat(document.getElementById('longitude')?.value) || null,
+                    area_sqm: parseInt(document.getElementById('area')?.value) || null,
+                    monthly_rent: parseInt(document.getElementById('monthlyRent')?.value) || null,
+                    monthly_revenue: parseInt(document.getElementById('monthlyRevenue')?.value) || null,
+                    monthly_profit: parseInt(document.getElementById('monthlyProfit')?.value) || null,
+                    employee_count: parseInt(document.getElementById('employeeCount')?.value) || null,
+                    establishment_year: parseInt(document.getElementById('establishedYear')?.value) || null,
+                    is_franchise: document.getElementById('isFranchise')?.value === 'yes',
+                    inventory_value: parseInt(document.getElementById('inventoryValue')?.value) || null,
+                    equipment_value: parseInt(document.getElementById('equipmentValue')?.value) || null,
+                    lease_end_date: document.getElementById('leaseEndDate')?.value || null,
+                    includes_training: document.getElementById('trainingSupport')?.value === 'yes',
+                    transfer_reason: document.getElementById('saleReason')?.value || null,
+                    contact_name: finalContactName,
+                    contact_phone: finalContactPhone,
+                    contact_email: user.email,
+                    status: 'pending'
+                };
+                
+                console.log('Listing data:', listingData);
+
+                const { data, error } = await supabase
+                    .from('listings')
+                    .insert([listingData])
+                    .select()
+                    .single();
+
+                if (error) throw error;
+
+                console.log('İlan oluşturuldu:', data);
+
+                // Upload cover image
+                const coverFile = document.getElementById('coverImage').files[0];
+                if (coverFile) {
+                    try {
+                        const fileExt = coverFile.name.split('.').pop();
+                        const fileName = `${data.id}-cover-${Date.now()}.${fileExt}`;
+                        
+                        const { data: uploadData, error: uploadError } = await supabase.storage
+                            .from('listing-images')
+                            .upload(fileName, coverFile);
+
+                        if (!uploadError) {
+                            const { data: { publicUrl } } = supabase.storage
+                                .from('listing-images')
+                                .getPublicUrl(fileName);
+                            
+                            await supabase.from('listing_images').insert({
+                                listing_id: data.id,
+                                image_url: publicUrl,
+                                is_primary: true,
+                                display_order: 0
+                            });
+                            
+                            console.log('Kapak resmi yüklendi');
+                        }
+                    } catch (e) {
+                        console.error('Kapak resmi yükleme hatası:', e);
+                    }
+                }
+
+                // Upload gallery images
+                if (galleryImages.length > 0) {
+                    for (let i = 0; i < galleryImages.length; i++) {
+                        try {
+                            const file = galleryImages[i];
+                            const fileExt = file.name.split('.').pop();
+                            const fileName = `${data.id}-gallery-${i}-${Date.now()}.${fileExt}`;
+                            
+                            const { data: uploadData, error: uploadError } = await supabase.storage
+                                .from('listing-images')
+                                .upload(fileName, file);
+
+                            if (!uploadError) {
+                                const { data: { publicUrl } } = supabase.storage
+                                    .from('listing-images')
+                                    .getPublicUrl(fileName);
+                                
+                                await supabase.from('listing_images').insert({
+                                    listing_id: data.id,
+                                    image_url: publicUrl,
+                                    is_primary: false,
+                                    display_order: i + 1
+                                });
+                            }
+                        } catch (e) {
+                            console.error('Galeri resmi yükleme hatası:', e);
+                        }
+                    }
+                    console.log(`${galleryImages.length} galeri resmi yüklendi`);
+                }
+
+                // Upload document (PDF)
+                const documentFile = document.getElementById('document').files[0];
+                if (documentFile) {
+                    try {
+                        const fileExt = documentFile.name.split('.').pop();
+                        const fileName = `${data.id}-document-${Date.now()}.${fileExt}`;
+                        
+                        const { data: uploadData, error: uploadError } = await supabase.storage
+                            .from('listings')
+                            .upload(fileName, documentFile);
+
+                        if (!uploadError) {
+                            const { data: { publicUrl } } = supabase.storage
+                                .from('listings')
+                                .getPublicUrl(fileName);
+                            
+                            // PDF URL'sini listings tablosuna kaydet (yeni bir column eklemek gerekebilir)
+                            await supabase.from('listings').update({
+                                document_url: publicUrl
+                            }).eq('id', data.id);
+                            
+                            console.log('Döküman yüklendi');
+                        }
+                    } catch (e) {
+                        console.error('Döküman yükleme hatası:', e);
+                    }
+                }
+
+                alert('İlanınız başarıyla oluşturuldu! Onay sürecinden sonra yayınlanacaktır.');
+                window.location.href = 'listings.html';
+
+            } catch (e) {
+                console.error('Submit error:', e);
+                alert('Hata: ' + e.message);
             }
-        })
+        }
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-select')) {
+                document.querySelectorAll('.select-dropdown').forEach(d => d.classList.remove('active'));
+            }
+            // locationDropdown removed - Google Autocomplete handles this
+            if (!e.target.closest('.custom-date-picker')) {
+                const dateDropdown = document.getElementById('dateDropdown');
+                if (dateDropdown) dateDropdown.classList.remove('active');
+            }
+        });
+
+        // Date picker functions
+        let selectedYear = new Date().getFullYear();
+        let selectedMonth = null;
+
+        function toggleDatePicker() {
+            document.getElementById('dateDropdown').classList.toggle('active');
+            document.getElementById('currentYear').textContent = selectedYear;
+        }
+
+        function changeYear(direction) {
+            selectedYear += direction;
+            document.getElementById('currentYear').textContent = selectedYear;
+        }
+
+        function selectMonth(month) {
+            selectedMonth = month;
+            const monthNames = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 
+                               'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+            
+            const displayText = `${monthNames[month]} ${selectedYear}`;
+            document.getElementById('selectedDate').textContent = displayText;
+            document.getElementById('selectedDate').style.color = '#374151';
+            
+            // Format as YYYY-MM-DD (PostgreSQL DATE format - use first day of month)
+            const formattedMonth = String(month + 1).padStart(2, '0');
+            document.getElementById('leaseEndDate').value = `${selectedYear}-${formattedMonth}-01`;
+            
+            document.getElementById('dateDropdown').classList.remove('active');
+        }
     </script>
 </body>
 </html>

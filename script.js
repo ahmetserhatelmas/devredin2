@@ -1,9 +1,9 @@
 // Navbar scroll effect
 window.addEventListener('scroll', () => {
-    const navbar = document.getElementById('navbar');
-    if (window.scrollY > 50) {
+    const navbar = document.querySelector('.navbar');
+    if (navbar && window.scrollY > 50) {
         navbar.classList.add('scrolled');
-    } else {
+    } else if (navbar) {
         navbar.classList.remove('scrolled');
     }
 });

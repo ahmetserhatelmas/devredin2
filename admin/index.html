@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Devredin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css?v=3">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html" class="logo">devredin</a>
+            <span class="admin-badge">Admin</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Dashboard
+            </a>
+            <a href="#listings" class="nav-item" data-section="listings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                İlan Yönetimi
+                <span class="badge" id="pendingBadge">0</span>
+            </a>
+            <a href="#franchises" class="nav-item" data-section="franchises">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Franchise Yönetimi
+            </a>
+            <a href="#blog" class="nav-item" data-section="blog">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Blog Yönetimi
+            </a>
+            <a href="#users" class="nav-item" data-section="users">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Kullanıcılar
+            </a>
+            <a href="#messages" class="nav-item" data-section="messages">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Mesajlar
+                <span class="badge" id="messagesBadge">0</span>
+            </a>
+            <a href="#categories" class="nav-item" data-section="categories">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                Kategoriler
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <a href="../index.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Siteye Dön
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="top-header">
+            <h1 id="pageTitle">Dashboard</h1>
+            <div class="header-actions">
+                <span class="admin-user" id="adminUser">Admin</span>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalListings">0</span>
+                        <span class="stat-label">Toplam İlan</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="pendingListings">0</span>
+                        <span class="stat-label">Onay Bekleyen</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalUsers">0</span>
+                        <span class="stat-label">Kullanıcı</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalBlogs">0</span>
+                        <span class="stat-label">Blog Yazısı</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-section">
+                <h3>Son Onay Bekleyen İlanlar</h3>
+                <div class="table-container">
+                    <table class="data-table" id="recentPendingTable">
+                        <thead>
+                            <tr>
+                                <th>İlan</th>
+                                <th>Kullanıcı</th>
+                                <th>Tarih</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentPendingBody">
+                            <tr><td colspan="4" class="loading">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Listings Section -->
+        <section id="listings" class="content-section">
+            <div class="section-header">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="pending">Onay Bekleyen</button>
+                    <button class="filter-btn" data-filter="active">Aktif</button>
+                    <button class="filter-btn" data-filter="rejected">Reddedilen</button>
+                    <button class="filter-btn" data-filter="all">Tümü</button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>İlan</th>
+                            <th>Kategori</th>
+                            <th>Fiyat</th>
+                            <th>Konum</th>
+                            <th>Durum</th>
+                            <th>Tarih</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listingsBody">
+                        <tr><td colspan="7" class="loading">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Franchises Section -->
+        <section id="franchises" class="content-section">
+            <div class="section-header">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="pending">Onay Bekleyen</button>
+                    <button class="filter-btn" data-filter="active">Aktif</button>
+                    <button class="filter-btn" data-filter="all">Tümü</button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Franchise</th>
+                            <th>Sektör</th>
+                            <th>Yatırım</th>
+                            <th>Durum</th>
+                            <th>Tarih</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="franchisesBody">
+                        <tr><td colspan="6" class="loading">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Blog Section -->
+        <section id="blog" class="content-section">
+            <div class="section-header">
+                <a href="blog-editor.html" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Yeni Blog Yazısı
+                </a>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Başlık</th>
+                            <th>Kategori</th>
+                            <th>Durum</th>
+                            <th>Görüntülenme</th>
+                            <th>Tarih</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blogBody">
+                        <tr><td colspan="6" class="loading">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users" class="content-section">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Tip</th>
+                            <th>Kayıt Tarihi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersBody">
+                        <tr><td colspan="6" class="loading">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Messages Section -->
+        <section id="messages" class="content-section">
+            <div class="section-header">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all" onclick="filterMessages('all')">Tümü</button>
+                    <button class="filter-btn" data-filter="new" onclick="filterMessages('new')">Yeni</button>
+                    <button class="filter-btn" data-filter="read" onclick="filterMessages('read')">Okundu</button>
+                    <button class="filter-btn" data-filter="archived" onclick="filterMessages('archived')">Arşiv</button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Mesaj</th>
+                            <th>Durum</th>
+                            <th>Tarih</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messagesTableBody">
+                        <tr>
+                            <td colspan="7" class="empty">Mesaj bulunamadı</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categories" class="content-section">
+            <div class="section-header">
+                <button class="btn btn-primary" onclick="showAddCategoryModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Yeni Kategori
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Kategori</th>
+                            <th>Slug</th>
+                            <th>İkon</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoriesBody">
+                        <tr><td colspan="5" class="loading">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Reject Modal -->
+    <div class="modal" id="rejectModal">
+        <div class="modal-content">
+            <h3>İlanı Reddet</h3>
+            <textarea id="rejectReason" placeholder="Red sebebini yazın..."></textarea>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">İptal</button>
+                <button class="btn btn-danger" onclick="confirmReject()">Reddet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../backend/api.js"></script>
+    <script>
+        let currentListingFilter = 'pending';
+        let currentFranchiseFilter = 'pending';
+        let rejectingId = null;
+        let rejectingType = null;
+
+        const adminEmails = ['admin@devredin.com', 'admin@devredinplatform.com', 'ahmetserhatelmas@hotmaail.com', 'ahmetserhatelmas@gmail.com'];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAdminAccess();
+            setupNavigation();
+            setupFilters();
+            await loadDashboard();
+        });
+
+        // Check admin access
+        async function checkAdminAccess() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    alert('Admin paneline erişim için giriş yapmalısınız.');
+                    window.location.href = '../login.html';
+                    return;
+                }
+                
+                if (!adminEmails.includes(user.email)) {
+                    alert('Bu sayfaya erişim yetkiniz yok.');
+                    window.location.href = '../index.html';
+                    return;
+                }
+
+                document.getElementById('adminUser').textContent = user.email;
+            } catch (e) {
+                window.location.href = '../login.html';
+            }
+        }
+
+        // Setup navigation
+        function setupNavigation() {
+            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.dataset.section;
+                    
+                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(section).classList.add('active');
+                    
+                    document.getElementById('pageTitle').textContent = item.textContent.trim();
+                    
+                    // Load section data
+                    if (section === 'listings') loadListings();
+                    if (section === 'franchises') loadFranchises();
+                    if (section === 'blog') loadBlogs();
+                    if (section === 'users') loadUsers();
+                    if (section === 'messages') loadMessages();
+                    if (section === 'categories') loadCategories();
+                });
+            });
+        }
+
+        // Setup filters
+        function setupFilters() {
+            document.querySelectorAll('#listings .filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#listings .filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentListingFilter = btn.dataset.filter;
+                    loadListings();
+                });
+            });
+
+            document.querySelectorAll('#franchises .filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#franchises .filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFranchiseFilter = btn.dataset.filter;
+                    loadFranchises();
+                });
+            });
+        }
+
+        // Load dashboard
+        async function loadDashboard() {
+            try {
+                // Total listings
+                const { count: totalListings } = await supabase
+                    .from('listings')
+                    .select('*', { count: 'exact', head: true });
+                document.getElementById('totalListings').textContent = totalListings || 0;
+
+                // Pending listings
+                const { count: pendingListings } = await supabase
+                    .from('listings')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('status', 'pending');
+                document.getElementById('pendingListings').textContent = pendingListings || 0;
+                document.getElementById('pendingBadge').textContent = pendingListings || 0;
+
+                // Total users
+                const { count: totalUsers } = await supabase
+                    .from('users')
+                    .select('*', { count: 'exact', head: true });
+                document.getElementById('totalUsers').textContent = totalUsers || 0;
+
+                // Total blogs
+                const { count: totalBlogs } = await supabase
+                    .from('blog_posts')
+                    .select('*', { count: 'exact', head: true });
+                document.getElementById('totalBlogs').textContent = totalBlogs || 0;
+
+                // Recent pending
+                const { data: recentPending } = await supabase
+                    .from('listings')
+                    .select('*')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                const tbody = document.getElementById('recentPendingBody');
+                if (!recentPending || recentPending.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty">Onay bekleyen ilan yok</td></tr>';
+                } else {
+                    tbody.innerHTML = recentPending.map(l => `
+                        <tr>
+                            <td><strong>${l.title}</strong></td>
+                            <td>${l.contact_name || '-'}</td>
+                            <td>${new Date(l.created_at).toLocaleDateString('tr-TR')}</td>
+                            <td>
+                                <button class="action-btn approve" onclick="approveListing('${l.id}')">Onayla</button>
+                                <button class="action-btn reject" onclick="showRejectModal('${l.id}', 'listing')">Reddet</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error('Dashboard yükleme hatası:', e);
+            }
+        }
+
+        // Load listings
+        async function loadListings() {
+            const tbody = document.getElementById('listingsBody');
+            tbody.innerHTML = '<tr><td colspan="7" class="loading">Yükleniyor...</td></tr>';
+
+            try {
+                let query = supabase
+                    .from('listings')
+                    .select(`
+                        *,
+                        category:categories!category_id(name),
+                        city:cities(name)
+                    `)
+                    .order('created_at', { ascending: false });
+                
+                if (currentListingFilter !== 'all') {
+                    query = query.eq('status', currentListingFilter);
+                }
+
+                const { data: listings, error } = await query;
+
+                if (error) {
+                    console.error('Error loading listings:', error);
+                    tbody.innerHTML = '<tr><td colspan="7" class="error">Hata: ' + error.message + '</td></tr>';
+                    return;
+                }
+
+                console.log('Loaded listings:', listings);
+
+                if (!listings || listings.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="empty">İlan bulunamadı</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = listings.map(l => `
+                    <tr>
+                        <td><strong>${l.title}</strong></td>
+                        <td>${l.category?.name || '-'}</td>
+                        <td>₺${(l.price || 0).toLocaleString('tr-TR')}</td>
+                        <td>${l.city?.name || '-'}</td>
+                        <td><span class="status-badge ${l.status}">${getStatusLabel(l.status)}</span></td>
+                        <td>${new Date(l.created_at).toLocaleDateString('tr-TR')}</td>
+                        <td>
+                            ${l.status === 'pending' ? `
+                                <button class="action-btn approve" onclick="approveListing('${l.id}')">Onayla</button>
+                                <button class="action-btn reject" onclick="showRejectModal('${l.id}', 'listing')">Reddet</button>
+                            ` : l.status === 'active' ? `
+                                <button class="action-btn reject" onclick="deactivateListing('${l.id}')">Pasife Al</button>
+                            ` : `
+                                <button class="action-btn approve" onclick="approveListing('${l.id}')">Aktif Et</button>
+                            `}
+                            <button class="action-btn delete" onclick="deleteListing('${l.id}')">Sil</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error('Exception loading listings:', e);
+                tbody.innerHTML = '<tr><td colspan="7" class="error">Hata oluştu: ' + e.message + '</td></tr>';
+            }
+        }
+
+        // Load franchises
+        async function loadFranchises() {
+            const tbody = document.getElementById('franchisesBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">Yükleniyor...</td></tr>';
+
+            try {
+                let query = supabase.from('franchises').select('*').order('created_at', { ascending: false });
+                
+                if (currentFranchiseFilter !== 'all') {
+                    query = query.eq('status', currentFranchiseFilter);
+                }
+
+                const { data: franchises } = await query;
+
+                if (!franchises || franchises.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty">Franchise bulunamadı</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = franchises.map(f => `
+                    <tr>
+                        <td><strong>${f.brand_name || f.title}</strong></td>
+                        <td>${f.sector || f.category || '-'}</td>
+                        <td>₺${(f.investment_min || 0).toLocaleString('tr-TR')}</td>
+                        <td><span class="status-badge ${f.status}">${getStatusLabel(f.status)}</span></td>
+                        <td>${new Date(f.created_at).toLocaleDateString('tr-TR')}</td>
+                        <td>
+                            ${f.status === 'pending' ? `
+                                <button class="action-btn approve" onclick="approveFranchise('${f.id}')">Onayla</button>
+                                <button class="action-btn reject" onclick="showRejectModal('${f.id}', 'franchise')">Reddet</button>
+                            ` : `
+                                <button class="action-btn" onclick="toggleFranchiseStatus('${f.id}', '${f.status}')">
+                                    ${f.status === 'active' ? 'Pasife Al' : 'Aktif Et'}
+                                </button>
+                            `}
+                            <button class="action-btn delete" onclick="deleteFranchise('${f.id}')">Sil</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="6" class="error">Hata oluştu</td></tr>';
+            }
+        }
+
+        // Load blogs
+        async function loadBlogs() {
+            const tbody = document.getElementById('blogBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">Yükleniyor...</td></tr>';
+
+            try {
+                const { data: blogs } = await supabase
+                    .from('blog_posts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (!blogs || blogs.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty">Blog yazısı bulunamadı</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = blogs.map(b => `
+                    <tr>
+                        <td><strong>${b.title}</strong></td>
+                        <td>${b.category || 'Genel'}</td>
+                        <td><span class="status-badge ${b.status}">${b.status === 'published' ? 'Yayında' : 'Taslak'}</span></td>
+                        <td>${b.views || 0}</td>
+                        <td>${new Date(b.created_at).toLocaleDateString('tr-TR')}</td>
+                        <td>
+                            <button class="action-btn" onclick="window.location.href='blog-editor.html?id=${b.id}'">Düzenle</button>
+                            <button class="action-btn delete" onclick="deleteBlog('${b.id}')">Sil</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="6" class="error">Hata oluştu</td></tr>';
+            }
+        }
+
+        // Load users
+        async function loadUsers() {
+            const tbody = document.getElementById('usersBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">Yükleniyor...</td></tr>';
+
+            try {
+                const { data: users } = await supabase
+                    .from('users')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (!users || users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty">Kullanıcı bulunamadı</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = users.map(u => `
+                    <tr>
+                        <td><strong>${u.full_name || '-'}</strong></td>
+                        <td>${u.email}</td>
+                        <td>${u.phone || '-'}</td>
+                        <td>${u.user_type || 'buyer'}</td>
+                        <td>${new Date(u.created_at).toLocaleDateString('tr-TR')}</td>
+                        <td>
+                            <button class="action-btn" onclick="viewUserListings('${u.id}')">İlanları</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="6" class="error">Hata oluştu</td></tr>';
+            }
+        }
+
+        // Load categories
+        async function loadCategories() {
+            const tbody = document.getElementById('categoriesBody');
+            tbody.innerHTML = '<tr><td colspan="5" class="loading">Yükleniyor...</td></tr>';
+
+            try {
+                const { data: categories } = await supabase
+                    .from('categories')
+                    .select('*')
+                    .order('display_order');
+
+                if (!categories || categories.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty">Kategori bulunamadı</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = categories.map(c => `
+                    <tr>
+                        <td><strong>${c.name}</strong></td>
+                        <td>${c.slug}</td>
+                        <td>${c.icon || '-'}</td>
+                        <td><span class="status-badge ${c.is_active ? 'active' : 'inactive'}">${c.is_active ? 'Aktif' : 'Pasif'}</span></td>
+                        <td>
+                            <button class="action-btn" onclick="toggleCategoryStatus(${c.id}, ${c.is_active})">
+                                ${c.is_active ? 'Pasife Al' : 'Aktif Et'}
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="5" class="error">Hata oluştu</td></tr>';
+            }
+        }
+
+        // Action functions
+        async function approveListing(id) {
+            if (!confirm('İlanı onaylamak istediğinize emin misiniz?')) return;
+            
+            try {
+                await supabase.from('listings').update({ status: 'active' }).eq('id', id);
+                alert('İlan onaylandı!');
+                loadListings();
+                loadDashboard();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function deactivateListing(id) {
+            if (!confirm('İlanı pasife almak istediğinize emin misiniz?')) return;
+            
+            try {
+                await supabase.from('listings').update({ status: 'inactive' }).eq('id', id);
+                alert('İlan pasife alındı!');
+                loadListings();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function deleteListing(id) {
+            if (!confirm('İlanı silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) return;
+            
+            try {
+                await supabase.from('listings').delete().eq('id', id);
+                alert('İlan silindi!');
+                loadListings();
+                loadDashboard();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function approveFranchise(id) {
+            if (!confirm('Franchise\'ı onaylamak istediğinize emin misiniz?')) return;
+            
+            try {
+                await supabase.from('franchises').update({ status: 'active' }).eq('id', id);
+                alert('Franchise onaylandı!');
+                loadFranchises();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function toggleFranchiseStatus(id, currentStatus) {
+            const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+            try {
+                await supabase.from('franchises').update({ status: newStatus }).eq('id', id);
+                loadFranchises();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function deleteFranchise(id) {
+            if (!confirm('Franchise\'ı silmek istediğinize emin misiniz?')) return;
+            
+            try {
+                await supabase.from('franchises').delete().eq('id', id);
+                alert('Franchise silindi!');
+                loadFranchises();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function deleteBlog(id) {
+            if (!confirm('Blog yazısını silmek istediğinize emin misiniz?')) return;
+            
+            try {
+                await supabase.from('blog_posts').delete().eq('id', id);
+                alert('Blog yazısı silindi!');
+                loadBlogs();
+                loadDashboard();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function toggleCategoryStatus(id, currentStatus) {
+            try {
+                await supabase.from('categories').update({ is_active: !currentStatus }).eq('id', id);
+                loadCategories();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        // Reject modal
+        function showRejectModal(id, type) {
+            rejectingId = id;
+            rejectingType = type;
+            document.getElementById('rejectModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('rejectModal').classList.remove('active');
+            document.getElementById('rejectReason').value = '';
+            rejectingId = null;
+            rejectingType = null;
+        }
+
+        async function confirmReject() {
+            const reason = document.getElementById('rejectReason').value;
+            if (!reason.trim()) {
+                alert('Lütfen red sebebi girin');
+                return;
+            }
+
+            try {
+                const table = rejectingType === 'listing' ? 'listings' : 'franchises';
+                await supabase.from(table).update({ 
+                    status: 'rejected',
+                    reject_reason: reason 
+                }).eq('id', rejectingId);
+                
+                alert('Reddedildi!');
+                closeModal();
+                if (rejectingType === 'listing') loadListings();
+                else loadFranchises();
+                loadDashboard();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        function viewUserListings(userId) {
+            // TODO: Implement user listings view
+            alert('Bu özellik yakında eklenecek');
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'pending': 'Bekliyor',
+                'active': 'Aktif',
+                'rejected': 'Reddedildi',
+                'inactive': 'Pasif',
+                'sold': 'Satıldı'
+            };
+            return labels[status] || status;
+        }
+
+        // Messages Management
+        let currentMessageFilter = 'all';
+
+        async function loadMessages() {
+            try {
+                let query = supabase.from('contact_messages').select('*').order('created_at', { ascending: false });
+                
+                if (currentMessageFilter !== 'all') {
+                    query = query.eq('status', currentMessageFilter);
+                }
+                
+                const { data, error } = await query;
+                if (error) throw error;
+                
+                const tbody = document.getElementById('messagesTableBody');
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="empty">Mesaj bulunamadı</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = data.map(msg => `
+                    <tr class="${msg.status === 'new' ? 'highlight' : ''}">
+                        <td><strong>${msg.name}${msg.surname ? ' ' + msg.surname : ''}</strong></td>
+                        <td>${msg.email || '-'}</td>
+                        <td>${msg.phone || '-'}</td>
+                        <td>
+                            <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${msg.message}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-${msg.status}">
+                                ${msg.status === 'new' ? 'Yeni' : msg.status === 'read' ? 'Okundu' : 'Arşiv'}
+                            </span>
+                        </td>
+                        <td>${new Date(msg.created_at).toLocaleDateString('tr-TR')}</td>
+                        <td class="actions">
+                            ${msg.status === 'new' ? `<button class="action-btn approve" onclick="markAsRead('${msg.id}')" title="Okundu İşaretle">✓</button>` : ''}
+                            <button class="action-btn view" onclick="viewMessage('${msg.id}')" title="Görüntüle">👁</button>
+                            <button class="action-btn delete" onclick="deleteMessage('${msg.id}')" title="Sil">🗑</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Update badge
+                const newCount = data.filter(m => m.status === 'new').length;
+                document.getElementById('messagesBadge').textContent = newCount;
+                
+            } catch (error) {
+                console.error('Mesaj yükleme hatası:', error);
+                document.getElementById('messagesTableBody').innerHTML = 
+                    '<tr><td colspan="7" class="error">Hata: ' + error.message + '</td></tr>';
+            }
+        }
+
+        function filterMessages(filter) {
+            currentMessageFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+            loadMessages();
+        }
+
+        async function markAsRead(id) {
+            try {
+                await supabase.from('contact_messages').update({ status: 'read' }).eq('id', id);
+                loadMessages();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function viewMessage(id) {
+            try {
+                const { data, error } = await supabase.from('contact_messages').select('*').eq('id', id).single();
+                if (error) throw error;
+                
+                // Mark as read
+                await supabase.from('contact_messages').update({ status: 'read' }).eq('id', id);
+                
+                const message = `
+📧 MESAJ DETAYI
+
+👤 Ad Soyad: ${data.name}${data.surname ? ' ' + data.surname : ''}
+📧 Email: ${data.email || '-'}
+📱 Telefon: ${data.phone || '-'}
+📅 Tarih: ${new Date(data.created_at).toLocaleString('tr-TR')}
+
+💬 Mesaj:
+${data.message}
+                `;
+                
+                alert(message);
+                loadMessages();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
+        async function deleteMessage(id) {
+            if (!confirm('Mesajı silmek istediğinize emin misiniz?')) return;
+            
+            try {
+                await supabase.from('contact_messages').delete().eq('id', id);
+                alert('Mesaj silindi!');
+                loadMessages();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+    </script>
+</body>
+</html>

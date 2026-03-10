@@ -118,7 +118,7 @@ body {
 .header-logo {
     font-size: 2rem;
     font-weight: 700;
-    color: #004E89;
+    color: #dc2626;
     text-decoration: none;
 }
 
@@ -147,7 +147,7 @@ body {
 }
 
 .step.active {
-    background: #004E89;
+    background: #dc2626;
     color: #fff;
 }
 
@@ -250,7 +250,7 @@ body {
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #004E89;
+    border-color: #dc2626;
 }
 
 .form-group input::placeholder {
@@ -333,7 +333,7 @@ body {
 
 .location-input input:focus {
     outline: none;
-    border-color: #004E89;
+    border-color: #dc2626;
 }
 
 .location-input .dropdown-icon {
@@ -645,7 +645,7 @@ body {
 }
 
 .upload-area:hover {
-    border-color: #004E89;
+    border-color: #dc2626;
     background: #f9fafb;
 }
 
@@ -823,7 +823,7 @@ body {
 }
 
 .btn-primary {
-    background: #004E89;
+    background: #dc2626;
     color: #fff;
     transition: all 0.2s;
 }
@@ -846,8 +846,8 @@ body {
 
 .btn-secondary {
     background: #fff;
-    color: #FF6B35;
-    border: 1px solid #FF6B35;
+    color: #000000;
+    border: 1px solid #000000;
 }
 
 .btn-secondary:hover {
@@ -883,8 +883,8 @@ body {
 }
 
 .btn-preview:hover {
-    border-color: #004E89;
-    color: #004E89;
+    border-color: #dc2626;
+    color: #dc2626;
 }
 
 /* Footer */
@@ -916,7 +916,7 @@ body {
 }
 
 .date-input:hover {
-    border-color: #004E89;
+    border-color: #dc2626;
     background: #fff;
 }
 
@@ -980,7 +980,7 @@ body {
 }
 
 .date-picker-header button:hover {
-    background: #004E89;
+    background: #dc2626;
     color: #fff;
 }
 
@@ -1010,17 +1010,17 @@ body {
 }
 
 .month-item:hover {
-    background: #004E89;
+    background: #dc2626;
     color: #fff;
-    border-color: #004E89;
+    border-color: #dc2626;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 78, 137, 0.2);
 }
 
 .month-item.selected {
-    background: #004E89;
+    background: #dc2626;
     color: #fff;
-    border-color: #004E89;
+    border-color: #dc2626;
 }
 
 /* Footer */
@@ -1054,7 +1054,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: #004E89;
+    background: #dc2626;
     transition: width 0.3s;
 }
 

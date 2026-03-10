@@ -22,7 +22,7 @@
 }
 
 .breadcrumb a:hover {
-    color: #004E89;
+    color: #dc2626;
 }
 
 .breadcrumb span:not(:last-child) {
@@ -120,7 +120,7 @@
 }
 
 .article-content a {
-    color: #004E89;
+    color: #dc2626;
     text-decoration: underline;
 }
 
@@ -135,7 +135,7 @@
 }
 
 .article-content blockquote {
-    border-left: 4px solid #004E89;
+    border-left: 4px solid #dc2626;
     padding: 1rem 1.5rem;
     margin: 2rem 0;
     background: #f8fafc;
@@ -182,7 +182,7 @@
 .author-avatar {
     width: 56px;
     height: 56px;
-    background: linear-gradient(135deg, #004E89, #0369a1);
+    background: linear-gradient(135deg, #dc2626, #0369a1);
     color: #fff;
     border-radius: 50%;
     display: flex;
@@ -241,8 +241,8 @@
 }
 
 .share-btn:hover {
-    background: #004E89;
-    border-color: #004E89;
+    background: #dc2626;
+    border-color: #dc2626;
     color: #fff;
 }
 
@@ -313,7 +313,7 @@
 }
 
 .related-card:hover h3 {
-    color: #004E89;
+    color: #dc2626;
 }
 
 /* Loading State */
@@ -327,7 +327,7 @@
     width: 40px;
     height: 40px;
     border: 3px solid #e2e8f0;
-    border-top-color: #004E89;
+    border-top-color: #dc2626;
     border-radius: 50%;
     margin: 0 auto 1rem;
     animation: spin 1s linear infinite;

@@ -54,6 +54,7 @@ body {
     align-items: center;
     justify-content: space-between;
     height: 70px;
+    gap: 1rem;
 }
 
 .logo {
@@ -65,13 +66,13 @@ body {
 }
 
 .logo-devredin {
-    color: var(--primary);
+    color: #dc2626;
     text-decoration: none;
     font-weight: 700;
 }
 
 .logo-devredin:hover {
-    color: var(--primary-dark);
+    color: #b91c1c;
 }
 
 .logo-divider {
@@ -80,19 +81,19 @@ body {
 }
 
 .logo-fr {
-    color: var(--accent);
+    color: #1f2937;
     text-decoration: none;
     font-weight: 700;
     font-style: italic;
 }
 
 .logo-fr:hover {
-    color: #e55a2b;
+    color: #111827;
 }
 
 .nav-menu {
     display: flex;
-    gap: 2rem;
+    gap: 1.25rem;
     list-style: none;
 }
 
@@ -100,8 +101,9 @@ body {
     color: var(--gray-700);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     transition: color 0.2s;
+    white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -374,20 +376,39 @@ body {
     padding: 0.75rem 1.25rem;
     border-radius: 8px;
     border: 1px solid var(--gray-300);
+    position: relative;
+    cursor: pointer;
 }
 
-.search-select svg {
+.search-select .select-icon {
     color: var(--gray-500);
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.search-select .select-arrow {
+    color: var(--gray-400);
+    flex-shrink: 0;
+    pointer-events: none;
+    margin-left: auto;
 }
 
 .search-select select {
     border: none;
-    background: none;
+    background: transparent;
     font-size: 0.95rem;
-    color: var(--gray-600);
+    color: var(--gray-700);
     cursor: pointer;
     min-width: 150px;
     outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 0.5rem;
+}
+
+.search-select select option {
+    padding: 0.5rem;
 }
 
 .btn-search {
@@ -1035,12 +1056,12 @@ section {
 }
 
 .footer-logo .logo-devredin {
-    color: var(--primary-light);
+    color: #dc2626;
     text-decoration: none;
 }
 
 .footer-logo .logo-devredin:hover {
-    color: var(--white);
+    color: #ef4444;
 }
 
 .footer-logo .logo-divider {
@@ -1048,13 +1069,13 @@ section {
 }
 
 .footer-logo .logo-fr {
-    color: var(--accent);
+    color: #9ca3af;
     text-decoration: none;
     font-style: italic;
 }
 
 .footer-logo .logo-fr:hover {
-    color: #ff8555;
+    color: #d1d5db;
 }
 
 .footer-brand p {
@@ -1098,8 +1119,8 @@ section {
     font-size: 0.85rem;
 }
 
-/* Back to devredin button */
-.back-to-devredin {
+/* Back to devret link button */
+.back-to-devret link {
     position: fixed;
     bottom: 24px;
     left: 24px;
@@ -1119,7 +1140,7 @@ section {
     z-index: 100;
 }
 
-.back-to-devredin:hover {
+.back-to-devret link:hover {
     border-color: var(--primary);
     color: var(--primary);
 }

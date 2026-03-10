@@ -7,9 +7,10 @@
 }
 
 :root {
-    --primary: #004E89;
-    --primary-dark: #003d6e;
-    --accent: #FF6B35;
+    --primary: #dc2626;
+    --primary-dark: #b91c1c;
+    --primary-footer: #004E89;
+    --accent: #1f2937;
     --dark: #1a1f36;
     --gray-900: #1e293b;
     --gray-700: #475569;
@@ -53,7 +54,7 @@ body {
     align-items: center;
     justify-content: space-between;
     height: 72px;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .logo {
@@ -96,7 +97,7 @@ body {
 .nav-menu {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.25rem;
     list-style: none;
 }
 
@@ -104,8 +105,9 @@ body {
     color: var(--gray-700);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     transition: color 0.2s;
+    white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -380,7 +382,7 @@ body {
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(0, 78, 137, 0.85), rgba(26, 101, 158, 0.75));
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.85), rgba(55, 65, 81, 0.75));
 }
 
 .hero-content {
@@ -1047,8 +1049,8 @@ body {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 1.5fr repeat(3, 1fr);
-    gap: 3rem;
+    grid-template-columns: 1.5fr repeat(4, 1fr);
+    gap: 2rem;
     margin-bottom: 3rem;
 }
 
@@ -1110,7 +1112,7 @@ body {
 }
 
 .footer-links a:hover {
-    color: var(--white);
+    color: var(--primary-footer);
 }
 
 .footer-bottom {

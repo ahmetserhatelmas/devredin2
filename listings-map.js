@@ -78,7 +78,9 @@ async function loadListingsForMap() {
 // Create markers for listings
 function createMarkers(listings) {
     // Clear existing markers
-    markers.forEach(marker => marker.setMap(null));
+    markers.forEach(marker => {
+        if (marker.setMap) marker.setMap(null);
+    });
     markers = [];
     
     if (!listings || listings.length === 0) return;
@@ -86,7 +88,9 @@ function createMarkers(listings) {
     listings.forEach(listing => {
         if (!listing.latitude || !listing.longitude) return;
         
-        // Create standard marker with custom label
+        const priceText = formatPriceShort(listing.price);
+        
+        // Create marker with custom icon
         const marker = new google.maps.Marker({
             position: { 
                 lat: parseFloat(listing.latitude), 
@@ -94,20 +98,10 @@ function createMarkers(listings) {
             },
             map: map,
             title: listing.title,
-            label: {
-                text: `₺${formatPrice(listing.price)}`,
-                color: '#ffffff',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                fontFamily: 'Inter, sans-serif'
-            },
             icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                fillColor: '#FF6B35',
-                fillOpacity: 1,
-                strokeColor: '#ffffff',
-                strokeWeight: 3,
-                scale: 18
+                url: createMarkerIcon(priceText),
+                scaledSize: new google.maps.Size(80, 40),
+                anchor: new google.maps.Point(40, 40)
             }
         });
         
@@ -134,16 +128,28 @@ function createMarkers(listings) {
     }
 }
 
-// Create custom marker content with price
-function createMarkerContent(listing) {
-    const div = document.createElement('div');
-    div.className = 'custom-marker';
-    div.innerHTML = `
-        <div class="marker-price">
-            ₺${formatPrice(listing.price)}
-        </div>
+// Create SVG marker icon with price
+function createMarkerIcon(priceText) {
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="40" viewBox="0 0 80 40">
+            <rect x="0" y="0" width="80" height="32" rx="6" fill="#dc2626"/>
+            <polygon points="40,40 32,32 48,32" fill="#dc2626"/>
+            <text x="40" y="21" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">₺${priceText}</text>
+        </svg>
     `;
-    return div;
+    return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+}
+
+// Format price for marker (short version)
+function formatPriceShort(price) {
+    if (price >= 1000000) {
+        const m = price / 1000000;
+        return m % 1 === 0 ? `${m}M` : `${m.toFixed(1)}M`;
+    } else if (price >= 1000) {
+        const k = price / 1000;
+        return k % 1 === 0 ? `${k}K` : `${Math.round(k)}K`;
+    }
+    return price.toLocaleString('tr-TR');
 }
 
 // Show listing info in popup
@@ -159,7 +165,7 @@ function showListingInfo(listing, marker) {
                 📍 ${location}
             </div>
             <div class="info-price">
-                ₺${formatPrice(listing.price)}
+                ₺${formatPriceFull(listing.price)}
             </div>
             <a href="listing-detail.html?slug=${listing.slug}" class="info-link">
                 Detayları Gör →
@@ -171,28 +177,25 @@ function showListingInfo(listing, marker) {
     infoWindow.open(map, marker);
 }
 
-// Format price
-function formatPrice(price) {
-    if (price >= 1000000) {
-        return `${(price / 1000000).toFixed(1)}M`;
-    } else if (price >= 1000) {
-        return `${(price / 1000).toFixed(0)}K`;
-    }
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+// Format price - full display
+function formatPriceFull(price) {
+    return price.toLocaleString('tr-TR');
 }
 
 // Update map markers based on current filters
 window.updateMapMarkers = function(filteredListings) {
-    if (!map || !allListings.length) return;
+    if (!map) return;
     
-    // If filtered listings provided, show only those
+    // If filtered listings provided, show only those with coordinates
     if (filteredListings && filteredListings.length > 0) {
-        const filteredIds = new Set(filteredListings.map(l => l.id));
-        const filtered = allListings.filter(l => filteredIds.has(l.id));
-        createMarkers(filtered);
+        // Filtrelenmiş ilanları kullan (koordinatı olanları)
+        const listingsWithCoords = filteredListings.filter(l => l.latitude && l.longitude);
+        createMarkers(listingsWithCoords);
+    } else if (filteredListings && filteredListings.length === 0) {
+        // Boş filtre sonucu - tüm markerları temizle
+        createMarkers([]);
     } else {
-        // Show all listings
+        // Filtre yok - tüm ilanları göster
         createMarkers(allListings);
     }
 };
-

@@ -438,6 +438,48 @@ SELECT id, 'Maltepe', 'maltepe', 40.9339, 29.1270 FROM cities WHERE slug = 'ista
 ON CONFLICT (city_id, slug) DO NOTHING;
 
 -- ============================================
+-- OFFERS TABLE (Teklifler)
+-- ============================================
+CREATE TABLE IF NOT EXISTS offers (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    listing_id UUID REFERENCES listings(id) ON DELETE CASCADE,
+    sender_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    receiver_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    amount DECIMAL(15, 2) NOT NULL,
+    currency VARCHAR(3) DEFAULT 'TRY',
+    note TEXT,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'cancelled', 'expired')),
+    response_note TEXT,
+    responded_at TIMESTAMP WITH TIME ZONE,
+    expires_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Offers indexes
+CREATE INDEX IF NOT EXISTS idx_offers_listing_id ON offers(listing_id);
+CREATE INDEX IF NOT EXISTS idx_offers_sender_id ON offers(sender_id);
+CREATE INDEX IF NOT EXISTS idx_offers_receiver_id ON offers(receiver_id);
+CREATE INDEX IF NOT EXISTS idx_offers_status ON offers(status);
+CREATE INDEX IF NOT EXISTS idx_offers_created_at ON offers(created_at DESC);
+
+-- Enable RLS for offers
+ALTER TABLE offers ENABLE ROW LEVEL SECURITY;
+
+-- Offers policies
+CREATE POLICY "Users can view offers they sent or received"
+    ON offers FOR SELECT
+    USING (auth.uid() = sender_id OR auth.uid() = receiver_id);
+
+CREATE POLICY "Users can create offers"
+    ON offers FOR INSERT
+    WITH CHECK (auth.uid() = sender_id);
+
+CREATE POLICY "Receivers can update offer status"
+    ON offers FOR UPDATE
+    USING (auth.uid() = receiver_id OR auth.uid() = sender_id);
+
+-- ============================================
 -- BLOG_POSTS TABLE (Blog Yazıları)
 -- ============================================
 CREATE TABLE IF NOT EXISTS blog_posts (
@@ -460,6 +502,44 @@ CREATE TABLE IF NOT EXISTS blog_posts (
 CREATE INDEX IF NOT EXISTS idx_blog_posts_status ON blog_posts(status);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON blog_posts(category);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_created_at ON blog_posts(created_at DESC);
+
+-- ============================================
+-- CONTACT MESSAGES TABLE
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    message TEXT NOT NULL,
+    status VARCHAR(20) DEFAULT 'new',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can send contact messages (INSERT)
+CREATE POLICY "Anyone can send contact messages" ON contact_messages
+    FOR INSERT
+    WITH CHECK (true);
+
+-- Anyone can view contact messages (for admin panel)
+CREATE POLICY "Anyone can view contact messages" ON contact_messages
+    FOR SELECT
+    USING (true);
+
+-- Anyone can update contact messages (for admin panel)
+CREATE POLICY "Anyone can update contact messages" ON contact_messages
+    FOR UPDATE
+    USING (true);
+
+-- Create index
+CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_created_at ON contact_messages(created_at DESC);
 
 -- ============================================
 -- STORAGE BUCKETS (Supabase Storage)

@@ -11,7 +11,7 @@ function createNavbar(options = {}) {
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <a href="${isDevredin ? 'index.html' : '../index.html'}" class="logo-main">devredin</a>
+                    <a href="${isDevredin ? 'index.html' : '../index.html'}" class="logo-main">devret link</a>
                     <span class="logo-divider">|</span>
                     <a href="${isDevredin ? 'franchise.html' : '../franchise.html'}" class="logo-sub">fr.</a>
                 </div>

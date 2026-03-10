@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franchise Fırsatları - Devret Link</title>
+    <link rel="stylesheet" href="styles.css?v=17">
+    <link rel="stylesheet" href="franchise-list.css?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="franchise-list-body">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html" class="logo-main">devret link</a>
+                    <span class="logo-divider">|</span>
+                    <a href="franchise.html" class="logo-sub">fr.</a>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li><a href="franchise.html" class="nav-link">Markalar İçin</a></li>
+                    <li><a href="listings.html" class="nav-link">İşletmeler İçin</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <!-- Auth Menu -->
+                    <div class="auth-menu" id="authMenu">
+                        <button class="auth-icon-btn" id="authBtn" onclick="toggleAuthDropdown()">
+                            <svg id="authIconGuest" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span id="authIconUser" class="user-initials" style="display:none;">AE</span>
+                        </button>
+                        <div class="auth-dropdown" id="authDropdown">
+                            <div id="authButtons">
+                                <a href="login.html" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                        <polyline points="10 17 15 12 10 7"></polyline>
+                                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                                    </svg>
+                                    Giriş Yap
+                                </a>
+                                <a href="login.html?register=true" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="8.5" cy="7" r="4"></circle>
+                                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                                    </svg>
+                                    Üye Ol
+                                </a>
+                            </div>
+                            <div id="userMenu" style="display: none;">
+                                <div class="dropdown-header">
+                                    <div class="dropdown-avatar" id="dropdownAvatar">AE</div>
+                                    <span class="dropdown-name" id="dropdownName">Kullanıcı</span>
+                                </div>
+                                <a href="profile.html" class="dropdown-item">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    Profil
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <button onclick="logout()" class="dropdown-item logout">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    Çıkış Yap
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <script>
+                        var _u = localStorage.getItem('devredin_user');
+                        document.write(_u 
+                            ? '<a href="add-franchise.html" class="btn btn-primary-nav">İlan Oluştur</a>'
+                            : '<a href="login.html" class="btn btn-primary-nav">Üye Ol</a>'
+                        );
+                    </script>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="franchise-list-page">
+        <div class="container">
+            <div class="list-header">
+                <div class="header-left">
+                    <h1>Franchise Fırsatları</h1>
+                    <span class="result-count" id="resultCount">Yükleniyor...</span>
+                </div>
+            </div>
+            
+            <!-- Search & Filter Bar -->
+            <div class="search-filter-bar">
+                <div class="search-input-wrapper">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Arama..." onkeyup="handleSearch(event)">
+                </div>
+                <button class="btn btn-search" onclick="applyFilters()">Ara</button>
+                <button class="btn btn-icon" onclick="openSortModal()" title="Sırala">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="6" x2="20" y2="6"></line>
+                        <line x1="4" y1="12" x2="16" y2="12"></line>
+                        <line x1="4" y1="18" x2="12" y2="18"></line>
+                    </svg>
+                </button>
+                <button class="btn btn-icon" onclick="openFilterModal()" title="Filtrele">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="21" x2="4" y2="14"></line>
+                        <line x1="4" y1="10" x2="4" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12" y2="3"></line>
+                        <line x1="20" y1="21" x2="20" y2="16"></line>
+                        <line x1="20" y1="12" x2="20" y2="3"></line>
+                        <line x1="1" y1="14" x2="7" y2="14"></line>
+                        <line x1="9" y1="8" x2="15" y2="8"></line>
+                        <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                </button>
+                <div class="view-toggle">
+                    <button class="view-btn" id="listViewBtn" onclick="setView('list')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Active Filters -->
+            <div class="active-filters" id="activeFilters" style="display: none;">
+                <!-- Active filter tags will be shown here -->
+            </div>
+            
+            <!-- Franchise Grid -->
+            <div class="franchise-grid" id="franchiseGrid">
+                <!-- Loading skeleton -->
+                <div class="franchise-card skeleton"></div>
+                <div class="franchise-card skeleton"></div>
+                <div class="franchise-card skeleton"></div>
+                <div class="franchise-card skeleton"></div>
+                <div class="franchise-card skeleton"></div>
+                <div class="franchise-card skeleton"></div>
+            </div>
+            
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">🔍</div>
+                <h3>Sonuç Bulunamadı</h3>
+                <p>Arama kriterlerinize uygun franchise bulunamadı.</p>
+                <button class="btn btn-primary" onclick="clearFilters()">Filtreleri Temizle</button>
+            </div>
+            
+            <!-- Load More -->
+            <div class="load-more" id="loadMore" style="display: none;">
+                <button class="btn btn-outline" onclick="loadMore()">Daha Fazla Göster</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Filter Modal -->
+    <div class="modal" id="filterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Filtreler</h3>
+                <button class="modal-close" onclick="closeFilterModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Sektör -->
+                <div class="filter-section">
+                    <button class="filter-toggle" onclick="toggleFilterSection(this)">
+                        <span>📁 Sektör</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="filter-options" id="sectorOptions">
+                        <!-- Sectors will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Fiyat -->
+                <div class="filter-section">
+                    <button class="filter-toggle" onclick="toggleFilterSection(this)">
+                        <span>💰 Fiyat</span>
+                        <span class="filter-badge" id="priceBadge" style="display:none;">Fiyat</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="filter-options">
+                        <div class="price-inputs">
+                            <div class="price-input-group">
+                                <label>Min</label>
+                                <input type="number" id="minPrice" placeholder="₺0">
+                            </div>
+                            <span class="price-separator">-</span>
+                            <div class="price-input-group">
+                                <label>Max</label>
+                                <input type="number" id="maxPrice" placeholder="₺∞">
+                            </div>
+                        </div>
+                        <div class="price-presets">
+                            <button class="preset-btn" onclick="setPrice(0, 500000)">₺0 - ₺500K</button>
+                            <button class="preset-btn" onclick="setPrice(500000, 1000000)">₺500K - ₺1M</button>
+                            <button class="preset-btn" onclick="setPrice(1000000, 2500000)">₺1M - ₺2.5M</button>
+                            <button class="preset-btn" onclick="setPrice(2500000, 5000000)">₺2.5M - ₺5M</button>
+                            <button class="preset-btn" onclick="setPrice(5000000, null)">₺5M+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="clearFilters()">Filtreleri Temizle</button>
+                <button class="btn btn-primary" onclick="applyFilters(); closeFilterModal();">Filtreleri Uygula</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sort Modal -->
+    <div class="modal" id="sortModal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <button class="modal-back" onclick="closeSortModal()">←</button>
+                <h3>Sırala</h3>
+                <button class="modal-close" onclick="closeSortModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="sort-options">
+                    <label class="sort-option">
+                        <input type="radio" name="sort" value="newest" checked onchange="applySort()">
+                        <span>Tarih (Önce Yeni)</span>
+                    </label>
+                    <label class="sort-option">
+                        <input type="radio" name="sort" value="oldest" onchange="applySort()">
+                        <span>Tarih (Önce Eski)</span>
+                    </label>
+                    <label class="sort-option">
+                        <input type="radio" name="sort" value="price_desc" onchange="applySort()">
+                        <span>Fiyat (Yüksekten Düşüğe)</span>
+                    </label>
+                    <label class="sort-option">
+                        <input type="radio" name="sort" value="price_asc" onchange="applySort()">
+                        <span>Fiyat (Düşükten Yükseğe)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>Copyright © 2025 Devret Link Bilgi Teknolojileri. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let allFranchises = [];
+        let filteredFranchises = [];
+        let currentPage = 1;
+        const perPage = 12;
+        let currentSort = 'newest';
+        let currentView = 'grid';
+        let filters = {
+            search: '',
+            sector: null,
+            minPrice: null,
+            maxPrice: null
+        };
+
+        // Auth functions
+        async function checkAuth() {
+            try {
+                const cached = localStorage.getItem('devredin_user');
+                if (cached) {
+                    const user = JSON.parse(cached);
+                    updateAuthUI(user);
+                }
+                
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    const { data: profile } = await supabase
+                        .from('users')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+                    
+                    if (profile) {
+                        localStorage.setItem('devredin_user', JSON.stringify(profile));
+                        updateAuthUI(profile);
+                    }
+                } else {
+                    localStorage.removeItem('devredin_user');
+                    updateAuthUI(null);
+                }
+            } catch (e) {
+                console.error('Auth check error:', e);
+            }
+        }
+
+        function updateAuthUI(user) {
+            const authButtons = document.getElementById('authButtons');
+            const userMenu = document.getElementById('userMenu');
+            const authIconGuest = document.getElementById('authIconGuest');
+            const authIconUser = document.getElementById('authIconUser');
+            const dropdownAvatar = document.getElementById('dropdownAvatar');
+            const dropdownName = document.getElementById('dropdownName');
+
+            if (user) {
+                if (authButtons) authButtons.style.display = 'none';
+                if (userMenu) userMenu.style.display = 'block';
+                if (authIconGuest) authIconGuest.style.display = 'none';
+                if (authIconUser) {
+                    authIconUser.style.display = 'flex';
+                    const initials = getInitials(user.full_name || user.email);
+                    authIconUser.textContent = initials;
+                }
+                if (dropdownAvatar) dropdownAvatar.textContent = getInitials(user.full_name || user.email);
+                if (dropdownName) dropdownName.textContent = user.full_name || user.email;
+            } else {
+                if (authButtons) authButtons.style.display = 'block';
+                if (userMenu) userMenu.style.display = 'none';
+                if (authIconGuest) authIconGuest.style.display = 'block';
+                if (authIconUser) authIconUser.style.display = 'none';
+            }
+        }
+
+        function getInitials(name) {
+            if (!name) return 'U';
+            const parts = name.split(' ').filter(p => p);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[1][0]).toUpperCase();
+            }
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        function toggleAuthDropdown() {
+            const dropdown = document.getElementById('authDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        async function logout() {
+            await supabase.auth.signOut();
+            localStorage.removeItem('devredin_user');
+            window.location.href = 'index.html';
+        }
+
+        // Close dropdown on outside click
+        document.addEventListener('click', (e) => {
+            const authMenu = document.getElementById('authMenu');
+            const dropdown = document.getElementById('authDropdown');
+            if (authMenu && dropdown && !authMenu.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            
+            // URL parametrelerini oku
+            const urlParams = new URLSearchParams(window.location.search);
+            filters.minPrice = urlParams.get('min') ? parseInt(urlParams.get('min')) : null;
+            filters.maxPrice = urlParams.get('max') ? parseInt(urlParams.get('max')) : null;
+            filters.sector = urlParams.get('category') ? parseInt(urlParams.get('category')) : null;
+            filters.search = urlParams.get('q') || '';
+            
+            if (filters.search) {
+                document.getElementById('searchInput').value = filters.search;
+            }
+            if (filters.minPrice) {
+                document.getElementById('minPrice').value = filters.minPrice;
+            }
+            if (filters.maxPrice) {
+                document.getElementById('maxPrice').value = filters.maxPrice;
+            }
+            
+            await loadSectors();
+            await loadFranchises();
+        });
+
+        async function loadSectors() {
+            try {
+                const { data } = await supabase
+                    .from('categories')
+                    .select('id, name')
+                    .is('parent_id', null)
+                    .order('name');
+                
+                const container = document.getElementById('sectorOptions');
+                if (data) {
+                    container.innerHTML = data.map(s => `
+                        <label class="filter-checkbox">
+                            <input type="checkbox" value="${s.id}" ${filters.sector == s.id ? 'checked' : ''} onchange="updateSectorFilter()">
+                            <span>${s.name}</span>
+                        </label>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error('Sector load error:', e);
+            }
+        }
+
+        async function loadFranchises() {
+            try {
+                let query = supabase
+                    .from('franchises')
+                    .select('*, sector:categories(name, icon)')
+                    .eq('status', 'active');
+                
+                const { data, error } = await query;
+                
+                if (error) throw error;
+                
+                allFranchises = data || [];
+                applyFilters();
+                
+            } catch (e) {
+                console.error('Franchise load error:', e);
+                document.getElementById('franchiseGrid').innerHTML = '<p class="error">Yüklenirken hata oluştu</p>';
+            }
+        }
+
+        function applyFilters() {
+            // Get current filter values
+            filters.search = document.getElementById('searchInput').value.toLowerCase();
+            filters.minPrice = document.getElementById('minPrice').value ? parseInt(document.getElementById('minPrice').value) : null;
+            filters.maxPrice = document.getElementById('maxPrice').value ? parseInt(document.getElementById('maxPrice').value) : null;
+            
+            // Filter franchises
+            filteredFranchises = allFranchises.filter(f => {
+                // Search filter
+                if (filters.search) {
+                    const searchText = `${f.brand_name} ${f.description || ''} ${f.sector?.name || ''}`.toLowerCase();
+                    if (!searchText.includes(filters.search)) return false;
+                }
+                
+                // Sector filter
+                if (filters.sector && f.sector_id !== filters.sector) return false;
+                
+                // Price filter
+                if (filters.minPrice && (f.min_investment || 0) < filters.minPrice) return false;
+                if (filters.maxPrice && (f.min_investment || 0) > filters.maxPrice) return false;
+                
+                return true;
+            });
+            
+            // Apply sort
+            applySort();
+        }
+
+        function applySort() {
+            currentSort = document.querySelector('input[name="sort"]:checked')?.value || 'newest';
+            
+            filteredFranchises.sort((a, b) => {
+                switch (currentSort) {
+                    case 'newest':
+                        return new Date(b.created_at) - new Date(a.created_at);
+                    case 'oldest':
+                        return new Date(a.created_at) - new Date(b.created_at);
+                    case 'price_desc':
+                        return (b.min_investment || 0) - (a.min_investment || 0);
+                    case 'price_asc':
+                        return (a.min_investment || 0) - (b.min_investment || 0);
+                    default:
+                        return 0;
+                }
+            });
+            
+            currentPage = 1;
+            renderFranchises();
+            closeSortModal();
+        }
+
+        function renderFranchises() {
+            const grid = document.getElementById('franchiseGrid');
+            const emptyState = document.getElementById('emptyState');
+            const loadMoreBtn = document.getElementById('loadMore');
+            const resultCount = document.getElementById('resultCount');
+            
+            const startIndex = 0;
+            const endIndex = currentPage * perPage;
+            const displayFranchises = filteredFranchises.slice(startIndex, endIndex);
+            
+            resultCount.textContent = `${filteredFranchises.length} sonuç gösteriliyor`;
+            
+            if (filteredFranchises.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'flex';
+                loadMoreBtn.style.display = 'none';
+                return;
+            }
+            
+            grid.style.display = currentView === 'grid' ? 'grid' : 'flex';
+            grid.className = currentView === 'grid' ? 'franchise-grid' : 'franchise-list';
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = displayFranchises.map(f => `
+                <a href="franchise-detail.html?id=${f.id}" class="franchise-card">
+                    <div class="card-image">
+                        ${f.logo_url 
+                            ? `<img src="${f.logo_url}" alt="${f.brand_name}">`
+                            : `<div class="card-placeholder">${f.brand_name?.charAt(0) || 'F'}</div>`
+                        }
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${f.brand_name}</h3>
+                        <span class="card-category">
+                            <span class="category-icon">${f.sector?.icon || '📁'}</span>
+                            ${f.sector?.name || 'Genel'}
+                        </span>
+                        <div class="card-price">
+                            ₺${(f.min_investment || 0).toLocaleString('tr-TR')} – ₺${(f.max_investment || 0).toLocaleString('tr-TR')}
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+            
+            // Show/hide load more button
+            loadMoreBtn.style.display = endIndex < filteredFranchises.length ? 'flex' : 'none';
+            
+            updateActiveFilters();
+        }
+
+        function loadMore() {
+            currentPage++;
+            renderFranchises();
+        }
+
+        function updateActiveFilters() {
+            const container = document.getElementById('activeFilters');
+            let tags = [];
+            
+            if (filters.search) {
+                tags.push(`<span class="filter-tag">Arama: ${filters.search} <button onclick="clearSearch()">×</button></span>`);
+            }
+            if (filters.minPrice || filters.maxPrice) {
+                const priceText = `₺${(filters.minPrice || 0).toLocaleString('tr-TR')} - ₺${filters.maxPrice ? filters.maxPrice.toLocaleString('tr-TR') : '∞'}`;
+                tags.push(`<span class="filter-tag">Fiyat: ${priceText} <button onclick="clearPrice()">×</button></span>`);
+            }
+            
+            if (tags.length > 0) {
+                container.innerHTML = tags.join('');
+                container.style.display = 'flex';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filters.search = '';
+            applyFilters();
+        }
+
+        function clearPrice() {
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            filters.minPrice = null;
+            filters.maxPrice = null;
+            applyFilters();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            document.querySelectorAll('#sectorOptions input').forEach(cb => cb.checked = false);
+            filters = { search: '', sector: null, minPrice: null, maxPrice: null };
+            applyFilters();
+        }
+
+        function updateSectorFilter() {
+            const checked = document.querySelector('#sectorOptions input:checked');
+            filters.sector = checked ? parseInt(checked.value) : null;
+        }
+
+        function setPrice(min, max) {
+            document.getElementById('minPrice').value = min || '';
+            document.getElementById('maxPrice').value = max || '';
+        }
+
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                applyFilters();
+            }
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+            document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+            renderFranchises();
+        }
+
+        function openFilterModal() {
+            document.getElementById('filterModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFilterModal() {
+            document.getElementById('filterModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openSortModal() {
+            document.getElementById('sortModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSortModal() {
+            document.getElementById('sortModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function toggleFilterSection(btn) {
+            btn.parentElement.classList.toggle('open');
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

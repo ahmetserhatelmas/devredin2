@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Devredin</title>
+    <title>Admin Panel - Devret Link</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css?v=3">
+    <link rel="stylesheet" href="admin.css?v=4">
 </head>
 <body>
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <a href="../index.html" class="logo">devredin</a>
+            <a href="../index.html" class="logo">devret link</a>
             <span class="admin-badge">Admin</span>
         </div>
         
@@ -32,6 +32,14 @@
                 </svg>
                 İlan Yönetimi
                 <span class="badge" id="pendingBadge">0</span>
+            </a>
+            <a href="#emlak" class="nav-item" data-section="emlak">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Emlak Yönetimi
+                <span class="badge" id="emlakBadge">0</span>
             </a>
             <a href="#franchises" class="nav-item" data-section="franchises">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -200,6 +208,36 @@
             </div>
         </section>
 
+        <!-- Emlak Section -->
+        <section id="emlak" class="content-section">
+            <div class="section-header">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="pending" onclick="filterEmlak('pending')">Onay Bekleyen</button>
+                    <button class="filter-btn" data-filter="active" onclick="filterEmlak('active')">Aktif</button>
+                    <button class="filter-btn" data-filter="all" onclick="filterEmlak('all')">Tümü</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>İlan Başlığı</th>
+                            <th>Tip</th>
+                            <th>Oda</th>
+                            <th>Fiyat</th>
+                            <th>Konum</th>
+                            <th>Durum</th>
+                            <th>Tarih</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="emlakBody">
+                        <tr><td colspan="8" class="loading">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Franchises Section -->
         <section id="franchises" class="content-section">
             <div class="section-header">
@@ -262,6 +300,17 @@
 
         <!-- Users Section -->
         <section id="users" class="content-section">
+            <div class="section-header">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all" onclick="filterUsers('all')">Tümü</button>
+                    <button class="filter-btn" data-filter="buyer" onclick="filterUsers('buyer')">Alıcılar</button>
+                    <button class="filter-btn" data-filter="seller" onclick="filterUsers('seller')">Satıcılar</button>
+                    <button class="filter-btn" data-filter="admin" onclick="filterUsers('admin')">Adminler</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="userSearchInput" placeholder="Kullanıcı ara..." onkeyup="searchUsers()">
+                </div>
+            </div>
             <div class="table-container">
                 <table class="data-table">
                     <thead>
@@ -270,16 +319,62 @@
                             <th>Email</th>
                             <th>Telefon</th>
                             <th>Tip</th>
+                            <th>Durum</th>
                             <th>Kayıt Tarihi</th>
                             <th>İşlemler</th>
                         </tr>
                     </thead>
                     <tbody id="usersBody">
-                        <tr><td colspan="6" class="loading">Yükleniyor...</td></tr>
+                        <tr><td colspan="7" class="loading">Yükleniyor...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
+        
+        <!-- User Edit Modal -->
+        <div class="modal-overlay" id="userEditModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Kullanıcı Düzenle</h3>
+                    <button class="modal-close" onclick="closeUserModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editUserId">
+                    <div class="form-group">
+                        <label>Ad Soyad</label>
+                        <input type="text" id="editUserName" placeholder="Ad Soyad">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="editUserEmail" placeholder="Email" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="tel" id="editUserPhone" placeholder="Telefon">
+                    </div>
+                    <div class="form-group">
+                        <label>Kullanıcı Tipi</label>
+                        <select id="editUserType">
+                            <option value="buyer">Alıcı</option>
+                            <option value="seller">Satıcı</option>
+                            <option value="both">Alıcı & Satıcı</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Doğrulandı</label>
+                        <select id="editUserVerified">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeUserModal()">İptal</button>
+                    <button class="btn btn-primary" onclick="saveUserChanges()">Kaydet</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Messages Section -->
         <section id="messages" class="content-section">
@@ -366,7 +461,7 @@
         let rejectingId = null;
         let rejectingType = null;
 
-        const adminEmails = ['admin@devredin.com', 'admin@devredinplatform.com', 'ahmetserhatelmas@hotmaail.com', 'ahmetserhatelmas@gmail.com'];
+        const adminEmails = ['admin@devretlink.com', 'admin@devretlinkplatform.com', 'ahmetserhatelmas@hotmail.com', 'ahmetserhatelmas@hotmaail.com', 'ahmetserhatelmas@gmail.com'];
 
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAdminAccess();
@@ -414,6 +509,7 @@
                     
                     // Load section data
                     if (section === 'listings') loadListings();
+                    if (section === 'emlak') loadEmlakListings();
                     if (section === 'franchises') loadFranchises();
                     if (section === 'blog') loadBlogs();
                     if (section === 'users') loadUsers();
@@ -472,6 +568,15 @@
                     .from('blog_posts')
                     .select('*', { count: 'exact', head: true });
                 document.getElementById('totalBlogs').textContent = totalBlogs || 0;
+
+                // Pending emlak count for badge
+                try {
+                    const { count: pendingEmlak } = await supabase
+                        .from('emlak_listings')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('status', 'pending');
+                    document.getElementById('emlakBadge').textContent = pendingEmlak || 0;
+                } catch(e) { /* table may not exist yet */ }
 
                 // Recent pending
                 const { data: recentPending } = await supabase
@@ -549,6 +654,9 @@
                                 <button class="action-btn approve" onclick="approveListing('${l.id}')">Onayla</button>
                                 <button class="action-btn reject" onclick="showRejectModal('${l.id}', 'listing')">Reddet</button>
                             ` : l.status === 'active' ? `
+                                <button class="action-btn ${l.is_featured ? 'featured-active' : 'feature'}" onclick="toggleFeatured('${l.id}', ${l.is_featured || false})">
+                                    ${l.is_featured ? '★ Öne Çıkan' : '☆ Öne Çıkar'}
+                                </button>
                                 <button class="action-btn reject" onclick="deactivateListing('${l.id}')">Pasife Al</button>
                             ` : `
                                 <button class="action-btn approve" onclick="approveListing('${l.id}')">Aktif Et</button>
@@ -642,36 +750,256 @@
         }
 
         // Load users
+        let allUsers = [];
+        let currentUserFilter = 'all';
+        
         async function loadUsers() {
             const tbody = document.getElementById('usersBody');
-            tbody.innerHTML = '<tr><td colspan="6" class="loading">Yükleniyor...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="loading">Yükleniyor...</td></tr>';
 
             try {
-                const { data: users } = await supabase
+                const { data: users, error } = await supabase
                     .from('users')
                     .select('*')
                     .order('created_at', { ascending: false });
 
+                if (error) throw error;
+
                 if (!users || users.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="empty">Kullanıcı bulunamadı</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="empty">Kullanıcı bulunamadı</td></tr>';
                     return;
                 }
 
-                tbody.innerHTML = users.map(u => `
-                    <tr>
-                        <td><strong>${u.full_name || '-'}</strong></td>
+                allUsers = users;
+                renderUsers(users);
+            } catch (e) {
+                console.error('Users error:', e);
+                tbody.innerHTML = '<tr><td colspan="7" class="error">Hata oluştu: ' + e.message + '</td></tr>';
+            }
+        }
+        
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersBody');
+            
+            if (!users || users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty">Kullanıcı bulunamadı</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = users.map(u => {
+                const userType = getUserTypeLabel(u.user_type);
+                const isVerified = u.email_verified ? 'Doğrulanmış' : 'Doğrulanmamış';
+                const verifiedClass = u.email_verified ? 'active' : 'pending';
+                
+                return `
+                    <tr data-user-id="${u.id}">
+                        <td>
+                            <div class="user-info-cell">
+                                <div class="user-avatar-sm">${(u.full_name || u.email || '?').charAt(0).toUpperCase()}</div>
+                                <strong>${u.full_name || '-'}</strong>
+                            </div>
+                        </td>
                         <td>${u.email}</td>
                         <td>${u.phone || '-'}</td>
-                        <td>${u.user_type || 'buyer'}</td>
+                        <td><span class="user-type-badge ${u.user_type || 'buyer'}">${userType}</span></td>
+                        <td><span class="status-badge ${verifiedClass}">${isVerified}</span></td>
                         <td>${new Date(u.created_at).toLocaleDateString('tr-TR')}</td>
                         <td>
-                            <button class="action-btn" onclick="viewUserListings('${u.id}')">İlanları</button>
+                            <div class="action-buttons">
+                                <button class="action-btn" onclick="viewUserListings('${u.id}')" title="İlanları Gör">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="action-btn edit" onclick="editUser('${u.id}')" title="Düzenle">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                                <button class="action-btn delete" onclick="deleteUser('${u.id}', '${(u.full_name || u.email).replace(/'/g, "\\'")}')" title="Sil">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </td>
                     </tr>
-                `).join('');
-            } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="6" class="error">Hata oluştu</td></tr>';
+                `;
+            }).join('');
+        }
+        
+        function getUserTypeLabel(type) {
+            const types = {
+                'buyer': 'Alıcı',
+                'seller': 'Satıcı',
+                'both': 'Alıcı & Satıcı',
+                'admin': 'Admin'
+            };
+            return types[type] || 'Alıcı';
+        }
+        
+        function filterUsers(filter) {
+            currentUserFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('#users .filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            
+            let filtered = allUsers;
+            if (filter !== 'all') {
+                filtered = allUsers.filter(u => u.user_type === filter);
             }
+            
+            renderUsers(filtered);
+        }
+        
+        function searchUsers() {
+            const query = document.getElementById('userSearchInput').value.toLowerCase();
+            
+            let filtered = allUsers;
+            if (currentUserFilter !== 'all') {
+                filtered = filtered.filter(u => u.user_type === currentUserFilter);
+            }
+            
+            if (query) {
+                filtered = filtered.filter(u => 
+                    (u.full_name && u.full_name.toLowerCase().includes(query)) ||
+                    (u.email && u.email.toLowerCase().includes(query)) ||
+                    (u.phone && u.phone.includes(query))
+                );
+            }
+            
+            renderUsers(filtered);
+        }
+        
+        function editUser(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) {
+                alert('Kullanıcı bulunamadı!');
+                return;
+            }
+            
+            document.getElementById('editUserId').value = user.id;
+            document.getElementById('editUserName').value = user.full_name || '';
+            document.getElementById('editUserEmail').value = user.email || '';
+            document.getElementById('editUserPhone').value = user.phone || '';
+            document.getElementById('editUserType').value = user.user_type || 'buyer';
+            document.getElementById('editUserVerified').value = user.email_verified ? 'true' : 'false';
+            
+            document.getElementById('userEditModal').classList.add('active');
+        }
+        
+        function closeUserModal() {
+            document.getElementById('userEditModal').classList.remove('active');
+        }
+        
+        async function saveUserChanges() {
+            const userId = document.getElementById('editUserId').value;
+            const fullName = document.getElementById('editUserName').value;
+            const phone = document.getElementById('editUserPhone').value;
+            const userType = document.getElementById('editUserType').value;
+            const emailVerified = document.getElementById('editUserVerified').value === 'true';
+            
+            try {
+                const { error } = await supabase
+                    .from('users')
+                    .update({
+                        full_name: fullName,
+                        phone: phone || null,
+                        user_type: userType,
+                        email_verified: emailVerified,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', userId);
+                
+                if (error) throw error;
+                
+                alert('Kullanıcı başarıyla güncellendi!');
+                closeUserModal();
+                loadUsers();
+            } catch (e) {
+                console.error('Update error:', e);
+                alert('Güncelleme hatası: ' + e.message);
+            }
+        }
+        
+        async function deleteUser(userId, userName) {
+            if (!confirm(`"${userName}" kullanıcısını silmek istediğinize emin misiniz?\n\nDİKKAT: Bu işlem kullanıcının tüm ilanlarını da silecektir ve geri alınamaz!`)) {
+                return;
+            }
+            
+            // İkinci onay
+            if (!confirm('Bu işlem geri alınamaz. Devam etmek istediğinize emin misiniz?')) {
+                return;
+            }
+            
+            try {
+                // Önce kullanıcının ilanlarını bul
+                const { data: userListings } = await supabase
+                    .from('listings')
+                    .select('id')
+                    .eq('user_id', userId);
+                
+                // İlan görselleri ve ilanları sil
+                if (userListings && userListings.length > 0) {
+                    const listingIds = userListings.map(l => l.id);
+                    await supabase.from('listing_images').delete().in('listing_id', listingIds);
+                    await supabase.from('listings').delete().in('id', listingIds);
+                }
+                
+                // Franchise'ları sil
+                await supabase.from('franchises').delete().eq('user_id', userId);
+                
+                // Teklifleri sil
+                await supabase.from('offers').delete().or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
+                
+                // Favorileri sil
+                await supabase.from('favorites').delete().eq('user_id', userId);
+                
+                // Sonra kullanıcıyı sil
+                const { error } = await supabase
+                    .from('users')
+                    .delete()
+                    .eq('id', userId);
+                
+                if (error) throw error;
+                
+                alert('Kullanıcı başarıyla silindi!');
+                loadUsers();
+            } catch (e) {
+                console.error('Delete error:', e);
+                alert('Silme hatası: ' + e.message);
+            }
+        }
+        
+        async function viewUserListings(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            const userName = user ? user.full_name || user.email : 'Kullanıcı';
+            
+            // Kullanıcının ilanlarını getir
+            const { data: listings } = await supabase
+                .from('listings')
+                .select('id, title, status, price, created_at')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false });
+            
+            if (!listings || listings.length === 0) {
+                alert(`${userName} kullanıcısının henüz ilanı bulunmuyor.`);
+                return;
+            }
+            
+            // İlanları listele
+            let listingInfo = `${userName} kullanıcısının ilanları (${listings.length}):\n\n`;
+            listings.forEach((l, i) => {
+                const status = l.status === 'active' ? '✅' : l.status === 'pending' ? '⏳' : '❌';
+                listingInfo += `${i + 1}. ${status} ${l.title}\n   Fiyat: ₺${l.price?.toLocaleString('tr-TR') || 0}\n\n`;
+            });
+            
+            alert(listingInfo);
         }
 
         // Load categories
@@ -734,6 +1062,21 @@
             }
         }
 
+        async function toggleFeatured(id, currentStatus) {
+            const newStatus = !currentStatus;
+            const message = newStatus ? 'İlanı öne çıkarmak istediğinize emin misiniz?' : 'İlanı öne çıkanlardan kaldırmak istediğinize emin misiniz?';
+            
+            if (!confirm(message)) return;
+            
+            try {
+                await supabase.from('listings').update({ is_featured: newStatus }).eq('id', id);
+                alert(newStatus ? 'İlan öne çıkanlara eklendi!' : 'İlan öne çıkanlardan kaldırıldı!');
+                loadListings();
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            }
+        }
+
         async function deleteListing(id) {
             if (!confirm('İlanı silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) return;
             
@@ -785,14 +1128,204 @@
             if (!confirm('Blog yazısını silmek istediğinize emin misiniz?')) return;
             
             try {
-                await supabase.from('blog_posts').delete().eq('id', id);
+                // First check if user is admin
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    alert('Giriş yapmanız gerekiyor!');
+                    return;
+                }
+
+                console.log('Deleting blog:', id);
+                console.log('User email:', user.email);
+
+                // Try to delete
+                const { data, error } = await supabase
+                    .from('blog_posts')
+                    .delete()
+                    .eq('id', id)
+                    .select();
+                
+                if (error) {
+                    console.error('Delete error:', error);
+                    
+                    // If RLS error, provide helpful message
+                    if (error.code === '42501' || error.message.includes('permission') || error.message.includes('policy')) {
+                        alert('Silme yetkiniz yok! Lütfen database/fix-admin-rls.sql dosyasını Supabase SQL Editor\'de çalıştırın.');
+                    } else {
+                        throw error;
+                    }
+                    return;
+                }
+                
+                // Check if anything was deleted
+                if (!data || data.length === 0) {
+                    console.warn('No data returned from delete operation');
+                    // Try alternative method - delete without select
+                    const { error: deleteError } = await supabase
+                        .from('blog_posts')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (deleteError) {
+                        console.error('Alternative delete error:', deleteError);
+                        if (deleteError.code === '42501' || deleteError.message.includes('permission')) {
+                            alert('Silme yetkiniz yok! Lütfen database/fix-admin-rls.sql dosyasını Supabase SQL Editor\'de çalıştırın.');
+                        } else {
+                            alert('Silme hatası: ' + deleteError.message);
+                        }
+                        return;
+                    }
+                    
+                    // If alternative method worked, reload
+                    alert('Blog yazısı silindi!');
+                    loadBlogs();
+                    loadDashboard();
+                    return;
+                }
+                
                 alert('Blog yazısı silindi!');
                 loadBlogs();
                 loadDashboard();
             } catch (e) {
-                alert('Hata: ' + e.message);
+                console.error('Delete error:', e);
+                if (e.message && (e.message.includes('permission') || e.message.includes('policy'))) {
+                    alert('Silme yetkiniz yok! Lütfen database/fix-admin-rls.sql dosyasını Supabase SQL Editor\'de çalıştırın.');
+                } else {
+                    alert('Hata: ' + e.message);
+                }
             }
         }
+
+        // ===== EMLAK YÖNETİMİ =====
+        let currentEmlakFilter = 'pending';
+
+        function filterEmlak(filter) {
+            currentEmlakFilter = filter;
+            document.querySelectorAll('#emlak .filter-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.filter === filter);
+            });
+            loadEmlakListings();
+        }
+
+        async function loadEmlakListings() {
+            const tbody = document.getElementById('emlakBody');
+            tbody.innerHTML = '<tr><td colspan="8" class="loading">Yükleniyor...</td></tr>';
+            try {
+                let query = supabase
+                    .from('emlak_listings')
+                    .select('*, city:cities(name), district:districts(name)')
+                    .order('created_at', { ascending: false });
+
+                if (currentEmlakFilter !== 'all') {
+                    query = query.eq('status', currentEmlakFilter);
+                }
+
+                const { data: listings, error } = await query;
+
+                if (error) throw error;
+
+                if (!listings || listings.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="empty">İlan bulunamadı</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = listings.map(l => {
+                    const typeLabel = l.listing_type === 'kiralik' ? '🔑 Kiralık' : '🏠 Satılık';
+                    const typeBadgeColor = l.listing_type === 'kiralik' ? 'color:#1d4ed8;' : 'color:#166534;';
+                    const location = [l.district?.name, l.city?.name].filter(Boolean).join(', ') || l.address || '-';
+                    const price = Number(l.price || 0).toLocaleString('tr-TR');
+                    const priceSuffix = l.listing_type === 'kiralik' ? '/ay' : '';
+                    const statusMap = { pending:'Bekliyor', active:'Aktif', inactive:'Pasif', sold:'Satıldı', rented:'Kiralık' };
+                    return `
+                        <tr>
+                            <td><strong>${l.title}</strong><br><small style="color:#9ca3af;">${l.contact_name || ''}</small></td>
+                            <td><span style="font-weight:600;${typeBadgeColor}">${typeLabel}</span></td>
+                            <td>${l.room_count || '-'}</td>
+                            <td>₺${price}${priceSuffix}</td>
+                            <td>${location}</td>
+                            <td><span class="status-badge ${l.status}">${statusMap[l.status] || l.status}</span></td>
+                            <td>${new Date(l.created_at).toLocaleDateString('tr-TR')}</td>
+                            <td>
+                                ${l.status === 'pending' ? `
+                                    <button class="action-btn approve" onclick="approveEmlak('${l.id}')">Onayla</button>
+                                    <button class="action-btn reject" onclick="rejectEmlak('${l.id}')">Reddet</button>
+                                ` : l.status === 'active' ? `
+                                    <button class="action-btn reject" onclick="deactivateEmlak('${l.id}')">Pasife Al</button>
+                                ` : `
+                                    <button class="action-btn approve" onclick="approveEmlak('${l.id}')">Aktif Et</button>
+                                `}
+                                <button class="action-btn delete" onclick="deleteEmlak('${l.id}')">Sil</button>
+                            </td>
+                        </tr>`;
+                }).join('');
+
+                // Update badge
+                const pendingCount = listings.filter(l => l.status === 'pending').length;
+                if (currentEmlakFilter === 'pending') {
+                    document.getElementById('emlakBadge').textContent = pendingCount;
+                }
+
+            } catch(e) {
+                console.error('Emlak yükleme hatası:', e);
+                tbody.innerHTML = `<tr><td colspan="8" class="error">Hata: ${e.message}</td></tr>`;
+            }
+        }
+
+        async function approveEmlak(id) {
+            if (!confirm('İlanı onaylamak istediğinize emin misiniz?')) return;
+            try {
+                const { error } = await supabase
+                    .from('emlak_listings')
+                    .update({ status: 'active', published_at: new Date().toISOString() })
+                    .eq('id', id);
+                if (error) throw error;
+                alert('Emlak ilanı onaylandı!');
+                loadEmlakListings();
+                loadDashboard();
+            } catch(e) { alert('Hata: ' + e.message); }
+        }
+
+        async function rejectEmlak(id) {
+            const reason = prompt('Red sebebini yazın (opsiyonel):');
+            if (reason === null) return; // cancel
+            try {
+                const { error } = await supabase
+                    .from('emlak_listings')
+                    .update({ status: 'inactive' })
+                    .eq('id', id);
+                if (error) throw error;
+                alert('İlan reddedildi.');
+                loadEmlakListings();
+                loadDashboard();
+            } catch(e) { alert('Hata: ' + e.message); }
+        }
+
+        async function deactivateEmlak(id) {
+            if (!confirm('İlanı pasife almak istediğinize emin misiniz?')) return;
+            try {
+                const { error } = await supabase
+                    .from('emlak_listings')
+                    .update({ status: 'inactive' })
+                    .eq('id', id);
+                if (error) throw error;
+                alert('İlan pasife alındı.');
+                loadEmlakListings();
+            } catch(e) { alert('Hata: ' + e.message); }
+        }
+
+        async function deleteEmlak(id) {
+            if (!confirm('Bu emlak ilanını silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) return;
+            try {
+                // Delete images first
+                await supabase.from('emlak_images').delete().eq('listing_id', id);
+                const { error } = await supabase.from('emlak_listings').delete().eq('id', id);
+                if (error) throw error;
+                alert('Emlak ilanı silindi!');
+                loadEmlakListings();
+                loadDashboard();
+            } catch(e) { alert('Hata: ' + e.message); }
+        }
+        // ===== EMLAK YÖNETİMİ BİTİŞ =====
 
         async function toggleCategoryStatus(id, currentStatus) {
             try {

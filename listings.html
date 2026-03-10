@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devren İlanları - Devredin</title>
-    <link rel="stylesheet" href="styles.css?v=10">
-    <link rel="stylesheet" href="listings.css?v=19">
+    <title>Devren İlanları - Devret Link</title>
+    <link rel="stylesheet" href="styles.css?v=18">
+    <link rel="stylesheet" href="listings.css?v=22">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="listings-page">
@@ -14,7 +14,7 @@
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <a href="index.html" class="logo-main">devredin</a>
+                    <a href="index.html" class="logo-main">devret link</a>
                     <span class="logo-divider">|</span>
                     <a href="franchise.html" class="logo-sub">fr.</a>
                 </div>
@@ -22,6 +22,7 @@
                 <ul class="nav-menu">
                     <li><a href="listings.html" class="nav-link active">İşletme Devral</a></li>
                     <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="emlak.html" class="nav-link">Emlak</a></li>
                     <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link">Panel</a></li>
                     <li><a href="blog.html" class="nav-link">Blog</a></li>
                 </ul>
@@ -118,7 +119,7 @@
         <aside class="filter-sidebar" id="filterSidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <a href="index.html" class="logo-main">devredin</a>
+                    <a href="index.html" class="logo-main">devret link</a>
                     <span class="logo-divider">|</span>
                     <a href="franchise.html" class="logo-sub">fr.</a>
                 </div>
@@ -131,8 +132,8 @@
                     <path d="m21 21-4.35-4.35"></path>
                 </svg>
                 <input type="text" placeholder="Arama..." id="sidebarSearch">
-            </div>
-            
+                    </div>
+
             <div class="sidebar-tabs">
                 <button class="sidebar-tab active" data-tab="filters" onclick="switchSidebarTab('filters')">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -151,9 +152,9 @@
                         <line x1="12" y1="8" x2="12" y2="12"></line>
                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
-                </button>
-            </div>
-            
+                        </button>
+                    </div>
+
             <!-- Filters Panel -->
             <div class="sidebar-panel active" id="filtersPanel">
                 <h3 class="panel-title">Filtreler</h3>
@@ -171,13 +172,13 @@
                             <option value="">Tüm İlçeler</option>
                         </select>
                     </div>
-                </div>
-                
+                    </div>
+
                 <div class="filter-group">
                     <button class="filter-accordion" onclick="toggleAccordion(this)">
                         <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg> Sektör</span>
                         <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
+                        </button>
                     <div class="filter-content">
                         <select id="filterCategory" onchange="applyFilters()">
                             <option value="">Tüm Sektörler</option>
@@ -185,8 +186,8 @@
                         <select id="filterSubcategory" onchange="applyFilters()">
                             <option value="">Tüm Alt Kategoriler</option>
                         </select>
-                    </div>
-                </div>
+                                    </div>
+                                </div>
                 
                 <div class="filter-group">
                     <button class="filter-accordion" onclick="toggleAccordion(this)">
@@ -199,24 +200,24 @@
                             <span>-</span>
                             <input type="number" id="maxPrice" placeholder="Max ₺" onchange="applyFilters()">
                         </div>
+                        </div>
                     </div>
-                </div>
-                
+
                 <div class="filter-group">
                     <button class="filter-accordion" onclick="toggleAccordion(this)">
                         <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line></svg> Gelişmiş</span>
                         <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
+                        </button>
                     <div class="filter-content">
                         <div class="checkbox-group">
                             <label><input type="checkbox" id="filterFeatured" onchange="applyFilters()"> Öne Çıkan</label>
                             <label><input type="checkbox" id="filterFranchise" onchange="applyFilters()"> Franchise</label>
                         </div>
+                        </div>
                     </div>
-                </div>
-                
+
                 <button class="btn btn-apply" onclick="applyFilters()">Filtreleri Uygula</button>
-            </div>
+                            </div>
             
             <!-- Sort Panel -->
             <div class="sidebar-panel" id="sortPanel">
@@ -233,10 +234,10 @@
                     </button>
                     <button class="sort-option" onclick="sortListings('price_asc')">
                         Fiyat (Düşükten Yükseğe) <span>→</span>
-                    </button>
-                </div>
+                        </button>
+                            </div>
                 <button class="btn btn-close-panel" onclick="toggleSidebar()">Kapat</button>
-            </div>
+                            </div>
             
             <!-- Saved Panel -->
             <div class="sidebar-panel" id="savedPanel">
@@ -245,9 +246,9 @@
                     <div class="empty-icon">📋</div>
                     <p>Henüz kayıtlı filtreniz yok</p>
                     <span class="empty-hint">İlan arama sayfasında filtreleri uygulayıp kaydet butonuna tıklayarak filtre kaydedebilirsiniz.</span>
-                </div>
+                            </div>
                 <button class="btn btn-close-panel" onclick="toggleSidebar()">Kapat</button>
-            </div>
+                            </div>
         </aside>
 
         <!-- Listings Section -->
@@ -256,7 +257,7 @@
                 <div class="listings-title">
                     <h1>Devren İlanları</h1>
                     <span class="listings-count" id="listingsCount">0 sonuç gösteriliyor</span>
-                </div>
+                        </div>
                 
                 <div class="listings-controls">
                     <div class="search-box">
@@ -267,7 +268,7 @@
                         <input type="text" placeholder="Arama..." id="searchInput" onkeyup="searchListings()">
                         <button class="btn btn-search-small">Ara</button>
                     </div>
-                    
+
                     <div class="view-controls">
                         <button class="view-btn" onclick="toggleSidebar()" title="Filtreler">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -319,7 +320,7 @@
                     <div class="spinner"></div>
                     <p>İlanlar yükleniyor...</p>
                 </div>
-            </div>
+                        </div>
         </section>
 
         <!-- Map Section -->
@@ -342,7 +343,7 @@
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC4r_aAIPvRAEGPqARc-Y9s-UstldmSqk&language=tr&callback=initGoogleMapsListings" async defer></script>
-    <script src="listings-map.js?v=4"></script>
+    <script src="listings-map.js?v=7"></script>
     <script src="script.js"></script>
     
     <!-- Google Maps -->
@@ -467,6 +468,7 @@
                     .from('listings')
                     .select(`
                         id, title, slug, price, monthly_rent, created_at, area_sqm, city, district,
+                        latitude, longitude,
                         category:categories!category_id(name, icon),
                         images:listing_images(image_url, is_primary)
                     `)
@@ -528,6 +530,10 @@
                             <p>Farklı filtreler deneyebilirsiniz</p>
                         </div>
                     `;
+                    // Harita markerlarını temizle
+                    if (typeof updateMapMarkers === 'function') {
+                        updateMapMarkers([]);
+                    }
                     return;
                 }
 
@@ -543,6 +549,11 @@
                 
                 container.innerHTML = listingItems;
                 console.log('✅ İlanlar başarıyla render edildi');
+                
+                // Harita markerlarını güncelle
+                if (typeof updateMapMarkers === 'function') {
+                    updateMapMarkers(currentListings);
+                }
 
             } catch (e) {
                 console.error('Load listings error:', e);

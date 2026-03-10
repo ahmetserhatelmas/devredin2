@@ -7,9 +7,9 @@
 }
 
 :root {
-    --primary: #004E89;
+    --primary: #dc2626;
     --primary-dark: #003d6e;
-    --accent: #FF6B35;
+    --accent: #000000;
     --dark: #1a1f36;
     --gray-900: #1e293b;
     --gray-700: #475569;
@@ -806,4 +806,184 @@ body {
         flex: 1;
         justify-content: center;
     }
+}
+
+/* ===== OFFERS STYLES ===== */
+.offers-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.offer-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.offer-tab:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.offer-tab.active {
+    background: var(--gray-900);
+    border-color: var(--gray-900);
+    color: var(--white);
+}
+
+.tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.offer-tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.offers-table {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.offers-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.offers-table th,
+.offers-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.offers-table th {
+    background: var(--gray-100);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.offers-table td {
+    font-size: 0.9rem;
+    color: var(--gray-900);
+}
+
+.offers-table tr:last-child td {
+    border-bottom: none;
+}
+
+.offers-table tr:hover {
+    background: var(--gray-100);
+}
+
+.offers-table tr.empty-row:hover {
+    background: transparent;
+}
+
+.offer-listing-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.offer-listing-link:hover {
+    text-decoration: underline;
+}
+
+.offer-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar-sm {
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: var(--white);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.currency-badge {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    background: var(--gray-100);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+}
+
+.offer-note {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--gray-500);
+}
+
+.offer-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-success {
+    background: #10b981;
+    color: var(--white);
+    border: none;
+}
+
+.btn-success:hover {
+    background: #059669;
+}
+
+.status-text {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+}
+
+.filter-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-dropdown span {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+}
+
+.filter-dropdown select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--white);
+    cursor: pointer;
 }

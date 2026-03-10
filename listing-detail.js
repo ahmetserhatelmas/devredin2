@@ -38,7 +38,7 @@ async function loadListingDetail(listingId) {
                 id, title, price, description, address, area_sqm, monthly_rent,
                 monthly_revenue, monthly_profit, employee_count, establishment_year,
                 lease_end_date, transfer_reason, is_franchise, inventory_value,
-                equipment_value, contact_name, contact_phone, sector,
+                equipment_value, contact_name, contact_phone, sector, document_url,
                 category:categories!category_id(name, icon),
                 city:cities(name),
                 district:districts(name),
@@ -84,7 +84,7 @@ async function incrementViewCount(listingId) {
 // ⚡ İlan detaylarını hızlı render et
 function renderListingDetail(listing) {
     // Sayfa başlığı
-    document.title = `${listing.title} - DevredinPlatform`
+    document.title = `${listing.title} - devret linkPlatform`
     
     // ⚡ Loaded class ekle (skeleton'ları kaldır)
     document.body.classList.add('loaded')
@@ -215,6 +215,57 @@ function renderListingDetail(listing) {
     
     // WhatsApp ve Arama butonları
     setupContactButtons(listing)
+    
+    // Dökümanlar bölümü
+    const documentsList = document.getElementById('documentsList')
+    if (documentsList) {
+        let docsHtml = ''
+        
+        if (listing.document_url) {
+            docsHtml += `
+                <div class="document-item">
+                    <div class="document-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </div>
+                    <div class="document-info">
+                        <span class="document-title">Tanıtım Dökümanı</span>
+                        <span class="document-desc">İlan sahibi tarafından yüklendi</span>
+                    </div>
+                    <a href="${listing.document_url}" target="_blank" class="document-view document-download">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+            `
+        }
+        
+        // Default rapor (her zaman göster)
+        docsHtml += `
+            <div class="document-item">
+                <div class="document-icon">
+                    <span class="doc-logo">d.</span>
+                </div>
+                <div class="document-info">
+                    <span class="document-title">Devret Link İlan Raporu</span>
+                    <span class="document-desc">Otomatik oluşturulmuş rapor</span>
+                </div>
+                <button class="document-view" onclick="viewReport()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+            </div>
+        `
+        
+        documentsList.innerHTML = docsHtml
+    }
 }
 
 // ⚡ Detay bilgisi güncelle (skeleton'ı temizle)

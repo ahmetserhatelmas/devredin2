@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel - Devredin</title>
-    <link rel="stylesheet" href="panel.css?v=3">
+    <title>Panel - Devret Link</title>
+    <link rel="stylesheet" href="panel.css?v=4">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <a href="../index.html" class="sidebar-logo">devredin</a>
+            <a href="../index.html" class="sidebar-logo">devret link</a>
         </div>
         
         <div class="sidebar-content">
@@ -49,6 +49,15 @@
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                     </svg>
                     Franchise'lar
+                </a>
+                <a href="#emlak" class="nav-item" data-page="emlak">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="15" rx="2"></rect>
+                        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
+                        <line x1="12" y1="12" x2="12" y2="17"></line>
+                        <line x1="9" y1="14.5" x2="15" y2="14.5"></line>
+                    </svg>
+                    Emlak İlanlarım
                 </a>
                 <a href="#mesajlar" class="nav-item" data-page="messages">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -247,6 +256,30 @@
                 </div>
             </div>
             
+            <!-- Emlak Page -->
+            <div class="page" id="page-emlak">
+                <h1 class="page-title">Emlak İlanlarım</h1>
+                <p class="page-subtitle">Tüm emlak ilanlarınızı görüntüleyin, düzenleyin ve yönetin</p>
+
+                <div class="table-header">
+                    <button class="btn btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                        Kolonları Özelleştir
+                    </button>
+                    <a href="../add-emlak.html" class="btn btn-primary">+ Yeni Emlak İlanı Ekle</a>
+                </div>
+
+                <div class="listings-list" id="userEmlakListings">
+                    <div class="empty-state">
+                        <p>Yükleniyor...</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Messages Page -->
             <div class="page" id="page-messages">
                 <div class="messages-layout">
@@ -366,6 +399,7 @@
             // Load data
             await loadUserListings(user.id);
             await loadUserFranchises(user.id);
+            await loadUserEmlakListings();
             
             // Setup navigation
             setupNavigation();
@@ -392,6 +426,7 @@
                     'dashboard': 'dashboard',
                     'ilanlar': 'listings',
                     'franchiselar': 'franchises',
+                    'emlak': 'emlak',
                     'mesajlar': 'messages',
                     'teklifler': 'offers'
                 };
@@ -411,6 +446,7 @@
                 'dashboard': 'Dashboard',
                 'listings': 'İlanlarım',
                 'franchises': 'Franchise\'larım',
+                'emlak': 'Emlak İlanlarım',
                 'messages': 'Mesajlar',
                 'offers': 'Teklifler'
             };
@@ -421,6 +457,8 @@
                 loadUserListings();
             } else if (pageId === 'franchises') {
                 loadUserFranchises();
+            } else if (pageId === 'emlak') {
+                loadUserEmlakListings();
             }
         }
 
@@ -514,6 +552,78 @@
             } catch (e) {
                 console.error('Error loading franchises:', e);
             }
+        }
+
+        // Load user emlak listings
+        async function loadUserEmlakListings() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+
+                const { data, error } = await supabase
+                    .from('emlak_listings')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .order('created_at', { ascending: false });
+
+                const container = document.getElementById('userEmlakListings');
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    container.innerHTML = data.map(item => `
+                        <div class="listing-item">
+                            <div class="listing-info">
+                                <h4>${item.title}</h4>
+                                <p>${item.district_name || item.city_name || ''} ${item.city_name && item.district_name ? '• ' + item.city_name : item.city_name || ''} • ${item.listing_type === 'kiralik' ? 'Kiralık' : 'Satılık'} • ${item.property_type || ''}</p>
+                            </div>
+                            <div class="listing-status">
+                                <span class="status-badge ${item.status || 'active'}">${getStatusText(item.status || 'active')}</span>
+                            </div>
+                            <div class="listing-price">₺${item.price?.toLocaleString('tr-TR') || 0}${item.listing_type === 'kiralik' ? '/ay' : ''}</div>
+                            <div class="listing-actions">
+                                <a href="../emlak-detail.html?id=${item.id}" class="btn btn-sm">Görüntüle</a>
+                                <button class="btn btn-sm btn-outline" onclick="editEmlakListing('${item.id}')">Düzenle</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteEmlakListing('${item.id}', '${item.title.replace(/'/g, "\\'")}')">Sil</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>Henüz emlak ilanınız bulunmuyor.</p>
+                            <a href="../add-emlak.html" class="btn btn-primary">İlk emlak ilanınızı oluşturun</a>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error('Error loading emlak listings:', e);
+                document.getElementById('userEmlakListings').innerHTML = `
+                    <div class="empty-state">
+                        <p>Emlak ilanları yüklenirken hata oluştu.</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function deleteEmlakListing(id, title) {
+            if (!confirm(`"${title}" ilanını silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz!`)) return;
+            try {
+                const { error } = await supabase
+                    .from('emlak_listings')
+                    .delete()
+                    .eq('id', id);
+                if (error) throw error;
+                alert('İlan başarıyla silindi!');
+                loadUserEmlakListings();
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('İlan silinirken hata oluştu: ' + error.message);
+            }
+        }
+
+        function editEmlakListing(id) {
+            window.location.href = `../add-emlak.html?edit=${id}`;
         }
 
         function getStatusText(status) {
@@ -634,6 +744,223 @@
         function toggleUserMenu() {
             // User menu toggle
         }
+
+        // ===== OFFERS MANAGEMENT =====
+        let currentOfferTab = 'incoming';
+        let currentUserId = null;
+
+        // Setup offer tabs
+        document.querySelectorAll('.offer-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.offer-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentOfferTab = tab.dataset.tab;
+                loadOffers();
+            });
+        });
+
+        // Load offers when page changes to offers
+        async function loadOffers() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+            currentUserId = user.id;
+
+            const tableBody = document.getElementById('offersTableBody');
+            tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;">Yükleniyor...</td></tr>';
+
+            try {
+                let query = supabase
+                    .from('offers')
+                    .select(`
+                        *,
+                        listing:listings(id, title, slug, price),
+                        sender:users!offers_sender_id_fkey(id, full_name, email),
+                        receiver:users!offers_receiver_id_fkey(id, full_name, email)
+                    `)
+                    .order('created_at', { ascending: false });
+
+                if (currentOfferTab === 'incoming') {
+                    query = query.eq('receiver_id', user.id);
+                } else {
+                    query = query.eq('sender_id', user.id);
+                }
+
+                // Apply status filter
+                const filterValue = document.getElementById('offerFilter').value;
+                if (filterValue !== 'all') {
+                    query = query.eq('status', filterValue);
+                }
+
+                const { data: offers, error } = await query;
+
+                if (error) throw error;
+
+                // Update tab counts
+                await updateOfferCounts(user.id);
+
+                if (!offers || offers.length === 0) {
+                    const emptyMsg = currentOfferTab === 'incoming' 
+                        ? 'Henüz gelen teklif bulunmuyor.' 
+                        : 'Henüz teklif göndermediniz.';
+                    tableBody.innerHTML = `
+                        <tr class="empty-row">
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <p>${emptyMsg}</p>
+                                    <small>${currentOfferTab === 'incoming' ? 'İlanlarınıza teklif geldiğinde burada görüntülenecektir.' : 'İlanlara teklif gönderdiğinizde burada görüntülenecektir.'}</small>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tableBody.innerHTML = offers.map(offer => {
+                    const listing = offer.listing || {};
+                    const otherUser = currentOfferTab === 'incoming' ? offer.sender : offer.receiver;
+                    const statusBadge = getOfferStatusBadge(offer.status);
+                    const date = new Date(offer.created_at).toLocaleDateString('tr-TR');
+                    const amount = parseFloat(offer.amount).toLocaleString('tr-TR');
+
+                    return `
+                        <tr data-offer-id="${offer.id}">
+                            <td><input type="checkbox"></td>
+                            <td>
+                                <a href="../listing-detail.html?id=${listing.id}" class="offer-listing-link">
+                                    ${listing.title || 'İlan silinmiş'}
+                                </a>
+                            </td>
+                            <td>
+                                <div class="offer-user">
+                                    <span class="user-avatar-sm">${(otherUser?.full_name || otherUser?.email || '?').charAt(0).toUpperCase()}</span>
+                                    <span>${otherUser?.full_name || otherUser?.email || 'Bilinmiyor'}</span>
+                                </div>
+                            </td>
+                            <td><strong>₺${amount}</strong> <span class="currency-badge">${offer.currency}</span></td>
+                            <td class="offer-note">${offer.note || '-'}</td>
+                            <td>${statusBadge}</td>
+                            <td>${date}</td>
+                            <td>
+                                <div class="offer-actions">
+                                    ${currentOfferTab === 'incoming' && offer.status === 'pending' ? `
+                                        <button class="btn btn-sm btn-success" onclick="respondToOffer('${offer.id}', 'accepted')">Kabul Et</button>
+                                        <button class="btn btn-sm btn-danger" onclick="respondToOffer('${offer.id}', 'rejected')">Reddet</button>
+                                    ` : ''}
+                                    ${currentOfferTab === 'sent' && offer.status === 'pending' ? `
+                                        <button class="btn btn-sm btn-outline" onclick="cancelOffer('${offer.id}')">İptal Et</button>
+                                    ` : ''}
+                                    ${offer.status !== 'pending' ? `
+                                        <span class="status-text">${getStatusText(offer.status)}</span>
+                                    ` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading offers:', error);
+                tableBody.innerHTML = `
+                    <tr class="empty-row">
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <p>Teklifler yüklenirken hata oluştu.</p>
+                                <small>${error.message}</small>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function updateOfferCounts(userId) {
+            try {
+                const { count: incomingCount } = await supabase
+                    .from('offers')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('receiver_id', userId);
+
+                const { count: sentCount } = await supabase
+                    .from('offers')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('sender_id', userId);
+
+                document.querySelector('.offer-tab[data-tab="incoming"] .tab-count').textContent = incomingCount || 0;
+                document.querySelector('.offer-tab[data-tab="sent"] .tab-count').textContent = sentCount || 0;
+            } catch (e) {
+                console.error('Count error:', e);
+            }
+        }
+
+        function getOfferStatusBadge(status) {
+            const statusMap = {
+                'pending': '<span class="status-badge pending">Beklemede</span>',
+                'accepted': '<span class="status-badge active">Kabul Edildi</span>',
+                'rejected': '<span class="status-badge rejected">Reddedildi</span>',
+                'cancelled': '<span class="status-badge draft">İptal Edildi</span>',
+                'expired': '<span class="status-badge draft">Süresi Doldu</span>'
+            };
+            return statusMap[status] || status;
+        }
+
+        async function respondToOffer(offerId, response) {
+            const confirmMsg = response === 'accepted' 
+                ? 'Bu teklifi kabul etmek istediğinize emin misiniz?' 
+                : 'Bu teklifi reddetmek istediğinize emin misiniz?';
+            
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                const { error } = await supabase
+                    .from('offers')
+                    .update({
+                        status: response,
+                        responded_at: new Date().toISOString()
+                    })
+                    .eq('id', offerId);
+
+                if (error) throw error;
+
+                alert(response === 'accepted' ? 'Teklif kabul edildi!' : 'Teklif reddedildi.');
+                loadOffers();
+            } catch (error) {
+                console.error('Response error:', error);
+                alert('İşlem sırasında hata oluştu: ' + error.message);
+            }
+        }
+
+        async function cancelOffer(offerId) {
+            if (!confirm('Teklifinizi iptal etmek istediğinize emin misiniz?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('offers')
+                    .update({
+                        status: 'cancelled'
+                    })
+                    .eq('id', offerId);
+
+                if (error) throw error;
+
+                alert('Teklif iptal edildi.');
+                loadOffers();
+            } catch (error) {
+                console.error('Cancel error:', error);
+                alert('İptal işlemi sırasında hata oluştu: ' + error.message);
+            }
+        }
+
+        // Filter change listener
+        document.getElementById('offerFilter').addEventListener('change', loadOffers);
+
+        // Load offers when page changes to offers
+        const originalShowPage = showPage;
+        showPage = function(pageId) {
+            originalShowPage(pageId);
+            if (pageId === 'offers') {
+                loadOffers();
+            }
+        };
     </script>
 </body>
 </html>

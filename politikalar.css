@@ -1,0 +1,254 @@
+/* Politikalar Page Styles */
+
+.policies-main {
+    margin-top: 72px;
+    padding: 2rem 0 4rem;
+    min-height: calc(100vh - 72px);
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 2rem;
+}
+
+.policies-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Sidebar */
+.policies-sidebar {
+    position: sticky;
+    top: 90px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.policies-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.policy-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    color: #374151;
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s;
+}
+
+.policy-link:last-child {
+    border-bottom: none;
+}
+
+.policy-link:hover {
+    background: #f9fafb;
+    color: #dc2626;
+}
+
+.policy-link.active {
+    background: #fef2f2;
+    color: #dc2626;
+    font-weight: 500;
+    border-left: 3px solid #dc2626;
+}
+
+.policy-link svg {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.policy-link:hover svg,
+.policy-link.active svg {
+    opacity: 1;
+}
+
+/* Content */
+.policies-content {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 2rem;
+    min-height: 600px;
+}
+
+.policy-section {
+    display: none;
+}
+
+.policy-section.active {
+    display: block;
+}
+
+.policy-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.policy-text {
+    color: #4b5563;
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+.policy-text h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 2rem 0 1rem;
+}
+
+.policy-text p {
+    margin-bottom: 1rem;
+}
+
+.policy-text ul,
+.policy-text ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.policy-text li {
+    margin-bottom: 0.5rem;
+}
+
+.policy-text strong {
+    color: #1f2937;
+}
+
+.policy-text a {
+    color: #dc2626;
+    text-decoration: none;
+}
+
+.policy-text a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .policies-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .policies-sidebar {
+        position: static;
+    }
+}
+
+/* FAQ Styles */
+.faq-category {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.faq-category:first-of-type {
+    margin-top: 0;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.faq-item {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #374151;
+    transition: color 0.2s;
+}
+
+.faq-question:hover {
+    color: #dc2626;
+}
+
+.faq-question span {
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.faq-icon {
+    flex-shrink: 0;
+    transition: transform 0.3s;
+    color: #9ca3af;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+    color: #dc2626;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding-bottom: 1rem;
+}
+
+.faq-answer p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .policies-content {
+        padding: 1.5rem;
+    }
+    
+    .policy-link {
+        padding: 0.875rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .faq-question {
+        font-size: 0.9rem;
+        padding: 0.875rem 0;
+    }
+}

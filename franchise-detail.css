@@ -582,6 +582,27 @@
     background: #d97706;
 }
 
+.doc-btn-active {
+    background: #10b981;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.doc-btn-active:hover {
+    background: #059669;
+}
+
+.document-empty {
+    background: #f9fafb;
+    border: 2px dashed #e5e7eb;
+}
+
+.document-empty .doc-text {
+    color: #9ca3af;
+}
+
 /* Info Warning */
 .info-warning {
     display: flex;

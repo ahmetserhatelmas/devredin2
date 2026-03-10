@@ -1,0 +1,734 @@
+/* Page Body */
+.franchise-list-body {
+    background: #f8fafc;
+}
+
+/* Franchise List Page */
+.franchise-list-page {
+    padding: 100px 0 3rem;
+    min-height: 100vh;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.list-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.result-count {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-left: 1rem;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Search & Filter Bar */
+.search-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    background: #f3f4f6;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.search-input-wrapper:focus-within {
+    border-color: #dc2626;
+    background: white;
+}
+
+.search-input-wrapper svg {
+    color: #9ca3af;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+}
+
+.search-input-wrapper input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 0.95rem;
+    outline: none;
+    color: #1f2937;
+}
+
+.search-input-wrapper input::placeholder {
+    color: #9ca3af;
+}
+
+.btn-search {
+    background: #1f2937 !important;
+    color: white !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-search:hover {
+    background: #111827 !important;
+}
+
+.btn-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.btn-icon:hover {
+    background: #e5e7eb;
+}
+
+.btn-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: #4b5563;
+}
+
+.view-toggle {
+    display: flex;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.view-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.view-btn:first-child {
+    border-right: 1px solid #e5e7eb;
+}
+
+.view-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: #6b7280;
+}
+
+.view-btn.active {
+    background: #1f2937;
+}
+
+.view-btn.active svg {
+    stroke: white;
+}
+
+/* Active Filters */
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.filter-tag button {
+    background: none;
+    border: none;
+    color: #1e40af;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0;
+    margin-left: 0.25rem;
+}
+
+.filter-tag button:hover {
+    color: #dc2626;
+}
+
+/* Franchise Grid */
+.franchise-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.franchise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.franchise-list .franchise-card {
+    flex-direction: row;
+}
+
+.franchise-list .franchise-card .card-image {
+    width: 200px;
+    height: 140px;
+    flex-shrink: 0;
+}
+
+/* Franchise Card */
+.franchise-card {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #f3f4f6;
+}
+
+.franchise-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    border-color: #e5e7eb;
+}
+
+.card-image {
+    height: 160px;
+    background: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 1.5rem;
+}
+
+.card-placeholder {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #d1d5db;
+}
+
+.card-content {
+    padding: 1.25rem;
+}
+
+.card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.75rem 0;
+}
+
+.card-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.75rem;
+    background: #f3f4f6;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #4b5563;
+    margin-bottom: 0.75rem;
+}
+
+.category-icon {
+    font-size: 0.85rem;
+}
+
+.card-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Skeleton */
+.franchise-card.skeleton {
+    height: 280px;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border: none;
+}
+
+.franchise-card.skeleton:hover {
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state p {
+    color: #6b7280;
+    margin: 0 0 1.5rem 0;
+}
+
+/* Load More */
+.load-more {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.btn-outline {
+    padding: 0.75rem 2rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #374151;
+}
+
+.btn-outline:hover {
+    border-color: #dc2626;
+    color: #dc2626;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    margin: 1rem;
+}
+
+.modal.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-sm {
+    max-width: 400px;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6b7280;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.modal-close:hover {
+    background: #f3f4f6;
+}
+
+.modal-back {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.modal-body {
+    padding: 1rem 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.modal-footer .btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+}
+
+.modal-footer .btn-outline {
+    background: white;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+.modal-footer .btn-primary {
+    background: #dc2626;
+    border: none;
+    color: white;
+}
+
+.modal-footer .btn-primary:hover {
+    background: #b91c1c;
+}
+
+/* Filter Sections */
+.filter-section {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.filter-section:last-child {
+    border-bottom: none;
+}
+
+.filter-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: #1f2937;
+}
+
+.filter-toggle span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-toggle svg {
+    transition: transform 0.2s;
+    width: 20px;
+    height: 20px;
+    stroke: #6b7280;
+}
+
+.filter-section.open .filter-toggle svg {
+    transform: rotate(180deg);
+}
+
+.filter-options {
+    display: none;
+    padding-bottom: 1rem;
+}
+
+.filter-section.open .filter-options {
+    display: block;
+}
+
+.filter-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    color: #374151;
+}
+
+.filter-checkbox input {
+    width: 18px;
+    height: 18px;
+    accent-color: #dc2626;
+}
+
+.filter-badge {
+    padding: 0.25rem 0.5rem;
+    background: #fee2e2;
+    color: #dc2626;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Price Inputs */
+.price-inputs {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.price-input-group {
+    flex: 1;
+}
+
+.price-input-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.35rem;
+}
+
+.price-input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.price-input-group input:focus {
+    border-color: #dc2626;
+}
+
+.price-separator {
+    color: #9ca3af;
+    padding-bottom: 0.75rem;
+}
+
+.price-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.preset-btn {
+    padding: 0.5rem 0.75rem;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #374151;
+}
+
+.preset-btn:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+}
+
+/* Sort Options */
+.sort-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.sort-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    color: #374151;
+}
+
+.sort-option:last-child {
+    border-bottom: none;
+}
+
+.sort-option input {
+    width: 20px;
+    height: 20px;
+    accent-color: #dc2626;
+}
+
+/* Error State */
+.error {
+    color: #dc2626;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Auth dropdown fix */
+.auth-dropdown.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Page specific overrides */
+.franchise-list-body .navbar {
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.franchise-list-body .footer {
+    background: #1f2937;
+    color: white;
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.franchise-list-body .footer-bottom {
+    text-align: center;
+}
+
+.franchise-list-body .footer-bottom p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .franchise-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .franchise-list-page {
+        padding-top: 100px;
+    }
+    
+    .list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .result-count {
+        margin-left: 0;
+    }
+    
+    .search-filter-bar {
+        flex-wrap: wrap;
+    }
+    
+    .search-input-wrapper {
+        width: 100%;
+        order: -1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-search {
+        flex: 1;
+    }
+    
+    .franchise-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .franchise-list .franchise-card {
+        flex-direction: column;
+    }
+    
+    .franchise-list .franchise-card .card-image {
+        width: 100%;
+        height: 160px;
+    }
+}

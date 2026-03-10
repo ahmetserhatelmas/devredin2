@@ -70,7 +70,7 @@ async function incrementViewCount(franchiseId) {
 
 // Render franchise detail
 function renderFranchiseDetail(franchise) {
-    document.title = `${franchise.brand_name} - Franchise - DevredinPlatform`
+    document.title = `${franchise.brand_name} - Franchise - devret linkPlatform`
     
     // Remove skeletons
     document.body.classList.add('loaded')
@@ -256,6 +256,79 @@ function renderFranchiseDetail(franchise) {
         ).join('')
     } else {
         supportAreas.innerHTML = '<span class="support-tag">Personel</span><span class="support-tag">Operasyonel</span>'
+    }
+    
+    // Documents Section
+    const documentsList = document.getElementById('documentsList')
+    const documentsSection = document.getElementById('documentsSection')
+    
+    if (documentsList) {
+        let documentsHtml = ''
+        let hasDocuments = false
+        
+        // Brochure PDF
+        if (franchise.brochure_url) {
+            hasDocuments = true
+            documentsHtml += `
+                <div class="document-card">
+                    <span class="doc-icon">📄</span>
+                    <span class="doc-text">Broşür / Tanıtım Dosyası</span>
+                    <a href="${franchise.brochure_url}" target="_blank" class="doc-btn doc-btn-active">
+                        📥 İndir
+                    </a>
+                </div>
+            `
+        }
+        
+        // Investor Presentation (if stored separately)
+        if (franchise.investor_presentation_url) {
+            hasDocuments = true
+            documentsHtml += `
+                <div class="document-card">
+                    <span class="doc-icon">📊</span>
+                    <span class="doc-text">Yatırımcı Sunumu</span>
+                    <a href="${franchise.investor_presentation_url}" target="_blank" class="doc-btn doc-btn-active">
+                        📥 İndir
+                    </a>
+                </div>
+            `
+        }
+        
+        // Gallery Images as downloadable
+        if (franchise.gallery_images && franchise.gallery_images.length > 0) {
+            hasDocuments = true
+            documentsHtml += `
+                <div class="document-card">
+                    <span class="doc-icon">🖼️</span>
+                    <span class="doc-text">Galeri Görselleri (${franchise.gallery_images.length} adet)</span>
+                    <button class="doc-btn doc-btn-active" onclick="showGallery()">
+                        👁️ Görüntüle
+                    </button>
+                </div>
+            `
+        }
+        
+        if (hasDocuments) {
+            documentsList.innerHTML = documentsHtml
+        } else {
+            // No documents available
+            documentsList.innerHTML = `
+                <div class="document-card document-empty">
+                    <span class="doc-icon">📁</span>
+                    <span class="doc-text">Henüz belge eklenmemiş</span>
+                </div>
+            `
+        }
+    }
+}
+
+// Show gallery modal
+function showGallery() {
+    // Get current franchise from page
+    const urlParams = new URLSearchParams(window.location.search)
+    const franchiseId = urlParams.get('id')
+    if (franchiseId) {
+        alert('Galeri görselleri yakında eklenecek!')
     }
 }
 

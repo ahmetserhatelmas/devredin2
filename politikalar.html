@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hukuki Bilgiler ve Politikalar - Devret Link</title>
+    <link rel="stylesheet" href="styles.css?v=15">
+    <link rel="stylesheet" href="politikalar.css?v=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html" class="logo-main">devret link</a>
+                    <span class="logo-divider">|</span>
+                    <a href="franchise.html" class="logo-sub">fr.</a>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
+                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link">Panel</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <button class="nav-icon-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Auth Menu -->
+                    <div class="auth-menu" id="authMenu">
+                        <button class="auth-icon-btn" id="authBtn" onclick="toggleAuthDropdown()">
+                            <svg id="authIconGuest" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span id="authIconUser" class="user-initials" style="display:none;">?</span>
+                        </button>
+                        <div class="auth-dropdown" id="authDropdown">
+                            <div id="authButtons">
+                                <a href="login.html" class="dropdown-item">Giriş Yap</a>
+                                <a href="login.html?register=true" class="dropdown-item">Üye Ol</a>
+                            </div>
+                            <div id="userMenu" style="display: none;">
+                                <div class="dropdown-header">
+                                    <div class="dropdown-avatar" id="dropdownAvatar">?</div>
+                                    <span class="dropdown-name" id="dropdownName">Kullanıcı</span>
+                                </div>
+                                <a href="profile.html" class="dropdown-item">Profil</a>
+                                <a href="panel/" class="dropdown-item">Panel</a>
+                                <a href="settings.html" class="dropdown-item">Ayarlar</a>
+                                <div class="dropdown-divider"></div>
+                                <button onclick="logout()" class="dropdown-item logout">Çıkış Yap</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="policies-main">
+        <div class="container">
+            <h1 class="page-title">Hukuki Bilgiler ve Politikalar</h1>
+            
+            <div class="policies-layout">
+                <!-- Sidebar Menu -->
+                <aside class="policies-sidebar">
+                    <nav class="policies-nav">
+                        <a href="#kullanim-kosullari" class="policy-link active" data-policy="kullanim-kosullari">
+                            Kullanım Koşulları
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#aydinlatma-metni" class="policy-link" data-policy="aydinlatma-metni">
+                            Aydınlatma Metni
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#kvkk" class="policy-link" data-policy="kvkk">
+                            KVKK
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#gizlilik-sozlesmesi" class="policy-link" data-policy="gizlilik-sozlesmesi">
+                            Gizlilik Sözleşmesi
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#kisisel-verilerin-islenmesi" class="policy-link" data-policy="kisisel-verilerin-islenmesi">
+                            Gizlilik ve Kişisel Verilerin İşlenmesi Politikası
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#veri-sahibi-basvuru" class="policy-link" data-policy="veri-sahibi-basvuru">
+                            Veri Sahibi Başvuru Formu
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#cerez-politikasi" class="policy-link" data-policy="cerez-politikasi">
+                            Gizlilik ve Çerez Politikası
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#basvuru-formu-eki" class="policy-link" data-policy="basvuru-formu-eki">
+                            Başvuru Formu Eki
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#uyelik-sozlesmesi" class="policy-link" data-policy="uyelik-sozlesmesi">
+                            Üyelik Sözleşmesi
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#acik-riza-metni" class="policy-link" data-policy="acik-riza-metni">
+                            Açık Rıza Metni
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#ilan-verme-kurallari" class="policy-link" data-policy="ilan-verme-kurallari">
+                            İlan Verme Kuralları
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#islem-rehberi" class="policy-link" data-policy="islem-rehberi">
+                            İşlem Rehberi
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#sss" class="policy-link" data-policy="sss">
+                            Sıkça Sorulan Sorular
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </a>
+                    </nav>
+                </aside>
+                
+                <!-- Content Area -->
+                <div class="policies-content">
+                    <!-- Kullanım Koşulları -->
+                    <section id="kullanim-kosullari" class="policy-section active">
+                        <h2>Kullanım Koşulları</h2>
+                        <div class="policy-text">
+                            <p>İçerik eklenecek...</p>
+                        </div>
+                    </section>
+                    
+                    <!-- Aydınlatma Metni -->
+                    <section id="aydinlatma-metni" class="policy-section">
+                        <h2>Aydınlatma Metni</h2>
+                        <div class="policy-text">
+                            <p>İşbu Kişisel Verilerin Korunması Kanunu Uyarınca Aydınlatma Metni ("Aydınlatma Metni") veri sorumlusu sıfatıyla hareket eden DEVRET LİNK BİLGİ TEKNOLOJİLERİ YAZILIM VE TİCARET A.Ş. ("DEVRET LİNK") tarafından DEVRET LİNK'in 6698 sayılı Kişisel Verilerin Korunması Kanunu'na ("Kanun") uygun olarak DEVRET LİNK kullanıcılarının kişisel verilerinin işlenmesine ilişkin açıklamalarda bulunmak ve bilgilendirmek amacıyla kaleme almıştır.</p>
+
+                            <h3>1. Toplanan Kişisel Veriler</h3>
+                            <p>Aydınlatma Metni kapsamında sınıflandırılan kişisel verileriniz aşağıdaki gibidir;</p>
+                            
+                            <ul>
+                                <li><strong>Kullanıcı Üyelik (Profil) Bilgisi:</strong> Kullanıcı adı (isim - soyisim), doğum tarihi (eğer ilettiyseniz), profil fotoğrafı (eğer ilettiyseniz).</li>
+                                <li><strong>Kimlik Doğrulama Bilgileri:</strong> Kullanıcıların üyelik bilgileri, kimliği doğrulamak için ve hesaba erişimi sağlamak için kullanılan parolaları, Kullanıcı Adı, kontak bilgileri, ilan numaraları. E-devlet tarafından kullanıcılara temin edilen tanımlayıcı numara (GUID-Globally Unique Identifier Number).</li>
+                                <li><strong>İletişim Bilgisi:</strong> Telefon numarası, adres, e-mail adresi</li>
+                                <li><strong>Lokasyon Verisi:</strong> Kişisel veri sahibinin DEVRET LİNK iş birimleri tarafından yürütülen operasyonlar çerçevesinde, kullanıcının DEVRET LİNK'i kullanırken işaretlediği ve/veya cihaz bazlı aktive ettiği lokasyonu</li>
+                                <li><strong>Müşteri İşlem Bilgisi:</strong> Ürün ve hizmetlerimizin kullanımına yönelik kayıtlar ile kullanıcının ürün ve hizmetleri kullanımı için gerekli olan talimatları/talepleri, favori ilanlar, son bilgi değişikliği tarihi, ilana ilişkin puanlar, yorumlar ve notlar, üyelik tarihi, kullanılan kampanya bilgisi</li>
+                                <li><strong>İşlem Güvenliği Bilgisi:</strong> Ticari faaliyetlerimizi yürütürken teknik, idari, hukuki ve ticari güvenliğimizi sağlamamız için işlenen IP adresi, (sistem giriş bilgileri) log in credentials, tedarikçilerin destek hizmeti verirken eriştikleri kaynakların loglanması, cüzdan sistemi özelinde kullanıcı hareketleri (şifre sıfırlama, şifre oluşturma gibi) gibi kişisel veriler</li>
+                                <li><strong>Finansal Bilgi:</strong> DEVRET LİNK'in kişisel veri sahibi ile kurmuş olduğu hukuki ilişkinin tipine göre yaratılan her türlü finansal sonucu gösteren bilgi, belge ve ödeme kayıtlarına ilişkin bilgiler ile ilk dört son altı hane olarak maskeli haldeki kredi kartı numarası</li>
+                                <li><strong>Görsel ve İşitsel Kayıtlar:</strong> Kullanıcı ile iletişim sonucu elde edilen canlı yardım kayıtları yahut telefon görüşme kayıtları, e-mail ile iletişim kurulması halinde e-mail yazışma kayıtları</li>
+                                <li><strong>Hukuki İşlem Bilgisi:</strong> Hukuki alacak ve haklarımızın tespiti, takibi ve borçlarımızın ifası ile kanuni yükümlülüklerimiz ve şirketimizin politikalarına uyum kapsamında işlenen kişisel veriler</li>
+                                <li><strong>Pazarlama Bilgisi:</strong> Ürün ve hizmetlerimizin kişisel veri sahibinin kullanım alışkanlıkları, beğenisi ve ihtiyaçları doğrultusunda özelleştirilerek pazarlamasının yapılmasına yönelik işlenen kişisel veriler (yararlanılan indirimler ve kampanyalar, sipariş zamanı, favori ürünler, kupon bilgisi, hangi uygulama üzerinden kaydolunduğu, hangi uygulama ile sipariş verildiği (web, mobil, uygulama), alışveriş alışkanlıkları) ve bu işleme sonuçları neticesinde yaratılan rapor ve değerlendirmeler</li>
+                                <li><strong>Risk Yönetimi Bilgisi:</strong> Kişiyle ilişkilendirilen ve şirketimizin ticari itibarını korumak maksatlı toplanan bilgiler</li>
+                            </ul>
+
+                            <p>Kişilerin ırkı, etnik kökeni, siyasi düşüncesi, felsefi inancı, dini, mezhebi veya diğer inançları, kılık ve kıyafeti, dernek, vakıf ya da sendika üyeliği, sağlığı, cinsel hayatı, ceza mahkûmiyeti ve güvenlik tedbirleriyle ilgili verileri ile biyometrik ve genetik verileri özel nitelikli kişisel veridir. DEVRET LİNK herhangi bir şekilde özel nitelikli kişisel verilerinizi toplamaz ve işlemez. Bu gibi verileri paylaşmanızı istemeyiz. DEVRET LİNK ile ilişkiniz kapsamında hangi etkileşim yoluyla olursa olsun özel nitelikli kişisel verilinizi paylaşmayınız.</p>
+
+                            <h3>2. Kişisel Verilerin İşlenme Amacı</h3>
+                            <p>Yukarıda belirtilen kişisel verileriniz aşağıdaki amaçlar doğrultusunda ve bunlarla sınırlı ve ölçülü olacak şekilde işlenecektir.</p>
+
+                            <p><strong>i. Şirket tarafından sunulan hizmete ilişkin sözleşmenin yerine getirilebilmesi kapsamında;</strong></p>
+                            <ul>
+                                <li>Siparişinizin tarafınıza iletilebilmesi (profil, iletişim, işlem güvenliği, hukuki işlem, lokasyon, görsel ve işitsel kayıtlar)</li>
+                                <li>DEVRET LİNK ile kurmuş olduğunuz sözleşmenin ifası (profil, iletişim, işlem güvenliği, hukuki işlem, lokasyon, görsel ve işitsel kayıtlar)</li>
+                                <li>Sözleşmenin diğer süreçlerinin takibi (pazarlama, müşteri işlem, profil, iletişim, işlem güvenliği, hukuki işlem, lokasyon, görsel ve işitsel kayıtlar)</li>
+                            </ul>
+
+                            <p><strong>ii. Şirket tarafından sunulan ürün ve hizmetlerin kullanıcı deneyiminin arttırılması için ve ilgili kişilerin beğeni, kullanım alışkanlıkları ve ihtiyaçlarına göre özelleştirilerek ilgili kişilere önerilmesi ve tanıtılması için gerekli olan aktivitelerin planlanması ve icrası kapsamında;</strong></p>
+                            <ul>
+                                <li>Kullanıcı memnuniyeti aktivitelerinin planlanması ve/veya icrası (İletişim, pazarlama, görsel ve işitsel kayıtlar)</li>
+                                <li>Ürün ve hizmetlerin satış ve pazarlaması için pazar araştırması faaliyetlerinin planlanması ve icrası (İletişim, pazarlama, müşteri işlem, görsel ve işitsel kayıtlar, profil)</li>
+                                <li>Ürün ve/veya hizmetlerin pazarlama süreçlerinin planlanması ve icrası (profil, iletişim, pazarlama, müşteri işlem, görsel ve işitsel kayıtlar)</li>
+                                <li>Şirketin sunduğu ürün veya hizmetlerden en yüksek faydanın elde edilmesi, kullanıcı deneyiminin artırılması için ilgili süreçlerin planlanması ve icrası ve bu kapsamda DEVRET LİNK tarafından anlık bildirimlerin yapılması, kullanıcı alışkanlıklarının tespit edilerek hedefleme, profilleme ve analizlerin yapılması, tarafınıza indirimli kampanya sunulması, özelleştirilmiş içeriklerin sunulması, dijital pazarlama, hedefleme, yeniden pazarlama (on-site remarketing), reklam yapılması (profil, iletişim, pazarlama, müşteri işlem)</li>
+                                <li>Satış, pazarlama ve optimizasyon süreçlerinin kullanıcı deneyimini iyileştirmek için planlanması ve icrası (profil, iletişim, pazarlama, müşteri işlem, görsel ve işitsel kayıtlar)</li>
+                                <li>Şirket iş ve stratejilerine ilişkin süreçlerin planlanması ve geliştirilmesi kapsamında tarafınıza yapılan reklamlara ilişkin değerlendirme, analiz ve kullanıcı deneyiminin geliştirilmesi için optimizasyon faaliyetlerinin yapılması, (profil, iletişim, risk yönetimi, müşteri işlem, görsel ve işitsel kayıtlar)</li>
+                                <li>Şirketin sunduğu ürün ve hizmetlerin satış ve pazarlaması için pazar araştırması faaliyetlerinin planlanması ve icrası kapsamında pazar araştırmaları ve anketlerin yapılması (iletişim, profil, pazarlama, müşteri işlem, görsel ve işitsel kayıtlar)</li>
+                            </ul>
+
+                            <p><strong>iii. Şirket tarafından sunulan ürün ve hizmetlerden ilgili kişileri faydalandırmak ve bu kullanıcıların deneyiminin arttırılması için gerekli çalışmaların iş birimlerimiz tarafından yapılması ve ilgili iş süreçlerinin yürütülmesi kapsamında;</strong></p>
+                            <ul>
+                                <li>Ürün ve/veya hizmetlerin satış süreçlerinin planlanması ve icrası (profil, iletişim, pazarlama, finans, müşteri işlem)</li>
+                                <li>Destek hizmetleri aktivitelerinin planlanması ve/veya icrası (profil, iletişim, pazarlama, finans, görsel ve işitsel kayıtlar, müşteri işlem)</li>
+                                <li>Kullanıcı ilişkileri yönetimi süreçlerinin planlanması ve icrası (profil, iletişim, görsel ve işitsel kayıtlar, müşteri işlem)</li>
+                                <li>Kullanıcı talep ve/veya şikayetlerinin takibi (profil, iletişim, görsel ve işitsel kayıtlar, müşteri işlem)</li>
+                                <li>Sözleşme süreçlerinin ve/veya hukuki taleplerin takibi (profil, iletişim, pazarlama, müşteri işlem, hukuki işlem, görsel ve işitsel kayıtlar, işlem güvenliği, lokasyon)</li>
+                            </ul>
+
+                            <p><strong>iv. Şirket'in ve Şirket'le iş ilişkisi içerisinde olan ilgili kişilerin hukuki, teknik ve ticari iş güvenliğinin temin edilmesi kapsamında;</strong></p>
+                            <ul>
+                                <li>Şirket denetim faaliyetlerinin planlanması ve icrası (iletişim, lokasyon, finans, risk yönetimi, işlem güvenliği, hukuki işlem)</li>
+                                <li>Şirket faaliyetlerinin şirket prosedürleri ve/veya ilgili mevzuata uygun olarak yürütülmesinin temini için gerekli operasyonel faaliyetlerin planlanması ve icrası (iletişim, işlem güvenliği, müşteri işlem, hukuki işlem, lokasyon, finans)</li>
+                                <li>Şirket operasyonlarının güvenliğinin temini (hukuki işlem, risk yönetimi, müşteri işlem, işlem güvenliği, lokasyon)</li>
+                                <li>Verilerin doğru ve güncel olmasının sağlanması (hukuki işlem, risk yönetimi, müşteri işlem, işlem güvenliği)</li>
+                                <li>Yetkili kuruluşlara mevzuattan kaynaklı bilgi verilmesi (iletişim, işlem güvenliği, müşteri işlem, hukuki işlem)</li>
+                            </ul>
+
+                            <p><strong>v. Şirket tarafından yürütülen ticari faaliyetlerin gerçekleştirilmesi için ilgili iş birimlerimiz tarafından gerekli çalışmaların yapılması ve buna bağlı iş süreçlerinin yürütülmesi kapsamında;</strong></p>
+                            <ul>
+                                <li>Bilgi güvenliği süreçlerinin planlanması, denetimi ve icrası (profil, risk yönetimi, işlem güvenliği, müşteri işlem, hukuki işlem)</li>
+                                <li>Bilgi teknolojileri alt yapısının oluşturulması ve yönetilmesi (risk yönetimi, işlem güvenliği, müşteri işlem, hukuki işlem)</li>
+                                <li>Finans ve/veya muhasebe işlerinin takibi (profil, iletişim, finans, müşteri işlem, hukuki işlem)</li>
+                                <li>Hukuk işlerinin takibi (profil, iletişim, müşteri işlem, hukuki işlem, işlem güvenliği, risk yönetimi, finans)</li>
+                                <li>İş faaliyetlerinin etkinlik/verimlilik ve/veya yerindelik analizlerinin gerçekleştirilmesi faaliyetlerinin planlanması ve/veya icrası (iletişim, lokasyon, hukuki işlem, görsel ve işitsel kayıtlar)</li>
+                                <li>İş faaliyetlerinin planlanması ve icrası (iletişim, lokasyon, hukuki işlem, görsel ve işitsel kayıtlar)</li>
+                                <li>Kurumsal iletişim faaliyetlerinin planlanması ve icrası (profil, iletişim, pazarlama, lokasyon)</li>
+                                <li>Lojistik faaliyetlerinin planlanması ve icrası (iletişim, müşteri işlem, lokasyon)</li>
+                                <li>Operasyon süreçlerinin planlanması ve icrası (iletişim, müşteri işlem, finans)</li>
+                                <li>Hileli faaliyetlerin önüne geçilmesi, mevzuata uygun hareket edilmesi, etik/uyum kurallarına uygun hareket edilmesi (hukuki işlem, risk yönetimi, işlem güvenliği)</li>
+                            </ul>
+
+                            <p><strong>vi. Şirket'in ticari ve/veya iş stratejilerinin planlanması ve icrası kapsamında;</strong></p>
+                            <ul>
+                                <li>İş ortakları ve/veya tedarikçilerle olan ilişkilerin yönetimi (iletişim, müşteri işlem, lokasyon)</li>
+                                <li>Stratejik planlama faaliyetlerinin icrası (risk yönetimi, finans)</li>
+                                <li>İş ortakları ve/veya tedarikçilerin tedarik zinciri yönetiminin ve değerlendirme süreçlerinin planlanması ve takibi (iletişim, lokasyon, müşteri işlem, finans)</li>
+                                <li>Şirketin iş ve stratejilerine/iyileştirme süreçlerine ve denetime ilişkin süreçlerin planlanması (iletişim, finans, risk yönetimi, lokasyon, hukuki işlem, pazarlama, görsel ve işitsel kayıtlar)</li>
+                                <li>Performans yönetimi süreçlerinin planlanması ve icrası (müşteri işlem, lokasyon)</li>
+                            </ul>
+
+                            <h3>3. Kişisel Veri Toplamanın Yöntemi ve Hukuki Sebebi</h3>
+                            <p>Kişisel verileriniz DEVRET LİNK tarafından e-mail, ilgili internet siteleri ve mobil uygulama gibi kanallardan, DEVRET LİNK'in erişimine imkan verdiğiniz sosyal medya hesapları üzerinden elektronik ortamda ve çağrı merkezi kanalı ile veya fiziki olarak posta/kargo yolu ile toplanmaktadır.</p>
+
+                            <p>Kişisel verileriniz işbu Aydınlatma Metin'inin 2. maddesinde belirtilen amaçlar doğrultusunda Kanun'un 5. maddesinde belirtilen aşağıdaki hukuki sebeplere dayanılarak işlenebilecektir:</p>
+
+                            <ul>
+                                <li><strong>Kanunlarda açıkça öngörülmesi:</strong> iii, iv, v</li>
+                                <li><strong>Sizinle aramızdaki sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması kaydıyla, size ait kişisel verilerinizi işlenmesinin gerekli olması:</strong> i, iii, v</li>
+                                <li><strong>Hukuki yükümlülüklerimizi yerine getirebilmemiz için zorunlu olması:</strong> iii, iv, v</li>
+                                <li><strong>Sizin tarafınızdan alenileştirilmiş olması (alenileştirme amacınızla bağdaştığı ölçüde):</strong> ii, iii</li>
+                                <li><strong>Bir hakkın tesisi, kullanılması veya korunması için kişisel verilerinizi işlemenin zorunlu olması:</strong> iii, iv, v</li>
+                                <li><strong>Temel hak ve özgürlüklerinize zarar vermemek kaydıyla, meşru menfaatlerimiz için zorunlu olması:</strong> ii, iii, iv, v, iv</li>
+                            </ul>
+
+                            <h3>4. Kişisel Verilerin Aktarılabileceği Taraflar ile Aktarım Amacı</h3>
+                            <p>Kişisel veriler Kanunun "Kişisel Verilerin Aktarımı" başlıklı 8. maddesindeki uyularak ve gerekli teknik ve idari tedbirler alınarak, sadece ilgili amacın gerçekleşmesi için gerekli olduğu ölçüde Kanunun 5. maddesinin 2. fıkrasının (c) bendi "bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olması kaydıyla, sözleşmenin taraflarına ait kişisel verilerin işlenmesinin gerekli olması", (ç) bendi "veri sorumlusunun hukuki yükümlülüğünü yerine getirmesi için zorunlu olması" ve (f) bendi "ilgili kişinin temel hak ve özgürlüklerine zarar vermemek kaydıyla, veri sorumlusunun meşru menfaatleri için veri işlenmesinin zorunlu olması" hukuki sebeplerine dayanılarak;</p>
+
+                            <ul>
+                                <li>Yukarıda sayılan amaçlarla sınırlı olarak iştirakler ve bağlı ortaklıklara ve aramızdaki sözleşmeler kapsamında mevzuata uygun bir şekilde iş ortaklarımıza,</li>
+                                <li>Hukuki yükümlülüğümüzü yerine getirebilmek için yasal düzenlemeler ve mevzuat gereği yetkili kişi ve resmi kurumlara aktarılabilmekte ve</li>
+                                <li>Teknoloji alanındaki altyapı tedarikçilerimiz tarafından sağlanan / kullanımımıza sunulan programlarımıza ve/veya sistemlerimize kaydedilebilmektedir.</li>
+                            </ul>
+
+                            <p>Ek olarak, Kanunun "Kişisel Verilerin Yurt Dışına Aktarılması" başlıklı 9. maddesindeki kurallara uyularak ve gerekli teknik ve idari tedbirler alınarak, sadece ilgili amacın gerçekleşmesi için gerekli olduğu ölçüde; "standart sözleşme imzalanması" hukuki sebebi uyarınca teknoloji alanındaki yurt dışında yerleşik altyapı tedarikçilerimiz tarafından sağlanan / kullanımımıza sunulan programlarımıza ve/veya sistemlerimize kaydedilerek yurt dışına aktarılmaktadır.</p>
+
+                            <h3>5. Kişisel Verilerinize İlişkin Haklarınız</h3>
+                            <p>Kanun'un 11. maddesi kapsamında kişisel verilerinize ilişkin olarak sizlere aşağıda belirtilen haklar tanınmıştır:</p>
+
+                            <ul>
+                                <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme,</li>
+                                <li>Kişisel verileriniz işlenmişse buna ilişkin bilgi talep etme,</li>
+                                <li>Kişisel verilerinin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme,</li>
+                                <li>Yurt içinde veya yurt dışında kişisel verilerinizin aktarıldığı üçüncü kişileri bilme,</li>
+                                <li>Kişisel verilerinizin eksik veya yanlış işlenmiş olması hâlinde bunların düzeltilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
+                                <li>6698 sayılı Kanun ve ilgili diğer kanun hükümlerine uygun olarak işlenmiş olmasına rağmen, işlenmesini gerektiren sebeplerin ortadan kalkması hâlinde kişisel verilerinizin silinmesini veya yok edilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerinizin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
+                                <li>İşlenen verilerinizin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle aleyhinize bir sonucun ortaya çıkmasına itiraz etme,</li>
+                                <li>Kişisel verilerinizin kanuna aykırı olarak işlenmesi sebebiyle zarara uğramanız hâlinde zararın giderilmesini talep etme.</li>
+                            </ul>
+
+                            <p>Kişisel veri sahipleri olarak, haklarınıza ilişkin talepleriniz <a href="mailto:info@devretlink.com">info@devretlink.com</a> adresine iletebilirsiniz. Kişisel Verileri Koruma Kurumu tarafından ilgili mevzuat kapsamında belirlenen şartları taşımayan başvurular, şartları karşılaması için sizden talep edilebilecek ek bilgi tamamlanmadığı müddetçe, değerlendirmeye alınmayacaktır.</p>
+
+                            <p>DEVRET LİNK talebin niteliğine göre talebi en kısa sürede ve/veya en geç otuz gün içinde ücretsiz olarak sonuçlandıracaktır. Bununla birlikte taleplerinizin yerine getirilmesi nedeniyle ek bir maliyet doğması hâlinde Kişisel Verileri Koruma Kurulunca belirlenen tarifedeki ücretin talep edilebileceğini hatırlatmak isteriz.</p>
+
+                            <p>DEVRET LİNK'in işbu Aydınlatma Metin'in, iş gereksinimleri, kanuni gereksinimler doğması halinde tek taraflı olarak güncelleme hakkı saklıdır.</p>
+                        </div>
+                    </section>
+                    
+                    <!-- KVKK -->
+                    <section id="kvkk" class="policy-section">
+                        <h2>KVKK</h2>
+                        <div class="policy-text">
+                            <h3>1. Veri Sorumlusu Bilgileri</h3>
+                            <p>Platformumuz, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında veri sorumlusu sıfatıyla hareket etmektedir. İletişim bilgilerimiz üzerinden bizlere ulaşabilirsiniz.</p>
+
+                            <h3>2. Kişisel Verilerin İşlenme Amacı</h3>
+                            <p>Toplanan kişisel veriler, hizmetlerin sunulması, kullanıcı deneyiminin geliştirilmesi ve yasal yükümlülüklerin yerine getirilmesi için işlenmektedir. Verileriniz, ilgili mevzuatın öngördüğü sınırlar çerçevesinde kullanılmaktadır.</p>
+
+                            <h3>3. İşlenen Kişisel Veriler</h3>
+                            <p>Platformumuzda, ad, soyad, iletişim bilgileri, IP adresi gibi bilgiler toplanabilir. Bu veriler, ilgili hizmetlerin sağlanabilmesi ve güvenliğin artırılması için kullanılmaktadır.</p>
+
+                            <h3>4. Kişisel Verilerin Aktarılması</h3>
+                            <p>Kişisel verileriniz, yasal zorunluluklar dışında üçüncü kişilerle paylaşılmamaktadır. Ancak, hizmetlerin sağlanabilmesi için gerekli durumlarda yasalara uygun şekilde aktarım yapılabilir.</p>
+
+                            <h3>5. Kişisel Verilerin Toplanma Yöntemi ve Hukuki Sebebi</h3>
+                            <p>Verileriniz, platformumuz üzerindeki formlar ve çerezler gibi çeşitli yollarla toplanmaktadır. Bu işlemler, KVKK'nın 5. ve 6. maddelerine uygun olarak yapılmaktadır.</p>
+
+                            <h3>6. Kullanıcı Hakları</h3>
+                            <p>KVKK kapsamında kullanıcılar; verilerine erişme, düzeltme, silme ve işlenmesini durdurma gibi haklara sahiptir. Bu haklarınızı kullanmak için bizimle iletişime geçebilirsiniz.</p>
+
+                            <h3>7. Güncellemeler ve Değişiklikler</h3>
+                            <p>Bu aydınlatma metni, yasal gereklilikler doğrultusunda güncellenebilir. Güncellenmiş metin, platformumuz üzerinden kullanıcılara duyurulacaktır.</p>
+
+                            <p>Bu aydınlatma metni, kişisel verilerinizin işlenmesi ve korunması konusundaki hassasiyetimizi ifade etmek amacıyla hazırlanmıştır. Daha fazla bilgi için bize ulaşabilirsiniz.</p>
+                        </div>
+                    </section>
+                    
+                    <!-- Gizlilik Sözleşmesi -->
+                    <section id="gizlilik-sozlesmesi" class="policy-section">
+                        <h2>Gizlilik Sözleşmesi</h2>
+                        <div class="policy-text">
+                            <h3>1. Kişisel Bilgilerin Toplanması</h3>
+                            <p>Platformumuz, kullanıcıların sağladığı bilgileri sadece hizmet sunumu için toplar. Bu bilgiler, kullanıcı onayı olmaksızın üçüncü taraflarla paylaşılmaz.</p>
+
+                            <h3>2. Bilgilerin Kullanımı</h3>
+                            <p>Toplanan bilgiler, platformumuzun işleyişini geliştirmek ve kullanıcı deneyimini artırmak için kullanılır. Ayrıca, kullanıcılarımızı ilgilendirebilecek hizmetler hakkında bilgilendirme amacıyla kullanılabilir.</p>
+
+                            <h3>3. Çerezler ve İzleme Teknolojileri</h3>
+                            <p>Platformumuz, kullanıcı tercihlerini saklamak ve hizmetleri optimize etmek amacıyla çerezler kullanır. Çerez ayarları tarayıcı üzerinden değiştirilebilir, ancak bu durumda bazı özellikler sınırlı olabilir.</p>
+
+                            <h3>4. Veri Güvenliği</h3>
+                            <p>Kullanıcı bilgilerinin güvenliği bizim için önceliklidir. Veriler, güncel güvenlik protokolleri ile korunmakta ve yetkisiz erişimlere karşı önlem alınmaktadır.</p>
+
+                            <h3>5. Üçüncü Taraf Bağlantıları</h3>
+                            <p>Platformumuzda üçüncü taraflara ait bağlantılar bulunabilir. Bu bağlantıların gizlilik politikalarından platformumuz sorumlu değildir, kullanıcıların dikkatli olmaları önerilir.</p>
+
+                            <h3>6. Kullanıcı Hakları</h3>
+                            <p>Kullanıcılar, kendilerine ait bilgileri görüntüleme, güncelleme ve silme hakkına sahiptir. Bu hakları kullanmak isteyen kullanıcılar, platformun destek ekibiyle iletişime geçebilir.</p>
+
+                            <h3>7. Değişiklik Hakkı</h3>
+                            <p>Gizlilik sözleşmesinde yapılacak değişiklikler, platformumuz tarafından güncellenebilir. Güncellemeler, kullanıcılar tarafından kabul edilmiş sayılacaktır.</p>
+
+                            <p>Bu gizlilik sözleşmesi, kullanıcılarımızın bilgilerini korumak ve güvenli bir deneyim sunmak amacıyla hazırlanmıştır. Daha fazla bilgi için bizimle iletişime geçebilirsiniz.</p>
+                        </div>
+                    </section>
+                    
+                    <!-- Kişisel Verilerin İşlenmesi -->
+                    <section id="kisisel-verilerin-islenmesi" class="policy-section">
+                        <h2>Gizlilik ve Kişisel Verilerin İşlenmesi Politikası</h2>
+                        <div class="policy-text">
+                            <h3>I. POLİTİKANIN AMACI</h3>
+                            <p>DEVRET LİNK BİLGİ TEKNOLOJİLERİ YAZILIM VE TİCARET A.Ş. ("DEVRET LİNK" veya "ŞİRKET") olarak hizmetlerimizi en iyi şekilde sunarken birtakım kişisel verilerinizi 6698 sayılı Kişisel Verilerin Korunması Kanunu ("Kanun") ve ilgili mevzuata uygun olarak toplamakta ve işlemekteyiz.</p>
+
+                            <p>İşbu Kişisel Verilerin İşlenmesi ve Korunması Politikası ("Politika") ise, kişisel verilerinizin hangi amaçlarla işlendiği, hangi üçüncü kişilere aktarıldığı, kişisel verilerinize ilişkin haklarınızı ve şirketimizin kişisel verilerin korunması bakımından yükümlülüklerini belirlemek ve göstermek amacıyla hazırlanmıştır.</p>
+
+                            <p>DEVRET LİNK Kanun'a uygunluğun DEVRET LİNK Platformu yönünden sağlanması amacıyla, ilgili mevzuatta yer alan kişisel verilerin korunması ve işlenmesine ilişkin ilkeleri benimseyerek gerekli idari ve teknik tedbirleri almaktadır. Kişisel verilerin işlenmesi ve korunması konusunda yürürlükte bulunan ilgili kanuni düzenlemeler öncelikli olarak uygulanacaktır. Yürürlükte bulunan mevzuat ve Politika arasında uyumsuzluk bulunması durumunda, DEVRET LİNK yürürlükteki mevzuatın uygulama alanı bulacağını kabul etmektedir. DEVRET LİNK, Kanun ve ilgili mevzuat hükümlerine uygun olarak işbu Politika çerçevesinde kişisel veri işleme faaliyetlerimizi yürütecektir. İşbu politika, KVK Kanun veya ilgili mevzuatta veyahut DEVRET LİNK'in faaliyetlerinde meydana gelen değişiklikler doğrultusunda, ilgili birimler tarafından her zaman değiştirilebilir ve güncellenebilir.</p>
+
+                            <p><em>İşbu Politika en son 20/03/2025 tarihinde güncellenmiştir.</em></p>
+
+                            <h3>II. KİŞİSEL VERİLERİN İŞLENMESİ</h3>
+                            
+                            <h4>II.I. KİŞİSEL VERİLERİN İŞLENMESİNE İLİŞKİN İLKELER</h4>
+                            <p>Anayasa'nın m. 20/III kişisel verilerin ancak kanunda öngörülen hallerde veya kişinin açık rızasıyla işlenebileceği belirtilerek kişisel verilerin korunması güvence altına alınmıştır. Kişisel veri sahiplerine tanınan bu hak doğrultusunda DEVRET LİNK kişisel verileri ilgili mevzuatta belirtilen ilkeler doğrultusunda veya kişinin açık rızasının bulunduğu durumlarda aşağıdaki ilkelere uygun işlemektedir:</p>
+                            <ul>
+                                <li>Hukuka ve Dürüstlük Kuralına Uygun İşleme</li>
+                                <li>Kişisel Verilerin Doğru ve Gerektiğinde Güncel Olmasını Sağlama</li>
+                                <li>Belirli, Açık ve Meşru Amaçlarla İşleme</li>
+                                <li>İşlendikleri Amaçla Bağlantılı, Sınırlı ve Ölçülü Olma</li>
+                                <li>İlgili Mevzuatta Öngörülen veya İşlendikleri Amaç için Gerekli Olan Süre Kadar Muhafaza Etme</li>
+                            </ul>
+
+                            <h4>II.II. KİŞİSEL VERİLERİN İŞLENME ŞARTLARI VE AMAÇLARI</h4>
+                            <p>Kişisel veriler, prensip olarak ancak kişisel veri sahibinin açık rızası bulunan hallerde işlenebilmektedir. Kanun'un 5. maddesinde kişisel veriler ile 6. maddesinde özel nitelikli kişisel verilerin işlenmesine ilişkin şartlara yer verilmiştir. Kanun, hukuka aykırı olarak işlendiğinde kişilerin mağduriyetine veya ayrımcılığa sebep olma riski taşıyan kişisel verileri "özel nitelikli kişisel veri" olarak belirlemiştir. Kanun'un 6. maddesinde özel nitelikli kişisel veriler sınırlı bir şekilde sayılmıştır ve bunlar kişilerin ırkı, etnik kökeni, siyasi düşüncesi, felsefi inancı, dini, mezhebi veya diğer inançları, kılık ve kıyafeti, dernek, vakıf ya da sendika üyeliği, sağlığı, cinsel hayatı, ceza mahkûmiyeti ve güvenlik tedbirleriyle ilgili verileri ile biyometrik ve genetik verilerini içermektedir. Yukarıda politika kapsamında belirtilen şekilde kullanıcılarımızın özel nitelikli kişisel verilerini işlememekteyiz.</p>
+
+                            <p>DEVRET LİNK kişisel verileri her halde Kanun'un 4. maddesinde belirtilen genel ilkelere uygun olarak aşağıda belirtilen amaç ve koşullar doğrultusunda işlemektedir.</p>
+
+                            <p><strong>Genel nitelikli kişisel veriler ile ilgili olarak;</strong></p>
+                            <ul>
+                                <li>Kişisel verilerinizin işlenmesine ilişkin DEVRET LİNK'in ilgili faaliyette bulunmasının Kanunlarda açıkça öngörülmesi</li>
+                                <li>DEVRET LİNK tarafından kişisel veri işleme faaliyetinde bulunulmasının kişisel veri sahibinin ya da bir başkasının hayatı veya beden bütünlüğünün korunması için zorunlu olması ve bu durumda da kişisel veri sahibinin fiili veya hukuki geçersizlik nedeniyle rızasını açıklayamayacak durumda bulunması</li>
+                                <li>Kişisel verilerinizin DEVRET LİNK tarafından işlenmesinin bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili ve gerekli olması</li>
+                                <li>Kişisel verilerinizin işlenmesinin DEVRET LİNK'in hukuki yükümlülüğünü yerine getirebilmesi için zorunlu olması</li>
+                                <li>Kişisel verilerinizin sizler tarafından alenileştirilmiş olması şartıyla; sizlerin alenileştirme amacıyla sınırlı bir şekilde DEVRET LİNK tarafından işlenmesi</li>
+                                <li>Kişisel verilerinizin DEVRET LİNK tarafından işlenmesinin DEVRET LİNK'in veya sizlerin veya üçüncü kişilerin haklarının tesisi, kullanılması veya korunması için zorunlu olması</li>
+                                <li>Sizlerin temel hak ve özgürlüklerine zarar vermemek kaydıyla DEVRET LİNK'in meşru menfaatleri için kişisel veri işleme faaliyetinde bulunulmasının zorunlu olması</li>
+                            </ul>
+
+                            <p><strong>kapsamında kişisel veriler DEVRET LİNK tarafından aşağıdaki amaçlarla işlemektedir:</strong></p>
+                            <ul>
+                                <li>Bilgi güvenliği süreçlerinin planlanması, denetimi ve icrası</li>
+                                <li>Bilgi teknolojileri altyapısının oluşturulması ve yönetilmesi</li>
+                                <li>Çalışanların bilgiye erişim yetkilerinin planlanması ve icrası</li>
+                                <li>Finans ve/veya muhasebe işlerinin takibi</li>
+                                <li>Hukuk işlerinin takibi</li>
+                                <li>İş faaliyetlerinin etkinlik/verimlilik ve/veya yerindelik analizlerinin gerçekleştirilmesi faaliyetlerinin planlanması ve/veya icrası</li>
+                                <li>İş faaliyetlerinin planlanması ve icrası</li>
+                                <li>Üyeler ve iş ortakları ve/veya tedarikçilerin bilgiye erişim yetkilerinin planlanması ve icrası</li>
+                                <li>Üyeler ve iş ortakları ve/veya tedarikçilerle olan ilişkilerin yönetimi</li>
+                                <li>İş sürekliliğinin sağlanması faaliyetlerinin planlanması ve/veya icrası</li>
+                                <li>Kurumsal iletişim faaliyetlerinin planlanması ve icrası</li>
+                                <li>Lojistik faaliyetlerinin planlanması ve icrası</li>
+                                <li>Müşteri/kullanıcı/üye ilişkileri yönetimi süreçlerinin planlanması ve icrası</li>
+                                <li>Müşteri/kullanıcı/üye memnuniyeti aktivitelerinin planlanması ve/veya icrası</li>
+                                <li>Müşteri/kullanıcı/üye talep ve/veya şikayetlerinin takibi</li>
+                                <li>Müşterilerin/kullanıcıların/üyelerin finansal risklerinin tespitine yönelik faaliyetler yapılması</li>
+                                <li>Satış sonrası destek hizmetleri aktivitelerinin planlanması ve/veya icrası</li>
+                                <li>Şirket denetim faaliyetlerinin planlanması ve icrası</li>
+                                <li>Şirket faaliyetlerinin şirket prosedürleri ve/veya ilgili mevzuata uygun olarak yürütülmesinin temini için gerekli operasyonel faaliyetlerinin planlanması ve icrası</li>
+                                <li>Şirket operasyonlarının güvenliğinin temini</li>
+                                <li>Şirketin sunduğu ürün veya hizmetlerden en yüksek faydanın elde edilmesi için ilgili süreçlerin planlanması ve icrası</li>
+                                <li>Sözleşme süreçlerinin ve/veya hukuki taleplerin takibi</li>
+                                <li>Stratejik planlama faaliyetlerinin icrası</li>
+                                <li>Operasyon süreçlerinin planlanması ve icrası</li>
+                                <li>Ürün ve hizmetlerin satış ve pazarlaması için pazar araştırması faaliyetlerinin planlanması ve icrası</li>
+                                <li>Ürün ve/veya hizmetlerin pazarlama süreçlerinin planlanması ve icrası</li>
+                                <li>Ürün ve/veya hizmetlerin satış süreçlerinin planlanması ve icrası</li>
+                                <li>Verilerin doğru ve güncel olmasının sağlanması</li>
+                                <li>Yetkili kuruluşlara mevzuattan kaynaklı bilgi verilmesi</li>
+                            </ul>
+
+                            <h3>III. KİŞİSEL VERİLERİN AKTARILMASI</h3>
+                            
+                            <h4>III.I. KİŞİSEL VERİLERİN AKTARILMASINA İLİŞKİN GENEL İLKELER</h4>
+                            <p>Kanun'un 8. ve 9. maddesinde kişisel verilerin yurt içinde ve yurt dışına aktarılmasına ilişkin hususlara yer verilmiştir. DEVRET LİNK, hukuka uygun olarak elde etmiş olduğu kişisel verileri veri işleme amaçları doğrultusunda gerekli güvenlik önlemlerini alarak üçüncü kişilere aktarabilmektedir. Bu doğrultuda DEVRET LİNK kişisel verileri Bölüm II'de belirtilen işleme şartlarından ve aşağıda belirtilen şartlardan birinin varlığı halinde üçüncü kişilere aktarabilecektir:</p>
+                            <ul>
+                                <li>Kişisel veri sahibinin açık rızası var ise,</li>
+                                <li>Kanunlarda kişisel verinin aktarılacağına ilişkin açık bir düzenleme var ise,</li>
+                                <li>Kişisel veri sahibinin veya başkasının hayatı veya beden bütünlüğünün korunması için zorunlu ise ve kişisel veri sahibi fiili imkânsızlık nedeniyle rızasını açıklayamayacak durumda ise veya rızasına hukuki geçerlilik tanınmıyorsa;</li>
+                                <li>Bir sözleşmenin kurulması veya ifasıyla doğrudan doğruya ilgili olmak kaydıyla sözleşmenin taraflarına ait kişisel verinin aktarılması gerekli ise,</li>
+                                <li>DEVRET LİNK'in yükümlülüğünü yerine getirmesi için kişisel veri aktarımı zorunlu ise,</li>
+                                <li>Kişisel veriler, kişisel veri sahibi tarafından alenileştirilmiş ise,</li>
+                                <li>Kişisel veri aktarımı bir hakkın tesisi, kullanılması veya korunması için zorunlu ise,</li>
+                                <li>Kişisel veri sahibinin temel hak ve özgürlüklerine zarar vermemek kaydıyla, DEVRET LİNK'in meşru menfaatleri için kişisel veri aktarımı zorunlu ise.</li>
+                            </ul>
+
+                            <h4>III.II. KİŞİSEL VERİLERİN YURTDIŞINA AKTARILMASI</h4>
+                            <p>DEVRET LİNK meşru ve hukuka uygun kişisel veri işleme amaçları doğrultusunda kişisel veri sahibinin kişisel verilerini aşağıdaki hallerde yurtdışına aktarabilecektir:</p>
+                            <ul>
+                                <li>Kanun'un 5. ve 6.maddelerinde belirtilen şartlardan birinin varlığı ve verilerin aktarılacağı ülke, ülke içerisindeki sektörler veya uluslararası kuruluşlar hakkında yeterlilik kararı bulunması halinde,</li>
+                                <li>Kişisel veriler, yeterlilik kararının bulunmaması durumunda, 5 inci ve 6 ncı maddelerde belirtilen şartlardan birinin varlığı, ilgili kişinin aktarımın yapılacağı ülkede de haklarını kullanma ve etkili kanun yollarına başvurma imkânının bulunması kaydıyla, uygun güvencelerden birinin taraflarca sağlanması halinde veri sorumluları ve veri işleyenler tarafından yurt dışına aktarılabilir.</li>
+                            </ul>
+
+                            <h4>III.III. KİŞİSEL VERİLERİN AKTARILDIĞI ÜÇÜNCÜ TARAFLAR</h4>
+                            <p>DEVRET LİNK yukarıda belirtilen şartlar doğrultusunda ve Kanun'un 8. ve 9. maddelerine uygun olarak Politika ile yönetilen veri sahiplerinin kişisel verilerini aşağıda belirtilen taraflara aktarabilir:</p>
+                            <ul>
+                                <li>İş ortaklığının kurulma amaçlarının yerine getirilmesini temin etme amacıyla anonim olarak iş ortaklarına,</li>
+                                <li>Üyeler ile sözleşme kapsamındaki amaçların yerine getirilmesi için sınırlı olarak üyelere</li>
+                                <li>DEVRET LİNK'in tedarikçiden dış kaynaklı olarak temin ettiği ve DEVRET LİNK'in ticari faaliyetlerini yerine getirmek için gerekli hizmetlerin DEVRET LİNK'e sunulmasını sağlamak amacıyla sınırlı olarak tedarikçilere,</li>
+                                <li>DEVRET LİNK'in iştiraklerinin de katılımını gerektiren ticari faaliyetlerinin yürütülmesini temin etmekle sınırlı olarak iştiraklere,</li>
+                                <li>DEVRET LİNK'in ticari faaliyetlerine ilişkin stratejilerin tasarlanması, şirket prosedürlerine uygun bilgilendirmelerin yapılması ile ilgili mevzuat hükümlerine uygun şekilde denetim amaçlarıyla sınırlı olarak hissedarlara,</li>
+                                <li>Hukuki yetkileri dahilinde talep ettikleri amaçla sınırlı olarak ilgili kamu kurum ve kuruluşları ile özel hukuk kişilerine</li>
+                            </ul>
+
+                            <h3>IV. KİŞİSEL VERİLERİN KORUNMASI</h3>
+                            <p>DEVRET LİNK, işlediği kişisel verilerin güvenliğini sağlamak için ilgili mevzuat uyarınca öngörülen ve KVK Kurulu tarafından bildirilecek olan diğer idari ve teknik önlemleri alarak kişisel verilerin hukuka uygun olarak işlenmesini ve korunmasını temin etmektedir. Bu kapsamda DEVRET LİNK, kişisel verilerin hukuka uygun olarak işlenmesi, güvenli ortamlarda saklanması, yetkisiz erişim riskleri ile diğer her türlü hukuka aykırı erişimlerin önlenmesi, arızi olarak gerçekleşen veri kayıplarının önlenmesi, verilere kasıtlı olarak zarar verilmesi ile silinmesinin önlenmesi için teknolojik imkânlar ve uygulama maliyetinin de ele alındığı makul derecedeki teknik ve idari önlemleri almaktadır.</p>
+
+                            <h3>V. KİŞİSEL VERİ SAHİBİNİN AYDINLATILMASI, HAKLARI VE BİLGİLENDİRİLMESİ</h3>
+                            
+                            <h4>V.I. KİŞİSEL VERİ SAHİBİNİN AYDINLATILMASI</h4>
+                            <p>Kanun'un 10. maddesinde kişisel verilerin elde edilmesi sırasında kişisel veri sahiplerinin aydınlatılması gerektiği belirtilmiştir. DEVRET LİNK, bu doğrultuda ilgili mevzuatta belirtilen diğer kişisel veri işleme faaliyeti genel ilkelerine uygun olarak kişisel veri sahiplerini kişisel verilerinin elde edilmesi sırasında; (i) varsa temsilcisinin kimliği, (ii) kişisel verilerin hangi amaçla işleneceği, (iii) kimlere ve hangi amaçla aktarılabileceği, (iv) kişisel veri toplamanın yöntemi ve hukuki sebebi, (v) kişisel veri sahibinin sahip olduğu haklara ilişkin olarak bilgilendirmektedir.</p>
+
+                            <h4>V.II. KİŞİSEL VERİ SAHİPLERİNİN HAKLARI</h4>
+                            <p>Kanun'un 11. maddesinde ise kişisel veri sahibinin sahip olduğu haklar sayılmıştır. Şöyle ki veri sahibi;</p>
+                            <ul>
+                                <li>Kişisel verilerinin işlenip işlenmediğini öğrenme,</li>
+                                <li>Kişisel verileri işlenmişse buna ilişkin bilgi talep etme,</li>
+                                <li>Kişisel verilerinin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme,</li>
+                                <li>Yurt içinde veya yurt dışında kişisel verilerin aktarıldığı üçüncü kişileri bilme,</li>
+                                <li>Kişisel verilerin eksik veya yanlış işlenmiş olması hâlinde bunların düzeltilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
+                                <li>Kanun ve ilgili diğer kanun hükümlerine uygun olarak işlenmiş olmasına rağmen, işlenmesini gerektiren sebeplerin ortadan kalkması hâlinde kişisel verilerin silinmesini veya yok edilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
+                                <li>İşlenen verilerin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle kişinin kendisi aleyhine bir sonucun ortaya çıkmasına itiraz etme,</li>
+                                <li>Kişisel verilerinin kanuna aykırı olarak işlenmesi sebebiyle zarara uğraması hâlinde zararın giderilmesini talep etme,</li>
+                            </ul>
+                            <p>haklarına sahiptir.</p>
+
+                            <h4>V.III. KİŞİSEL VERİ SAHİPLERİNİN BİLGİLENDİRİLMESİ</h4>
+                            <p>Kişisel veri sahipleri, Anayasa'nın 20. maddesi uyarınca kendileriyle ilgili kişisel veriler hakkında bilgi sahibi olma ile yukarıda belirtilen haklar arasında sayılan "bilgi talep etme" hakkı doğrultusunda yapmış oldukları bilgi talepleri DEVRET LİNK tarafından Kanun'a uygun olarak karşılanmaktadır. DEVRET LİNK, kişisel veri sahiplerine gereken bilgilendirmelerin yapılması amacıyla Kanun'un 13. Maddesine uygun olarak gerekli kanalları, iç işleyişi, idari ve teknik düzenlemeleri yürütmektedir.</p>
+
+                            <p>Bu doğrultuda kişisel veri sahipleri yukarıda belirtilen haklarına ilişkin taleplerini DEVRET LİNK'e iletmeleri durumunda talebin niteliğine göre talebe karşılık gerekçeli olumlu/olumsuz yanıtını en geç otuz gün içinde ücretsiz olarak bildirmektedir. Kişisel veri sahipleri yukarıda belirtilen haklarına ilişkin aşağıdaki yöntemlerden biri ile gerçekleştirilecektir:</p>
+                            <ul>
+                                <li><a href="mailto:devretlink@hotmail.com">devretlink@hotmail.com</a> e-posta adresine talep gönderilmesi,</li>
+                                <li>Kişisel Verileri Koruma Kurulu tarafından öngörülen bir yöntemin izlenmesi.</li>
+                                <li>Kişisel veri sahipleri adına üçüncü kişilerin başvuru talebinde bulunabilmesi için veri sahibi tarafından başvuruda bulunacak kişi adına noter kanalıyla düzenlenmiş özel vekâletname bulunmalıdır.</li>
+                            </ul>
+
+                            <h3>VI. VERİ SAHİBİ VE KİŞİSEL VERİ KATEGORİZASYONU</h3>
+                            
+                            <h4>VI.I. VERİ SAHİBİ KATEGORİZASYONU</h4>
+                            <p>DEVRET LİNK, kendi bünyesinde işlediği kişisel verilerin sahiplerini aşağıdaki şekilde kategorize etmiştir:</p>
+                            <ul>
+                                <li><strong>Müşteri/Kullanıcı/Ürün veya Hizmet Alan Kişi:</strong> DEVRET LİNK ile herhangi bir sözleşmesel ilişkisi olup olmadığına bakılmaksızın Şirketimizin sunmuş olduğu ürün ve hizmetleri kullanan veya kullanmış olan gerçek kişiler</li>
+                                <li><strong>Potansiyel Müşteri:</strong> Ürün ve hizmetlerimize kullanma talebinde veya ilgisinde bulunmuş veya bu ilgiye sahip olabileceği ticari teamül ve dürüstlük kurallarına uygun olarak değerlendirilmiş gerçek kişiler</li>
+                                <li><strong>Üçüncü Kişiler:</strong> Bu Politika ve DEVRET LİNK Çalışanları Kişisel Verilerin Korunması ve İşlenmesi Politikası kapsamına girmeyen diğer gerçek kişiler</li>
+                                <li><strong>İş Ortağı Hissedarı, Yetkilisi, Çalışanı:</strong> DEVRET LİNK'in her türlü iş ilişkisi içerisinde bulunduğu kurumlarda çalışanlar, bu kurumların hissedarları ve yetkilileri dahil olmak üzere, gerçek kişiler</li>
+                                <li><strong>İş Ortağı Adayı:</strong> DEVRET LİNK'in herhangi bir iş ilişkisi kurmayı öngördüğü gerçek kişiler veya tüzel kişilerin çalışanları, hissedarları ve yetkilileri olan gerçek kişiler</li>
+                                <li><strong>Ziyaretçi:</strong> DEVRET LİNK'in sahip olduğu fiziksel yerleşkelere çeşitli amaçlarla girmiş olan veya internet sitelerimizi ziyaret eden gerçek kişiler</li>
+                            </ul>
+
+                            <h4>VI.II. KİŞİSEL VERİ KATEGORİZASYONU</h4>
+                            <p>İşbu Politika kapsamında, DEVRET LİNK tarafından işlenen kişisel veriler kategorize edilmiştir:</p>
+                            <ul>
+                                <li><strong>Profil Bilgisi:</strong> Kullanıcı adı, fotoğrafı gibi profile özgü bilgiler.</li>
+                                <li><strong>Kimlik Doğrulama Bilgileri:</strong> Kullanıcıların üyelik bilgileri, kimliği doğrulamak için ve hesaba erişimi sağlamak için kullanılan parolaları, Kullanıcı Adı, kontak bilgileri, ilan numaraları.</li>
+                                <li><strong>İletişim Bilgisi:</strong> Telefon numarası, adres, e-mail adresi, faks numarası, IP adresi gibi bilgiler</li>
+                                <li><strong>Lokasyon Verisi:</strong> Kişisel veri sahibinin DEVRET LİNK iş birimleri tarafından yürütülen operasyonlar çerçevesinde bulunduğu yerin konumunu tespit eden bilgiler</li>
+                                <li><strong>Müşteri İşlem Bilgisi:</strong> Ürün ve hizmetlerimizin kullanımına yönelik kayıtlar ile müşterinin ürün ve hizmetleri kullanımı için gerekli olan talimatları ve talepleri gibi bilgiler</li>
+                                <li><strong>İşlem Güvenliği Bilgisi:</strong> Ticari faaliyetlerimizi yürütürken teknik, idari, hukuki ve ticari güvenliğimizi sağlamamız için işlenen IP adresi, log in credentials gibi kişisel veriler</li>
+                                <li><strong>Finansal Bilgi:</strong> DEVRET LİNK'in kişisel veri sahibi ile kurmuş olduğu hukuki ilişkinin tipine göre yaratılan her türlü finansal sonucu gösteren bilgi, belge ve kayıtlara ilişkin işlenen kişisel veriler</li>
+                                <li><strong>Hukuki İşlem Bilgisi:</strong> Hukuki alacak ve haklarımızın tespiti, takibi ve borçlarımızın ifası ile kanuni yükümlülüklerimiz ve şirketimizin politikalarına uyum kapsamında işlenen kişisel veriler</li>
+                                <li><strong>Pazarlama Bilgisi:</strong> Ürün ve hizmetlerimizin kişisel veri sahibinin kullanım alışkanlıkları, beğenisi ve ihtiyaçları doğrultusunda özelleştirilerek pazarlamasının yapılmasına yönelik işlenen kişisel veriler</li>
+                                <li><strong>Risk Yönetimi Bilgisi:</strong> Kişiyle ilişkilendirilen ve şirketimizin ticari itibarını korumak maksatlı toplanan bilgiler</li>
+                            </ul>
+
+                            <h3>VII. KİŞİSEL VERİLERİN SAKLANMA SÜRELERİNE İLİŞKİN İLKELER</h3>
+                            <p>Kişisel veriler, DEVRET LİNK tarafından ilgili mevzuatta öngörülen süreler boyunca ve hukuki yükümlülükleri doğrultusunda saklanmaktadır. Kişisel verilerin ne kadar süre boyunca saklanması gerektiğine ilişkin mevzuatta bir süre düzenlenmemişse, kişisel veriler DEVRET LİNK'in o veriyi işlerken yürüttüğü faaliyet ile bağlantılı olarak DEVRET LİNK'in uygulamaları ile ticari teamüller doğrultusunda işlenmesini gerektiren süre kadar işlenmekte daha sonra silinmekte, yok edilmekte veya anonim hale getirilmektedir.</p>
+
+                            <h3>VIII. KİŞİSEL VERİLERİN SİLİNMESİ, YOK EDİLMESİ VE ANONİMLEŞTİRİLMESİ ŞARTLARI</h3>
+                            <p>Türk Ceza Kanunu'nun 138. maddesinde ve Kanunu'nun 7. maddesinde düzenlendiği üzere ilgili kanun hükümlerine uygun olarak işlenmiş olmasına rağmen, işlenmesini gerektiren sebeplerin ortadan kalkması halinde DEVRET LİNK'in kararına istinaden veya kişisel veri sahibinin talebi üzerine kişisel veriler silinir, yok edilir veya anonim hâle getirilir.</p>
+
+                            <h3>IX. SORUMSUZLUK</h3>
+                            <p>Politikada zaman zaman değişiklikler yapabiliriz. İşbu politikanın içeriğini herhangi bir zamanda ve bildirimde bulunmaksızın değiştirme hakkımız saklıdır. Yeni politikalar, yayınlandıklarında geçerli olacaktır. Değişiklikler yürürlüğe girdikten sonra Web sitelerimize erişmeye veya hizmetlerimizi kullanmaya devam ederek, değiştirilmiş Politikaya bağlı olmayı kabul edersiniz.</p>
+                        </div>
+                    </section>
+                    
+                    <!-- Veri Sahibi Başvuru -->
+                    <section id="veri-sahibi-basvuru" class="policy-section">
+                        <h2>Veri Sahibi Başvuru Formu</h2>
+                        <div class="policy-text">
+                            <p>İçerik eklenecek...</p>
+                        </div>
+                    </section>
+                    
+                    <!-- Çerez Politikası -->
+                    <section id="cerez-politikasi" class="policy-section">
+                        <h2>Gizlilik ve Çerez Politikası</h2>
+                        <div class="policy-text">
+                            <p>Devret Link Bilgi Teknolojileri Yazılım ve Ticaret A.Ş. (Şirket) tarafından gizliliğinize saygı duyulmakta ve veri güvenliğinize önem verilmektedir. Bu kapsamda, tarafından işletilen https://www.devretlink.com/ web sitesini ziyaret edenlerin ("ziyaretçi") kişisel verilerini 6698 sayılı Kişisel Verilerin Korunması Kanunu ("Kanun") uyarınca işlemekte ve gizliliğini korumaktayız. Bu Web Sitesi Gizlilik ve Çerez Politikası ("Politika") ile ziyaretçilerin kişisel verilerinin işlenmesi, çerez politikası ve internet sitesi gizlilik ilkeleri belirlenmektedir.</p>
+
+                            <h3>Bilgilendirme</h3>
+                            <p>Birçok web sitesi, teknik, işlevsel, deneyim kalitesini arttırmak ve benzeri birçok sebepten "Çerez" (Cookie) kullanmaktadır. Aşağıda "çerez" (Cookie) kullanımımız, kullanıcıların bu çerezleri çeşitli mecralarda nasıl yönetebileceği açıklanmaktadır. Bu dokümanda açıklanan bilgiler, Kişisel Verilerin Korunması Kanunu çerçevesinde sitemizden erişilebilen Aydınlatma ve Kullanıcı Sözleşmesi ile bir bütün olarak değerlendirilmelidir.</p>
+
+                            <h3>Gizlilik Politikamız</h3>
+                            <p>Gizliliğiniz bizim için önemlidir, gizlilik ve güvenlik haklarınız temel prensibimizdir. Bu kapsamda, kişisel verilerin korunmasına dair aydınlatma metnimize buradan ulaşabilirsiniz.</p>
+
+                            <h3>Çerez (Cookie) Nedir ve Neden Kullanılmaktadır?</h3>
+                            <p>Çerez (Cookie), herhangi bir İnternet sitesi tarafından bilgisayara bırakılan bir tür tanımlama dosyasıdır. Çerez dosyalarında oturum bilgileri ve benzeri veriler saklanır. Çerez kullanan bir site ziyaret edildiğinde bu site, erişimin yapıldığı tarayıcıya sabit diske bir ya da daha fazla çerez bırakma konusunda talep gönderebilir. Çerezler, siteyi ziyaret eden kişilere ait isim, yaş, adres, cinsiyet gibi kişisel verileri barındırmazlar.</p>
+
+                            <p><strong>Web sitesinde çerezler, aşağıdaki amaçlar için kullanılabilir:</strong></p>
+                            <ul>
+                                <li>Web sitesinin çalışması için gerekli olan işlevleri yerine getirilmesi</li>
+                                <li>Ziyaret ve deneyim kişiselleştirme, hedefleme, doğru ve amaca dönük reklam ve tanıtım faaliyetleri</li>
+                                <li>Web sitesi ve bileşenlerinin işlevlerinin doğru, kolay ve daha verimli çalışması</li>
+                                <li>Web sitesini, kaynak kullanımı, erişen bilgisi, ziyaretçi sayısı ve platformlarının tespiti gibi bilgileri analiz ederek performansın arttırılması ve kullanıcı deneyiminin iyileştirilmesi</li>
+                                <li>Şirket'in, 5651 sayılı Internet Ortamında Yapılan Yayınların Düzenlenmesi ve Bu Yayınlar Yoluyla İşlenen Suçlarla Mücadele Edilmesi Hakkında Kanun ve Internet Ortamında Yapılan Yayınların Düzenlenmesine Dair Usul ve Esaslar Hakkında Yönetmelik'ten kaynaklananlar başta olmak üzere, kanuni ve sözleşmesel yükümlülüklerini yerine getirebilmesi için IP adresiniz gibi kişisel verilerinize ihtiyaç duyması</li>
+                            </ul>
+
+                            <h3>Çerezlerle Hangi Tür Verilerinizi İşliyoruz?</h3>
+                            <p>Çerezler, türlerine bağlı olmak üzere, genel olarak, Web Sitesi'ne eriştiğiniz cihazda tarama ve kullanım tercihlerinize ilişkin verileri toplamaktadır. Bu veriler, eriştiğiniz sayfaları, incelediğiniz hizmet ve ürünlerimizi, Web Sitesi'nde yaptığınız gezintiye ilişkin tüm bilgileri kapsamaktadır.</p>
+
+                            <h3>Hangi Tür Çerezleri Hangi Şekillerde Kullanıyoruz?</h3>
+                            <p>Web Sitesi'nde farklı türlerde çerezler kullanmaktayız. Bunlar Web Sitesi'nin çalışmasını sağlamak için kullanılması zorunlu olan çerezler, işlev çerezleri, analiz/performans çerezleri ve hedefleme/reklam çerezleridir.</p>
+
+                            <h4>Kullanım Bakımından Çerez Türleri:</h4>
+                            <ul>
+                                <li><strong>Kullanılması Zorunlu Olan Çerezler:</strong> Bu çerezler, Web Sitesi'nin düzgün şekilde çalışması için mutlaka gerekli olan çerezlerdir. Bu çerezlere, sistemin yönetilebilmesi, sahte işlemlerin önlenmesi için ihtiyaç vardır ve engellenmesi halinde Web Sitesi çalışamayacaktır.</li>
+                                <li><strong>İşlev Çerezleri:</strong> Bu çerezler size daha gelişmiş ve kolay bir kullanım deneyimi yaşatmak için kullanılan çerezlerdir. Örneğin önceki tercihlerinizi hatırlamak, Web Sitesi üzerinde yer alan bazı içeriklere rahatça erişmenizi sağlamak işlevlerini yerine getirmektedir.</li>
+                                <li><strong>Analiz/Performans Çerezleri:</strong> Bu çerezler, Web Sitesi'nin işleyişinizi analiz edip anlamımızı sağlayan ve sizinle etkileşime geçerek Web Sitesi'ni geliştirebilmemizi sağlamaktadır.</li>
+                                <li><strong>Hedefleme/Reklam Çerezleri:</strong> Bu çerezler, size, reklam içerikleri de dâhil olmak üzere, ilginizi çekebilecek içerikleri saptayarak sunmamız için kullanılmaktadır.</li>
+                            </ul>
+
+                            <h3>Google Analytics</h3>
+                            <p>Google Analytics, çerezleri ziyaretçilerin Web Sitesini nasıl kullandıklarını analiz etmek amacıyla kullanır. Web sitesini kullanımınızla ilgili bilgiler (IP adresiniz dahil) Google'a aktarılarak ABD'deki sunucularında saklanmaktadır. Google, bu bilgileri Web Sitesini kullanımınızı değerlendirmek, Şirket için Web Sitesi faaliyetlerini derlemek ve internet kullanımıyla ilgili başka hizmetler sağlamak amacıyla kullanacaktır.</p>
+                            <p>Google Analytics çerez kullanımı hakkında daha fazla bilgi için: <a href="http://www.google.co.uk/intl/en/analytics/privacyoverview.html" target="_blank">http://www.google.co.uk/intl/en/analytics/privacyoverview.html</a></p>
+
+                            <h3>Google Ads</h3>
+                            <p>Google Ads, çerezleri aşağıdaki amaçlarla kullanır:</p>
+                            <ul>
+                                <li>Güvenli arama tercihlerinizi hatırlamak</li>
+                                <li>Size daha alakalı reklamlar göstermek</li>
+                                <li>Bir sayfaya kaç ziyaretçi geldiğini belirlemek</li>
+                                <li>Hizmetlerimize kaydolmanıza yardımcı olmak</li>
+                                <li>Verilerinizi korumak veya reklam ayarlarınızı hatırlamak</li>
+                            </ul>
+                            <p>Google Ads çerez kullanımı hakkında daha fazla bilgi için: <a href="https://policies.google.com/privacy?hl=tr" target="_blank">https://policies.google.com/privacy?hl=tr</a></p>
+
+                            <h3>Facebook</h3>
+                            <p>Facebook, çerezleri aşağıdaki amaçlarla kullanır:</p>
+                            <ul>
+                                <li>Kimlik kontrolü</li>
+                                <li>Güvenlik ve site bütünlüğü</li>
+                                <li>Reklamlar, tavsiyeler</li>
+                                <li>Ölçüm, analiz ve raporlama</li>
+                            </ul>
+                            <p>Ayrıca ilginizi çekebilecek reklamları sosyal medya platformlarında sunabilmek ve özel hedef kitle oluşturmak amacıyla kişisel verilerinizden e-posta adresiniz bu platformlar ile paylaşılmaktadır.</p>
+                            <p>Facebook Gizlilik İlkeleri için: <a href="https://www.facebook.com/privacy/explanation" target="_blank">https://www.facebook.com/privacy/explanation</a></p>
+
+                            <h3>Çerezler Aracılığıyla İşlenen Kişisel Verilerin Aktarılması</h3>
+                            <p>Çerezler aracılığıyla yürütülen faaliyetlerimiz kapsamında kişisel verileriniz; DEVRET LİNK hizmetlerinin size özelleştirilerek geliştirilmesi, pazarlama faaliyetlerinin yürütülebilmesi, iş faaliyetlerinin yürütülmesi ve denetimi, mal / hizmet satın alım süreçlerinin yürütülmesi amaçları ile yurt içinde yer alan Tedarikçilerimize aktarılmaktadır.</p>
+
+                            <p>Ayrıca kişisel verileriniz, performans / analitik çerezlerine onay vermeniz halinde; saklama ve arşiv faaliyetlerinin yürütülmesi amacıyla sınırlı olarak yurt dışında yerleşik üçüncü taraf altyapı sağlayıcı Google Analytics aracılığıyla yurt dışındaki sunucularda işlenecektir.</p>
+
+                            <h3>Çerezlerin Yönetimi</h3>
+                            <p>Tarayıcılar genellikle çerezleri otomatik olarak kabul etmektedir. İnternet sitemizi kullanabilmek için çerez kullanımı zorunlu değildir, fakat tarayıcınızı çerezleri kabul etmemeye ayarlamanız halinde kullanıcı deneyiminizin kalitesi düşebilir ve sitelerimizin çeşitli işlevleri bozulabilir.</p>
+
+                            <p>Çerez yönetim panelindeki butonları tercihinize göre açık veya kapalı konuma getirerek "Ayarları kaydet" butonuna tıklayınız. Ayarlarınızı etkin hâle getirmek için sayfayı yenileyiniz.</p>
+
+                            <h3>Çerezlerin Kullanılmasını Nasıl Engelleyebilirsiniz?</h3>
+                            <p>Çerezlerin kullanılması Web Sitesi'nin daha iyi hizmet vermekle birlikte eğer dilerseniz çerezlerin kullanılmasını engelleyebilirsiniz. Ancak bu takdirde sitenin tam olarak işlevini gösterememesi ve tüm özelliklerinden yararlanamayabileceğinizi unutmayınız.</p>
+
+                            <h4>Internet Explorer:</h4>
+                            <ol>
+                                <li>Masaüstünü açın ve görev çubuğunda Internet Explorer simgesine dokunun veya tıklayın.</li>
+                                <li>Araçlar düğmesine ve İnternet Seçenekleri'ne dokunun veya tıklayın.</li>
+                                <li>Gizlilik sekmesine dokunun veya tıklayın, ardından tüm tanımlama bilgilerini engellemek için Ayarlar'ın altında bulunan kaydırıcıyı yukarıya hareket ettirin ve Tamam düğmesine dokunun veya tıklayın.</li>
+                            </ol>
+
+                            <h4>Microsoft Edge:</h4>
+                            <ol>
+                                <li>Microsoft Edge tarayıcınızın sağ üst köşesinden üç nokta işareti olan bölüme tıklayın ve Ayarlar bölümüne gelin.</li>
+                                <li>Karşınıza gelen yeni pencereden Temizlenecek Öğeleri Seç dedikten sonra karşınıza gelen pencereden temizlemek istediğiniz bölümleri seçin.</li>
+                                <li>Burada birçok bölüm bulunmaktadır. İstediğinizi seçerek temizleme işlemine başlayabilirsiniz.</li>
+                            </ol>
+
+                            <h4>Google Chrome:</h4>
+                            <ol>
+                                <li>Bilgisayarınızda Chrome'u açın.</li>
+                                <li>Sağ üstte Diğer Ayarlar'ı tıklayın.</li>
+                                <li>Altta Gelişmiş'i tıklayın.</li>
+                                <li>"Gizlilik ve güvenlik"in altında İçerik ayarları'nı tıklayın.</li>
+                                <li>Çerezler'i tıklayın.</li>
+                                <li>"Tüm çerezler ve site verileri"nin altında Web Sitesi'nin adını arayın.</li>
+                                <li>Sitenin sağındaki Kaldır simgesini tıklayın.</li>
+                            </ol>
+
+                            <h4>Mozilla Firefox:</h4>
+                            <ol>
+                                <li>Firefox Menü düğmesine tıklayın ve Seçenekler'i seçin.</li>
+                                <li>Gizlilik ve Güvenlik panelini seçin ve Geçmiş bölümüne gidin.</li>
+                                <li>Firefox ayarını geçmiş için özel ayarları kullansın olarak değiştirin.</li>
+                                <li>Çerezleri göster… düğmesine tıklayın.</li>
+                                <li>Arama alanına, çerezlerini silmek istediğiniz sitenin adını yazın.</li>
+                                <li>Silmek istediğiniz çerez(ler)i seçip Seçilenleri sil düğmesine tıklayın.</li>
+                            </ol>
+
+                            <h4>Safari:</h4>
+                            <ol>
+                                <li>Safari > Tercihler'i seçin.</li>
+                                <li>Gizlilik öğesini tıklayın.</li>
+                                <li>Web Sitesi Verilerini tıklayın.</li>
+                                <li>Bir veya daha fazla web sitesi seçin ve sonra Sil veya Tümünü Sil'e tıklayın.</li>
+                            </ol>
+
+                            <p>Diğer ana web tarayıcılarında bu işlemin nasıl yapılacağı hakkında daha fazla bilgiyi <a href="https://www.aboutcookies.org" target="_blank">https://www.aboutcookies.org</a> adresinde bulabilirsiniz.</p>
+
+                            <h3>Politikanın Yürürlüğü</h3>
+                            <p>Bu Politika yayınlandığı tarihte yürürlüğe girer. Politika'nın tümünün veya belirli maddelerinin yenilenmesi halinde Politika'nın yürürlük tarihi revize edilir.</p>
+
+                            <h3>Sorumsuzluk</h3>
+                            <p>Politikada zaman zaman değişiklikler yapabiliriz. Web sitelerimizin Çerezlerle ilgili kullanım şartlarında da değişiklikler yapılabilir. İşbu politikanın içeriğini herhangi bir zamanda ve bildirimde bulunmaksızın değiştirme hakkımız saklıdır. Yeni politikalar, yayınlandıklarında geçerli olacaktır.</p>
+
+                            <p>Kişisel Verilerin Korunması ve İşlenmesi Politikası için <a href="https://www.devretlink.com/">https://www.devretlink.com/</a> adresinden ulaşabilirsiniz.</p>
+
+                            <h3>Bizimle İletişime Geçin</h3>
+                            <p>Politika ile ilgili tüm soru ve görüşlerinizi bize iletmek için bizimle aşağıdaki adreste belirtilen iletişim yolunu kullanabilirsiniz: <a href="mailto:devretlink@hotmail.com">devretlink@hotmail.com</a> ayrıca <a href="https://www.devretlink.com/">https://www.devretlink.com/</a> adresinden dilediğiniz zaman ulaşabilirsiniz.</p>
+                        </div>
+                    </section>
+                    
+                    <!-- Başvuru Formu Eki -->
+                    <section id="basvuru-formu-eki" class="policy-section">
+                        <h2>Başvuru Formu Eki</h2>
+                        <div class="policy-text">
+                            <p>İçerik eklenecek...</p>
+                        </div>
+                    </section>
+                    
+                    <!-- Üyelik Sözleşmesi -->
+                    <section id="uyelik-sozlesmesi" class="policy-section">
+                        <h2>Üyelik Sözleşmesi</h2>
+                        <div class="policy-text">
+                            <p>İçerik eklenecek...</p>
+                        </div>
+                    </section>
+                    
+                    <!-- Açık Rıza Metni -->
+                    <section id="acik-riza-metni" class="policy-section">
+                        <h2>Açık Rıza Metni</h2>
+                        <div class="policy-text">
+                            <p>İçerik eklenecek...</p>
+                        </div>
+                    </section>
+                    
+                    <!-- İlan Verme Kuralları -->
+                    <section id="ilan-verme-kurallari" class="policy-section">
+                        <h2>İlan Verme Kuralları</h2>
+                        <div class="policy-text">
+                            <p>Aşağıda belirtilen tüm kategorilerdeki "İlan Verme Kuralları" hem bireysel hem kurumsal Hesap Sahibi olanlar için geçerlidir. İlan girişinde bulunan Üye, mevzuata, ilan verme kurallarına ve Sözleşme'de belirtilen kurallara uymayı, kanun ve yönetmelikler başta olmak üzere mevzuat gereği tüketiciyi aldatma ihtimali taşıyan açıklamalara ilanda yer vermemeyi kabul ve taahhüt etmiş sayılır.</p>
+
+                            <p>devretlink.com portalında ilanının verilmesi yasak olan ürünlerin güncel listesine Yasaklı Ürünler Listesi sayfasından ulaşılabilir. DEVRET LİNK, ilanı verilmesi yasaklı ürünlere, portalın ilgili bölümlerinde yapacağı açıklamalar doğrultusunda eklemeler yapabilir. "Hesap Sahibi", ilanı yasaklı ürünleri güncel olarak takip etmeli, yasaklı olmayan ürünlere ilişkin ilan vermelidir.</p>
+
+                            <p>devretlink.com'da yayınlanmış ilanlar, ilan sahipleri tarafından yayından kaldırıldığında ya da ilan verme kurallarına ve/veya hesap sözleşmesine aykırılık nedeniyle DEVRET LİNK tarafından yayından kaldırıldığında; ilan ve doping ürünleri elektronik ortamda anında ifa edilen hizmetlerden olduğu için, yayından kaldırılan ilanın ücreti ve uygulanmış doping varsa doping ücreti veya varsa bu ilan kapsamında tanımlanmış kampanya ve tekliflere ait haklar (ücretsiz ilan vb gibi) iade edilmez.</p>
+
+                            <p>Kullanıcı'lar, "Portal" dahilinde eriştikleri bilgileri yalnızca bu bilgileri ifşa eden "Hesap Sahibi" veya "DEVRET LİNK"in amacına uygun olarak kullanmakla, ticari olmayan amaçla görüntülemekle yükümlüdür. İlan veren Hesap Sahibi tarafından girilmiş bulunan ilanlardaki iletişim bilgileri sadece ilan hakkında bilgi almak için iletişim kurulması amacıyla kullanılabilir. İlanda yer alabilecek 6698 sayılı Kişisel Verilerin Korunması Hakkında Kanun kapsamında koruma altında olan ilan verene ait veya üçüncü kişilere ait kişisel veriler ve/veya özel nitelikli kişisel veriler, başkaca bir amaçla kullanılamaz, kopyalanamaz, başka mecralarda doğrudan veya dolaylı olarak yayınlanamaz, işlenemez, dağıtılamaz, başkaca veri tabanlarına aktarılarak üçüncü kişilerin erişimine ve kullanımına açılamaz.</p>
+
+                            <p>İdari veya yasal düzenlemeler gereğince veya müşteri deneyimini ve süreçleri iyileştirme amacıyla DEVRET LİNK tarafından gerekli görülmesi halinde; ilan verme aşamasındaki kategori yapısı, kategori ismi ve/veya mevcut ilanların kategorileri herhangi bir bildirime gerek olmaksızın DEVRET LİNK tarafından değiştirilebilir, kategori kapatılabilir veya kapatılan kategori altındaki ilanlar uygun olan benzer nitelikteki başka bir kategori altına taşınabilir.</p>
+
+                            <p>İlan verenler, ilanlarından DEVRET LİNK tarafından uygun görülenlerin; DEVRET LİNK'in belirleyeceği süre boyunca belirli kategorilerde yayınlanmasına, ayrıca DEVRET LİNK tarafından seçilen ilanların, sosyal medyada, basın bülteninde ve sair mecralarda yayınlanmasına onay vermektedir.</p>
+
+                            <p>Fiyat Bilgileri özelliği kullanıcılarımızın daha kolay şekilde favoriye aldıkları ilanların fiyat değişikliklerini takip edebilmelerini sağlayan bir özelliktir. Bu özellik tüm ilanlarda gösterilir ancak ilanın fiyat tarihçesinin görüntülenebilmesi için ilanın favoriye eklenmesi gerekmektedir. Favoriye eklenen ilanlardaki fiyat değişikliklerini gösteren Fiyat Bilgileri özelliği kaldırılamaz.</p>
+
+                            <p>Özel hayatın gizliliği prensibi kapsamında ilan bilgilerinde ve/veya ilana ilişkin fotoğraflarda herhangi bir kişiye ait kişisel veriye yer verilmemelidir.</p>
+
+                            <p>Bireysel ve Kurumsal Hesap Sahibi, Portal üzerinden ilan verme, ilan düzenleme ve ilanı yeniden yayına alma işlemlerinden önce yasal mevzuat gereği sistem üzerinden kimliklerini doğrulamalıdır. Bireysel ve Kurumsal Hesap Sahibi, doğrulama işlemi yapmadıkları takdirde ilgili mevzuat uyarınca ilan veremeyeceklerini kabul eder.</p>
+
+                            <h3>İlan İçeriği Kuralları</h3>
+                            <ul>
+                                <li>İlan başlığında ve ilan açıklama bölümünde sadece devredilen işyeri hakkındaki bilgiler yer almalıdır.</li>
+                                <li>İlan başlığında ve ilan açıklama bölümlerde reklam içerikli yazı yazılmaması, link ve ürüne ait fotoğrafların eklenmemesi gerekmektedir.</li>
+                                <li>Sistem içerisindeki farklı bir kullanıcının fotoğrafı / fotoğrafları kullanılmamalıdır.</li>
+                                <li>Girilen bir ilanın aynısı, ilk girilen ilan silinerek sisteme yeniden girilemez. Bir ilanın silinip sisteme tekrar yeni baştan girilmesi ve benzeri nitelikteki faaliyetleri gerçekleştiren hesap sahiplerinin bu ilanları silinebilir, hesapları geçici olarak durdurulabilir veya iptal edilebilir.</li>
+                                <li>Aynı sitede veya blokta bulunan ve aynı özellikleri taşıyan işyerleri için ayrı ilan girişi yapılmaması gerekmektedir. Aynı özellikte ikinci ilan girişi mükerrer (aynı kayıt) sayılmaktadır.</li>
+                                <li>Her bir ilan için farklı resimler kullanılmalıdır, aynı konumda dahi olsa aynı resim ikinci bir ilanda kullanılmamalıdır.</li>
+                                <li>Emlak ilan girişleri mutlaka mal sahibi tarafından veya mal sahibinin onayı alınarak yapılmalıdır. Bu sorumluluk ilan verene aittir. Mal sahibinin itirazı doğrultusunda hesap sahiplerinin bu ilanları silinebilir, hesapları geçici olarak durdurulabilir veya iptal edilebilir.</li>
+                                <li>Temsili fiyat verilmemelidir.</li>
+                                <li>İlan açıklama bölümlerinde web sayfası, mail adresi ve firma iletişim bilgilerine yer verilmemelidir. Telefon numarası ve kullanıcı adı sadece "Kullanıcı bilgileri" bölümünde yayınlanmalıdır.</li>
+                            </ul>
+
+                            <p>İlan verme aşamasında, ilana ait devretlink.com tarafından belirlenmiş bazı kriterler için girilen bilgiler, ilan veren tarafından sonradan değiştirilemez, ilan veren bu konuda itirazda bulunmayacağını peşinen kabul etmektedir. devretlink.com hangi kriterlere ait bilgilerin değiştirilemeyeceğini belirleme, zaman içinde belirlediği kriterlerde değişiklik yapma ve değişiklik yapma tarihi itibariyle belirlediği kriterleri tüm ilanlara uygulama hakkını saklı tutmaktadır.</p>
+
+                            <p>İlan bilgilerinin doluluğu ve doğruluğu, fotoğrafların kalitesi ve geçmiş hareketler göz önünde bulundurularak ilan sahiplerinin ilanları değerlendirilebilir. İlan yayınlama kurallarını sıklıkla ihlal eden kullanıcıların sözleşmesini tek taraflı olarak feshetme hakkını DEVRET LİNK saklı tutar. Aynı şekilde ilan bilgilerini daimi olarak doğru ve hatasız giren kullanıcılar, haksız rekabete yol açmayacak şekilde sistem algoritması tarafından ödüllendirilerek ilanların öne çıkması sağlanabilir.</p>
+
+                            <h3>Ayrımcılık Yasağı</h3>
+                            <p>İlan içerisinde yer alan ifadelerin cinsiyet, ırk, renk, dil, din, inanç, mezhep, felsefi ve siyasi görüş, etnik köken, servet, doğum, medeni hâl, sağlık durumu, engellilik ve yaş temellerine dayalı ayrımcılık niteliği taşımaması yasal bir zorunluluktur. Bu tür ifadeler kullanılması hukuka aykırı olup, Türkiye İnsan Hakları ve Eşitlik Kurumu (TİHEK) tarafından idari para cezası verilmesine sebep olabilir. Ayrıca, İlanda belirtilen ifadelerle ayrımcılığa yol açabilecek bilgilere yer verilmesi ilgili ifadelerin ve/veya ilanın yayından kaldırılması sebebidir.</p>
+
+                            <p>İş bu kurallar çerçevesinde hareket etmeyen ilan sahiplerinin ilanları, ilan içeriklerinin bir kısmı veya tamamı silinebilir, kara listeye alınabilir, ilan sahibinin üyeliğine DEVRET LİNK tarafından tek taraflı olarak son verilebilir, Üyelik Sözleşmesi feshedilebilir.</p>
+
+                            <h3>Önemli Bilgilendirme</h3>
+                            <p>Mevzuat hükümleri gereğince, Bireysel ve Kurumsal Hesap Sahipleri ilan verme, ilan düzenleme ve ilanı yeniden yayına alma işlemlerinden önce kendilerine ait kimlik bilgilerini doğrulaması gerekir. Kurumsal Hesaplarda "Yetkili Kullanıcı" kimlik doğrulaması yapmak zorundadır. "Yetkili Kullanıcı" doğrulama yapmadan, hesabın alt kullanıcıları ilan verme, ilan düzenleme ve ilan yeniden yayına alma işlemlerine devam edemez. Bireysel ve Kurumsal Hesap Sahiplerinin kimlik doğrulamasını hiç veya usulüne uygun olarak yapamaması nedeniyle DEVRET LİNK ve/veya üçüncü kişilerin uğrayabileceği her türlü zarar ve idari yaptırım/idari para Bireysel ve Kurumsal Hesap Sahipleri sorumludur.</p>
+                        </div>
+                    </section>
+                    
+                    <!-- İşlem Rehberi -->
+                    <section id="islem-rehberi" class="policy-section">
+                        <h2>İşlem Rehberi</h2>
+                        <div class="policy-text">
+                            <p>İçerik eklenecek...</p>
+                        </div>
+                    </section>
+                    
+                    <!-- SSS -->
+                    <section id="sss" class="policy-section">
+                        <h2>Sıkça Sorulan Sorular</h2>
+                        <div class="policy-text">
+                            
+                            <h3 class="faq-category">Genel</h3>
+                            <div class="faq-list">
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Devret Link'de Kimler İlan Verebilir?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Devret Link'de küçük işletme sahipleri ve franchise markaları ve danışmanları ilan verebilir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Devret Link'de Nasıl İlan Veririm?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Ücretsiz üyelik sonrası ilan formunu doldurup işletmenizin bilgilerini, görsellerini ve devir şartlarını eklemeniz yeterlidir. İlanınız onay sonrası yayına alınır.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3 class="faq-category">Devredenler İçin</h3>
+                            <div class="faq-list">
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>İşletmemi Satmak İstiyorum, Nereden Başlamalıyım?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Devretlink.com'a üye olup ilan vererek işe başlayabilirsiniz. İşletmenizin öne çıkan özelliklerini ve görsellerini eklemeyi unutmayın.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>İşletmemi Kısa Sürede Nasıl Devredebilirim?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Rekabetçi fiyat belirleyin, kaliteli fotoğraflar ekleyin ve açıklamayı net yazın. "Hızlı devir" veya "acil satış" gibi ifadeler kullanarak dikkat çekebilirsiniz. Ek olarak devir için lazım olacak belgeleri hazırlayarak zaman kazanabilirsiniz.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>İşletme Satış Fiyatını Nasıl Belirleyebilirim?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Son 12 aylık ciro, net kâr ve demirbaş değeri temel alınır. Benzer ilanlarla karşılaştırma yapın. Gerekirse bir profesyonel danışmandan destek alabilirsiniz.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>İşletme Devri İçin Gerekli Belgeler Nelerdir?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Vergi levhası, kira kontratı, işletme ruhsatı, varsa çalışan listesi, devir sözleşmesi gibi evraklar gerekir. Duruma göre değişkenlik gösterebilir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Devren Kiralama ile Satın Alma Arasındaki Fark Nedir?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Devren kiralamada mülk sahibiyle kira anlaşması yapılır ve işletme o şekilde devralınır. Devren Satılıkta ise tüm hak ve varlıklar alıcıya geçer. İkisinde de işletme markasıyla ve ekipmanlarıyla devralınır ancak devren satılıkta işletme mülküne de sahip olursunuz. Bu sebeple devren kiralama genelde daha düşük maliyetlidir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Hazır İşletme Alırken Dolandırılmamak İçin Ne Yapmalıyım?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Resmi belgeleri isteyin, mutlaka yerinde görün, varsa borçları yazılı teyit edin. Gerekirse hukuki ve mali destek alın.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Devir Sürecinde Kira Sözleşmesi Ne Olur?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Kira sözleşmesi mülk sahibiyle görüşülerek devralana devredilir veya yeniden düzenlenir. Önceden mülk sahibinin onayını almak önemlidir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>İşletme Devri Ne Kadar Sürer?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Sektör, fiyat ve lokasyona bağlı olarak 2 haftadan kısa bir süreden 12 aya kadar sürebilir. İşletmeden işletmeye değişkenlik gösterebiliyor.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3 class="faq-category">Devralanlar İçin</h3>
+                            <div class="faq-list">
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>İşletme Devralırken Nelere Dikkat Etmeli?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Ciro, borçlar, kira sözleşmesi, ruhsat, lokasyon ve müşteri trafiği incelenmeli. Gerekirse mali müşavirden destek alınmalı.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Devren Satılık Ne Demek?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Hazır işletmenin tüm ekipman, düzeni ve mülküyle birlikte devredilmesidir. Hızlı başlangıç avantajı sunar.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Satın Aldığım İşletme Sonradan Kapanırsa Sorumlu Ben mi Olurum?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Devir sonrası tüm yasal ve mali yükümlülükler size geçer. Bu sebeple devir öncesi kontroller ve sözleşme detayları çok önemlidir. Bu konuda destek almanız önerilir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Devralınan İşte Çalışanlar Devam Eder mi?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Bu durum sözleşmeye bağlıdır. Dilerseniz çalışanları devralabilir ya da yeni ekip kurabilirsiniz. SGK devirleri kontrol edilmelidir.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3 class="faq-category">Franchise & Yatırım</h3>
+                            <div class="faq-list">
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Franchise Nedir?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Bir markanın isim ve iş modeli hakkını bedel karşılığında kullanma sistemidir. Eğitim ve destek genelde markadan gelir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Franchise Almak Mantıklı mı?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Marka bilinirliği, hazır müşteri kitlesi ve operasyon desteği sunar. O sebeple girişimciler için mantıklı olabilir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Franchise Bedeli Nedir?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Başlangıçta markaya ödenen isim hakkı ücretidir. Markaya ve sektöre göre 50.000 TL'den milyonlara çıkabilir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Hangi Sektörlerde Franchise Daha Hızlı Geri Döner?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Fast food, kafe, temizlik ve çocuk eğitimi gibi hizmet odaklı sektörlerde franchise geri dönüşü daha hızlı olabilir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Franchise Veren Firmalar Nasıl Listelenir?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Devret Link üzerinde özel franchise kategorisi bulunur. Marka sahipleri başvurarak ilan oluşturabilir.</p>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <button class="faq-question" onclick="toggleFaq(this)">
+                                        <span>Franchise Alırken Nelere Dikkat Etmeli?</span>
+                                        <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    <div class="faq-answer">
+                                        <p>Franchise sözleşmesini, royalty oranlarını, bölge korumasını ve eğitim süreçlerini detaylıca incelemeniz önerilir. Bu süreçte hukuki destek almanız tavsiye edilir.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">d.</a>
+                    <p class="footer-copyright">
+                        Copyright © 2025<br>
+                        Devret Link Bilgi Teknolojileri<br>
+                        Yazılım ve Ticaret A.Ş.<br>
+                        Tüm Hakları Saklıdır.
+                    </p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Devret Link</h4>
+                    <ul>
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Bize Ulaşın</a></li>
+                        <li><a href="politikalar.html#islem-rehberi">İşlem Rehberi</a></li>
+                        <li><a href="politikalar.html#sss">Sıkça Sorulan Sorular</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>İşletme Devral</h4>
+                    <ul>
+                        <li><a href="listings.html">Devren Kiralık İlanlar</a></li>
+                        <li><a href="franchise.html">Franchise Bul</a></li>
+                        <li><a href="politikalar.html#ilan-verme-kurallari">İlan Verme Kuralları</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Diğer</h4>
+                    <ul>
+                        <li><a href="politikalar.html#kullanim-kosullari">Kullanım Koşulları</a></li>
+                        <li><a href="politikalar.html#aydinlatma-metni">Aydınlatma Metni</a></li>
+                        <li><a href="politikalar.html#kvkk">KVKK</a></li>
+                        <li><a href="politikalar.html#gizlilik-sozlesmesi">Gizlilik Sözleşmesi</a></li>
+                        <li><a href="politikalar.html#kisisel-verilerin-islenmesi">Gizlilik ve Kişisel Verilerin İşlenmesi</a></li>
+                        <li><a href="politikalar.html#veri-sahibi-basvuru">Veri Sahibi Başvuru Formu</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>&nbsp;</h4>
+                    <ul>
+                        <li><a href="politikalar.html#cerez-politikasi">Gizlilik ve Çerez Politikası</a></li>
+                        <li><a href="politikalar.html#basvuru-formu-eki">Başvuru Formu Eki</a></li>
+                        <li><a href="politikalar.html#uyelik-sozlesmesi">Üyelik Sözleşmesi</a></li>
+                        <li><a href="politikalar.html#acik-riza-metni">Açık Rıza Metni</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Devret Link. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            
+            // Handle hash navigation
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                showPolicy(hash);
+            }
+            
+            // Setup navigation
+            document.querySelectorAll('.policy-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const policy = link.dataset.policy;
+                    showPolicy(policy);
+                    history.pushState(null, null, `#${policy}`);
+                });
+            });
+        });
+        
+        function showPolicy(policyId) {
+            // Update active link
+            document.querySelectorAll('.policy-link').forEach(link => {
+                link.classList.toggle('active', link.dataset.policy === policyId);
+            });
+            
+            // Show selected section
+            document.querySelectorAll('.policy-section').forEach(section => {
+                section.classList.toggle('active', section.id === policyId);
+            });
+            
+            // Scroll to top of content
+            document.querySelector('.policies-content').scrollTop = 0;
+        }
+        
+        // FAQ Accordion
+        function toggleFaq(button) {
+            const faqItem = button.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all other FAQ items (optional - remove if you want multiple open)
+            // document.querySelectorAll('.faq-item').forEach(item => {
+            //     item.classList.remove('active');
+            // });
+            
+            // Toggle current item
+            faqItem.classList.toggle('active', !isActive);
+        }
+        
+        // Handle browser back/forward
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                showPolicy(hash);
+            }
+        });
+    </script>
+</body>
+</html>

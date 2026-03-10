@@ -190,11 +190,33 @@ document.querySelectorAll('.step-item').forEach((item, index) => {
 
 // File Uploads
 function setupFileUploads() {
+    console.log('🔧 Dosya yükleme ayarlanıyor...')
+    
     // Logo upload
     const logoUpload = document.getElementById('logoUpload')
     if (logoUpload) {
+        console.log('✅ Logo input bulundu')
         logoUpload.addEventListener('change', (e) => {
+            console.log('🖼️ Logo dosyası seçildi')
             previewFile(e.target.files[0], 'logoPreview')
+        })
+    } else {
+        console.log('❌ Logo input bulunamadı!')
+    }
+    
+    // Investor document upload
+    const investorDoc = document.getElementById('investorDoc')
+    if (investorDoc) {
+        investorDoc.addEventListener('change', (e) => {
+            showDocumentSelected(e.target, 'investorDoc')
+        })
+    }
+    
+    // Brochure document upload
+    const brochureDoc = document.getElementById('brochureDoc')
+    if (brochureDoc) {
+        brochureDoc.addEventListener('change', (e) => {
+            showDocumentSelected(e.target, 'brochureDoc')
         })
     }
     
@@ -208,16 +230,48 @@ function setupFileUploads() {
 }
 
 function previewFile(file, previewId) {
-    if (!file) return
+    if (!file) {
+        console.log('❌ Dosya seçilmedi')
+        return
+    }
+    
+    console.log('📷 Dosya seçildi:', file.name, '(' + (file.size / 1024 / 1024).toFixed(2) + ' MB)')
     
     const reader = new FileReader()
     reader.onload = (e) => {
         const preview = document.getElementById(previewId)
         if (preview) {
-            preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`
+            preview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px; border: 2px solid #10b981;">`
+            console.log('✅ Önizleme gösterildi:', previewId)
+        } else {
+            console.log('❌ Preview elementi bulunamadı:', previewId)
         }
     }
+    reader.onerror = (e) => {
+        console.error('❌ Dosya okuma hatası:', e)
+    }
     reader.readAsDataURL(file)
+}
+
+// Show document selected feedback
+function showDocumentSelected(input, inputId) {
+    if (!input.files || input.files.length === 0) return
+    
+    const file = input.files[0]
+    const label = document.querySelector(`label[for="${inputId}"]`)
+    
+    if (label) {
+        const fileName = file.name
+        const fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB'
+        
+        label.innerHTML = `
+            <span class="doc-icon" style="color: #10b981;">✅</span>
+            <span style="font-weight: 600; color: #10b981;">${fileName}</span>
+            <span class="doc-hint" style="color: #6b7280;">${fileSize} - Dosya seçildi</span>
+        `
+        label.style.borderColor = '#10b981'
+        label.style.backgroundColor = '#f0fdf4'
+    }
 }
 
 // Gallery Upload
@@ -573,32 +627,21 @@ function setupFormSubmission() {
                 status: 'pending'
             }
             
-            console.log('📤 Franchise verisi gönderiliyor:', franchiseRecord)
+            // Generate a unique ID for file uploads first
+            const tempId = crypto.randomUUID()
             
-            // First, insert the franchise record
-            const { data, error } = await supabase
-                .from('franchises')
-                .insert([franchiseRecord])
-                .select()
-                .single()
+            // Upload files FIRST before inserting franchise
+            let logoUrl = null
+            let brochureUrl = null
+            const galleryUrls = []
             
-            if (error) throw error
-            
-            console.log('✅ Franchise kaydedildi:', data)
-            const franchiseId = data.id
-            
-            // Now upload files to Supabase Storage
             try {
-                let logoUrl = null
-                let brochureUrl = null
-                const galleryUrls = []
-                
                 // 1. Upload logo
                 const logoInput = document.getElementById('logoUpload')
                 if (logoInput && logoInput.files && logoInput.files.length > 0) {
                     const logoFile = logoInput.files[0]
                     const logoExt = logoFile.name.split('.').pop()
-                    const logoPath = `${franchiseId}/logo-${Date.now()}.${logoExt}`
+                    const logoPath = `${tempId}/logo-${Date.now()}.${logoExt}`
                     
                     console.log('📤 Logo yükleniyor:', logoPath)
                     const { data: logoData, error: logoError } = await supabase.storage
@@ -624,7 +667,7 @@ function setupFormSubmission() {
                 if (brochureInput && brochureInput.files && brochureInput.files.length > 0) {
                     const brochureFile = brochureInput.files[0]
                     const brochureExt = brochureFile.name.split('.').pop()
-                    const brochurePath = `${franchiseId}/brochure-${Date.now()}.${brochureExt}`
+                    const brochurePath = `${tempId}/brochure-${Date.now()}.${brochureExt}`
                     
                     console.log('📤 Broşür yükleniyor:', brochurePath)
                     const { data: brochureData, error: brochureError } = await supabase.storage
@@ -645,15 +688,42 @@ function setupFormSubmission() {
                     }
                 }
                 
-                // 3. Upload gallery images
+                // 3. Upload investor presentation PDF
+                const investorInput = document.getElementById('investorDoc')
+                if (investorInput && investorInput.files && investorInput.files.length > 0) {
+                    const investorFile = investorInput.files[0]
+                    const investorExt = investorFile.name.split('.').pop()
+                    const investorPath = `${tempId}/investor-${Date.now()}.${investorExt}`
+                    
+                    console.log('📤 Yatırımcı sunumu yükleniyor:', investorPath)
+                    const { data: investorData, error: investorError } = await supabase.storage
+                        .from('franchise-documents')
+                        .upload(investorPath, investorFile, {
+                            cacheControl: '3600',
+                            upsert: false
+                        })
+                    
+                    if (investorError) {
+                        console.error('❌ Yatırımcı sunumu yükleme hatası:', investorError)
+                    } else {
+                        const { data: { publicUrl } } = supabase.storage
+                            .from('franchise-documents')
+                            .getPublicUrl(investorPath)
+                        // Store in brochureUrl if no brochure (or add separate field)
+                        if (!brochureUrl) brochureUrl = publicUrl
+                        console.log('✅ Yatırımcı sunumu yüklendi:', publicUrl)
+                    }
+                }
+                
+                // 4. Upload gallery images
                 if (galleryImages && galleryImages.length > 0) {
                     console.log('📤 Galeri resimleri yükleniyor:', galleryImages.length, 'adet')
                     
                     for (let i = 0; i < galleryImages.length; i++) {
                         const fileObj = galleryImages[i]
-                        const file = fileObj.file // Extract file from object
+                        const file = fileObj.file
                         const ext = file.name.split('.').pop()
-                        const path = `${franchiseId}/gallery-${Date.now()}-${i}.${ext}`
+                        const path = `${tempId}/gallery-${Date.now()}-${i}.${ext}`
                         
                         const { data: imgData, error: imgError } = await supabase.storage
                             .from('franchise-images')
@@ -673,31 +743,28 @@ function setupFormSubmission() {
                         }
                     }
                 }
-                
-                // 4. Update franchise record with file URLs
-                const updateData = {}
-                if (logoUrl) updateData.logo_url = logoUrl
-                if (brochureUrl) updateData.brochure_url = brochureUrl
-                if (galleryUrls.length > 0) updateData.gallery_images = galleryUrls
-                
-                if (Object.keys(updateData).length > 0) {
-                    console.log('📤 Dosya URL\'leri güncelleniyor:', updateData)
-                    const { error: updateError } = await supabase
-                        .from('franchises')
-                        .update(updateData)
-                        .eq('id', franchiseId)
-                    
-                    if (updateError) {
-                        console.error('❌ URL güncelleme hatası:', updateError)
-                    } else {
-                        console.log('✅ Dosya URL\'leri güncellendi')
-                    }
-                }
-                
             } catch (uploadError) {
                 console.error('❌ Dosya yükleme hatası:', uploadError)
-                // Don't stop the process, franchise is already created
             }
+            
+            // Add file URLs to franchise record BEFORE insert
+            if (logoUrl) franchiseRecord.logo_url = logoUrl
+            if (brochureUrl) franchiseRecord.brochure_url = brochureUrl
+            if (galleryUrls.length > 0) franchiseRecord.gallery_images = galleryUrls
+            
+            console.log('📤 Franchise verisi gönderiliyor:', franchiseRecord)
+            
+            // Insert the franchise record with ALL data including file URLs
+            const { data, error } = await supabase
+                .from('franchises')
+                .insert([franchiseRecord])
+                .select()
+                .single()
+            
+            if (error) throw error
+            
+            console.log('✅ Franchise kaydedildi:', data)
+            const franchiseId = data.id
             
             alert('✅ Franchise ilanınız başarıyla oluşturuldu!\n\nİlan No: ' + franchiseId.substring(0, 8) + '\n\nAdmin onayından sonra yayınlanacaktır.')
             window.location.href = 'franchise.html'

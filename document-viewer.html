@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Döküman Görüntüleyici - Devret Link</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        .viewer-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .viewer-header .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .viewer-header .back-btn:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+        
+        .viewer-header .doc-title {
+            flex: 1;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .viewer-header .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #dc2626;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .viewer-header .download-btn:hover {
+            background: #b91c1c;
+        }
+        
+        .breadcrumb {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        
+        .breadcrumb a {
+            color: #6b7280;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #dc2626;
+        }
+        
+        .breadcrumb span {
+            margin: 0 0.5rem;
+        }
+        
+        .viewer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        .pdf-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .pdf-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: #374151;
+            color: white;
+        }
+        
+        .pdf-toolbar .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .pdf-toolbar .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .pdf-toolbar .menu-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .pdf-toolbar .page-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .pdf-toolbar .page-info input {
+            width: 50px;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #4b5563;
+            border-radius: 4px;
+            background: #1f2937;
+            color: white;
+            text-align: center;
+        }
+        
+        .pdf-toolbar .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .pdf-toolbar .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .pdf-toolbar .zoom-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 1.2rem;
+        }
+        
+        .pdf-toolbar .zoom-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .pdf-toolbar .zoom-value {
+            font-size: 0.9rem;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .pdf-frame {
+            width: 100%;
+            height: calc(100vh - 220px);
+            min-height: 600px;
+            border: none;
+        }
+        
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: #6b7280;
+        }
+        
+        .loading-state .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #dc2626;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-state .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .error-state h3 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .error-state p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+        
+        .error-state .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #dc2626;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .viewer-header {
+                padding: 0.5rem 1rem;
+            }
+            
+            .viewer-header .doc-title {
+                font-size: 0.85rem;
+            }
+            
+            .pdf-toolbar {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .pdf-frame {
+                height: calc(100vh - 280px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="viewer-header">
+        <a href="javascript:history.back()" class="back-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Geri
+        </a>
+        <span class="doc-title" id="docTitle">Döküman Yükleniyor...</span>
+        <a href="#" class="download-btn" id="downloadBtn" download>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            İndir
+        </a>
+    </header>
+    
+    <nav class="breadcrumb">
+        <a href="index.html">Ana Sayfa</a>
+        <span>›</span>
+        <a href="listings.html">İlanlar</a>
+        <span>›</span>
+        <span id="breadcrumbTitle">Döküman</span>
+    </nav>
+    
+    <div class="viewer-container">
+        <div class="pdf-wrapper">
+            <div class="pdf-toolbar">
+                <div class="toolbar-left">
+                    <button class="menu-btn" title="Menü">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <span class="doc-title-short" id="docTitleShort">Döküman</span>
+                </div>
+                <div class="toolbar-right">
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" onclick="zoomOut()" title="Küçült">−</button>
+                        <span class="zoom-value" id="zoomValue">100%</span>
+                        <button class="zoom-btn" onclick="zoomIn()" title="Büyüt">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p>Döküman yükleniyor...</p>
+            </div>
+            
+            <div class="error-state" id="errorState">
+                <div class="error-icon">📄</div>
+                <h3>Döküman Yüklenemedi</h3>
+                <p>Döküman görüntülenirken bir hata oluştu.</p>
+                <a href="#" class="btn" id="directDownloadBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Doğrudan İndir
+                </a>
+            </div>
+            
+            <iframe id="pdfFrame" class="pdf-frame" style="display:none;"></iframe>
+        </div>
+    </div>
+    
+    <script>
+        let currentZoom = 100;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const docUrl = urlParams.get('url');
+            const docTitle = urlParams.get('title') || 'Döküman';
+            const listingTitle = urlParams.get('listing') || '';
+            
+            // Set titles
+            document.getElementById('docTitle').textContent = docTitle;
+            document.getElementById('docTitleShort').textContent = docTitle;
+            document.getElementById('breadcrumbTitle').textContent = listingTitle || docTitle;
+            document.title = `${docTitle} - Devret Link`;
+            
+            // Set download link
+            document.getElementById('downloadBtn').href = docUrl;
+            document.getElementById('directDownloadBtn').href = docUrl;
+            
+            if (docUrl) {
+                loadDocument(docUrl);
+            } else {
+                showError();
+            }
+        });
+        
+        function loadDocument(url) {
+            const frame = document.getElementById('pdfFrame');
+            const loading = document.getElementById('loadingState');
+            const error = document.getElementById('errorState');
+            
+            // Use Google Docs Viewer for better compatibility
+            const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+            
+            frame.onload = () => {
+                loading.style.display = 'none';
+                frame.style.display = 'block';
+            };
+            
+            frame.onerror = () => {
+                showError();
+            };
+            
+            // Fallback: if iframe doesn't load in 10 seconds, show error
+            setTimeout(() => {
+                if (loading.style.display !== 'none') {
+                    // Try direct PDF display
+                    frame.src = url;
+                    setTimeout(() => {
+                        if (loading.style.display !== 'none') {
+                            loading.style.display = 'none';
+                            frame.style.display = 'block';
+                        }
+                    }, 2000);
+                }
+            }, 5000);
+            
+            frame.src = viewerUrl;
+        }
+        
+        function showError() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'flex';
+        }
+        
+        function zoomIn() {
+            if (currentZoom < 200) {
+                currentZoom += 25;
+                updateZoom();
+            }
+        }
+        
+        function zoomOut() {
+            if (currentZoom > 50) {
+                currentZoom -= 25;
+                updateZoom();
+            }
+        }
+        
+        function updateZoom() {
+            document.getElementById('zoomValue').textContent = currentZoom + '%';
+            const frame = document.getElementById('pdfFrame');
+            frame.style.transform = `scale(${currentZoom / 100})`;
+            frame.style.transformOrigin = 'top center';
+        }
+    </script>
+</body>
+</html>

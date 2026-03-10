@@ -111,4 +111,4 @@ document.querySelectorAll('.listing-card').forEach((card, index) => {
     observer.observe(card);
 });
 
-console.log('DevredinPlatform loaded successfully! 🚀');
+console.log('devret linkPlatform loaded successfully! 🚀');

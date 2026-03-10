@@ -10,7 +10,7 @@
 }
 
 .logo-main {
-    color: #004E89;
+    color: #dc2626;
     text-decoration: none;
     font-weight: 700;
 }
@@ -25,7 +25,7 @@
 }
 
 .logo-sub {
-    color: #FF6B35;
+    color: #000000;
     text-decoration: none;
     font-weight: 700;
     font-style: italic;
@@ -82,7 +82,7 @@
 }
 
 .sidebar-logo .logo-main {
-    color: #004E89;
+    color: #dc2626;
     text-decoration: none;
     font-weight: 700;
 }
@@ -93,7 +93,7 @@
 }
 
 .sidebar-logo .logo-sub {
-    color: #FF6B35;
+    color: #000000;
     text-decoration: none;
     font-weight: 700;
     font-style: italic;
@@ -160,13 +160,13 @@
 }
 
 .sidebar-tab:hover {
-    border-color: #1a3a5c;
-    color: #1a3a5c;
+    border-color: #1f2937;
+    color: #1f2937;
 }
 
 .sidebar-tab.active {
-    background: #1a3a5c;
-    border-color: #1a3a5c;
+    background: #1f2937;
+    border-color: #1f2937;
     color: #fff;
 }
 
@@ -249,7 +249,7 @@
 
 .filter-content select:focus {
     outline: none;
-    border-color: #1a3a5c;
+    border-color: #1f2937;
 }
 
 .price-inputs {
@@ -268,7 +268,7 @@
 
 .price-inputs input:focus {
     outline: none;
-    border-color: #1a3a5c;
+    border-color: #1f2937;
 }
 
 .checkbox-group {
@@ -294,7 +294,7 @@
 
 .btn-apply {
     margin-top: auto;
-    background: #1a3a5c;
+    background: #1f2937;
     color: #fff;
     border: none;
     padding: 1rem;
@@ -305,12 +305,12 @@
 }
 
 .btn-apply:hover {
-    background: #0f2a45;
+    background: #111827;
 }
 
 .btn-close-panel {
     margin-top: auto;
-    background: #1a3a5c;
+    background: #1f2937;
     color: #fff;
     border: none;
     padding: 1rem;
@@ -321,7 +321,7 @@
 }
 
 .btn-close-panel:hover {
-    background: #0f2a45;
+    background: #111827;
 }
 
 /* Sort Options */
@@ -351,7 +351,7 @@
 
 .sort-option.active {
     background: #f3f4f6;
-    color: #1a3a5c;
+    color: #1f2937;
     font-weight: 500;
 }
 
@@ -446,7 +446,7 @@
 }
 
 .btn-search-small {
-    background: #1a3a5c;
+    background: #1f2937;
     color: #fff;
     border: none;
     padding: 0.5rem 1rem;
@@ -457,7 +457,7 @@
 }
 
 .btn-search-small:hover {
-    background: #0f2a45;
+    background: #111827;
 }
 
 .view-controls {
@@ -481,13 +481,13 @@
 }
 
 .view-btn:hover {
-    border-color: #1a3a5c;
-    color: #1a3a5c;
+    border-color: #1f2937;
+    color: #1f2937;
 }
 
 .view-btn.active {
-    background: #1a3a5c;
-    border-color: #1a3a5c;
+    background: #1f2937;
+    border-color: #1f2937;
     color: #fff;
 }
 
@@ -518,7 +518,7 @@
     width: 40px;
     height: 40px;
     border: 3px solid #e5e7eb;
-    border-top-color: #1a3a5c;
+    border-top-color: #1f2937;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin-bottom: 1rem;
@@ -621,7 +621,7 @@
 .listing-item-category {
     font-size: 0.85rem;
     font-weight: 500;
-    color: #1a3a5c;
+    color: #1f2937;
 }
 
 .listing-item-sector {
@@ -649,7 +649,7 @@
 .listing-item-price .price {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #1a3a5c;
+    color: #1f2937;
 }
 
 /* Grid View */
@@ -696,6 +696,51 @@
 }
 
 /* Custom Map Markers */
+.price-marker {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    background: #dc2626;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.price-marker::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #dc2626;
+}
+
+.price-marker:hover,
+.price-marker.hover {
+    background: #b91c1c;
+    transform: translate(-50%, -100%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+    z-index: 200;
+}
+
+.price-marker:hover::after,
+.price-marker.hover::after {
+    border-top-color: #b91c1c;
+}
+
+.price-marker span {
+    display: block;
+}
+
 .custom-marker {
     background: white;
     padding: 6px 12px;
@@ -703,7 +748,7 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     font-weight: 600;
     font-size: 14px;
-    color: #004E89;
+    color: #dc2626;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -740,14 +785,14 @@
 .info-price {
     font-size: 18px;
     font-weight: 700;
-    color: #004E89;
+    color: #dc2626;
     margin-bottom: 12px;
 }
 
 .info-link {
     display: inline-block;
     padding: 8px 16px;
-    background: #004E89;
+    background: #dc2626;
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -863,13 +908,13 @@
 
 .auth-icon-btn:hover {
     background: #f1f5f9;
-    color: #004E89;
+    color: #dc2626;
 }
 
 .user-initials {
     width: 40px;
     height: 40px;
-    background: #004E89;
+    background: #dc2626;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -913,7 +958,7 @@
 .dropdown-avatar {
     width: 36px;
     height: 36px;
-    background: #004E89;
+    background: #dc2626;
     border-radius: 8px;
     display: flex;
     align-items: center;

@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #004E89;
+            --primary: #dc2626;
             --primary-dark: #003d6e;
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
@@ -850,9 +850,10 @@
                 console.log('👤 Current user email:', user.email);
                 
                 const adminEmails = [
-                    'admin@devredin.com', 
-                    'admin@devredinplatform.com',
+                    'admin@devretlink.com', 
+                    'admin@devretlinkplatform.com',
                     'ahmetserhatelmas@hotmail.com',
+                    'ahmetserhatelmas@hotmaail.com',
                     'ahmetserhatelmas@gmail.com'
                 ];
                 
@@ -965,18 +966,70 @@
             if (!confirm('Bu yazıyı silmek istediğinize emin misiniz?')) return;
 
             try {
-                const { error } = await supabase
+                // First check if user is admin
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    alert('Giriş yapmanız gerekiyor!');
+                    return;
+                }
+
+                console.log('Deleting post:', postId);
+                console.log('User email:', user.email);
+
+                // Try to delete
+                const { data, error } = await supabase
                     .from('blog_posts')
                     .delete()
-                    .eq('id', postId);
+                    .eq('id', postId)
+                    .select();
 
-                if (error) throw error;
+                if (error) {
+                    console.error('Delete error:', error);
+                    
+                    // If RLS error, provide helpful message
+                    if (error.code === '42501' || error.message.includes('permission') || error.message.includes('policy')) {
+                        alert('Silme yetkiniz yok! Lütfen database/fix-admin-rls.sql dosyasını Supabase SQL Editor\'de çalıştırın.');
+                    } else {
+                        throw error;
+                    }
+                    return;
+                }
+
+                // Check if anything was deleted
+                if (!data || data.length === 0) {
+                    console.warn('No data returned from delete operation');
+                    // Try alternative method - delete without select
+                    const { error: deleteError } = await supabase
+                        .from('blog_posts')
+                        .delete()
+                        .eq('id', postId);
+                    
+                    if (deleteError) {
+                        console.error('Alternative delete error:', deleteError);
+                        if (deleteError.code === '42501' || deleteError.message.includes('permission')) {
+                            alert('Silme yetkiniz yok! Lütfen database/fix-admin-rls.sql dosyasını Supabase SQL Editor\'de çalıştırın.');
+                        } else {
+                            alert('Silme hatası: ' + deleteError.message);
+                        }
+                        return;
+                    }
+                    
+                    // If alternative method worked, reload
+                    alert('Yazı silindi!');
+                    loadExistingPosts();
+                    return;
+                }
 
                 alert('Yazı silindi!');
                 loadExistingPosts();
 
             } catch (e) {
-                alert('Silme hatası: ' + e.message);
+                console.error('Delete error:', e);
+                if (e.message && (e.message.includes('permission') || e.message.includes('policy'))) {
+                    alert('Silme yetkiniz yok! Lütfen database/fix-admin-rls.sql dosyasını Supabase SQL Editor\'de çalıştırın.');
+                } else {
+                    alert('Silme hatası: ' + e.message);
+                }
             }
         }
 

@@ -24,8 +24,8 @@ supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.ano
 // ============================================
 
 // Session cache key
-const USER_CACHE_KEY = 'devredin_user_cache'
-const PROFILE_CACHE_KEY = 'devredin_profile_cache'
+const USER_CACHE_KEY = 'devret link_user_cache'
+const PROFILE_CACHE_KEY = 'devret link_profile_cache'
 
 // Cached user data for instant display
 let cachedUser = null

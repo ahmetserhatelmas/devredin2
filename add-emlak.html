@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emlak İlanı Ver - Devret Link</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-dark: #b91c1c;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--gray-50); color: var(--gray-900); }
+
+        /* NAVBAR */
+        .navbar {
+            background: #fff; border-bottom: 1px solid var(--gray-200);
+            position: sticky; top: 0; z-index: 100; padding: 0 1.5rem;
+        }
+        .nav-inner {
+            max-width: 1000px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between; height: 60px;
+        }
+        .logo-main { font-weight: 800; font-size: 1.25rem; color: var(--primary); text-decoration: none; }
+        .logo-divider { color: var(--gray-300); margin: 0 0.35rem; }
+        .logo-sub { font-weight: 700; color: var(--primary); text-decoration: none; font-size: 1rem; }
+        .btn-back {
+            display: flex; align-items: center; gap: 0.4rem;
+            color: var(--gray-600); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+        }
+        .btn-back:hover { color: var(--primary); }
+
+        /* PROGRESS BAR */
+        .progress-bar-wrap {
+            background: #fff; border-bottom: 1px solid var(--gray-200); padding: 1rem 1.5rem;
+        }
+        .progress-bar-inner { max-width: 1000px; margin: 0 auto; }
+        .steps { display: flex; align-items: center; gap: 0; }
+        .step {
+            display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex: 1;
+            position: relative;
+        }
+        .step-top { display: flex; align-items: center; width: 100%; }
+        .step-top-line {
+            flex: 1; height: 2px; background: var(--gray-200); transition: background 0.3s;
+        }
+        .step:first-child .step-top-line:first-child { visibility: hidden; }
+        .step:last-child .step-top-line:last-child { visibility: hidden; }
+        .step.done .step-top-line { background: var(--primary); }
+        .step.active .step-top-line:first-child { background: var(--primary); }
+        .step-circle {
+            width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gray-300);
+            display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700;
+            color: var(--gray-500); background: #fff; flex-shrink: 0; transition: all 0.3s; z-index: 1;
+        }
+        .step.active .step-circle { border-color: var(--primary); color: var(--primary); background: #fef2f2; }
+        .step.done .step-circle { border-color: var(--primary); background: var(--primary); color: #fff; }
+        .step-label { font-size: 0.78rem; font-weight: 600; color: var(--gray-500); white-space: nowrap; text-align: center; }
+        .step.active .step-label { color: var(--primary); }
+        .step.done .step-label { color: var(--gray-700); }
+
+        /* MAIN */
+        .main { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem 3rem; }
+
+        /* STEP PAGES */
+        .step-page { display: none; }
+        .step-page.active { display: block; }
+
+        /* SECTION CARD */
+        .section-card {
+            background: #fff; border-radius: 12px; border: 1px solid var(--gray-200);
+            padding: 1.5rem; margin-bottom: 1.25rem;
+        }
+        .section-title {
+            font-size: 1rem; font-weight: 700; color: var(--gray-900);
+            margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-100);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .section-title svg { color: var(--primary); }
+
+        /* TYPE TOGGLE (Kiralık / Satılık) */
+        .type-toggle { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .type-option {
+            flex: 1; padding: 1rem; border: 2px solid var(--gray-300); border-radius: 12px;
+            cursor: pointer; text-align: center; transition: all 0.2s; background: #fff;
+        }
+        .type-option.selected.kiralik { border-color: #2563eb; background: #eff6ff; }
+        .type-option.selected.satilik { border-color: #16a34a; background: #f0fdf4; }
+        .type-option-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .type-option-label { font-size: 0.9rem; font-weight: 700; color: var(--gray-800); }
+        .type-option-desc { font-size: 0.75rem; color: var(--gray-500); margin-top: 0.2rem; }
+        .type-option.selected.kiralik .type-option-label { color: #1d4ed8; }
+        .type-option.selected.satilik .type-option-label { color: #166534; }
+
+        /* FORM FIELDS */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+        .form-row.single { grid-template-columns: 1fr; }
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0; }
+        .form-label { font-size: 0.8rem; font-weight: 600; color: var(--gray-600); }
+        .form-label .req { color: var(--primary); }
+        .form-input, .form-select, .form-textarea {
+            border: 1px solid var(--gray-300); border-radius: 8px;
+            padding: 0.7rem 0.85rem; font-size: 0.9rem; color: var(--gray-900);
+            background: #fff; outline: none; transition: border-color 0.2s; font-family: inherit;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); }
+        .form-input.error, .form-select.error { border-color: #ef4444; }
+        .form-textarea { min-height: 120px; resize: vertical; }
+        .form-hint { font-size: 0.75rem; color: var(--gray-400); }
+
+        /* PREFIX INPUT */
+        .input-prefix { position: relative; }
+        .input-prefix .prefix {
+            position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+            font-size: 0.9rem; color: var(--gray-500); font-weight: 600; pointer-events: none;
+        }
+        .input-prefix .form-input { padding-left: 1.75rem; }
+
+        /* CHECKBOX GRID */
+        .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+        .check-option {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.6rem 0.75rem; border: 1px solid var(--gray-200); border-radius: 8px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .check-option:has(input:checked) { border-color: var(--primary); background: #fef2f2; }
+        .check-option input { accent-color: var(--primary); width: 16px; height: 16px; }
+        .check-option label { font-size: 0.83rem; color: var(--gray-700); cursor: pointer; font-weight: 500; }
+
+        /* ROOM BUTTONS */
+        .room-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .room-btn {
+            padding: 0.5rem 0.9rem; border: 1.5px solid var(--gray-300); border-radius: 8px;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #fff; color: var(--gray-700);
+            transition: all 0.2s;
+        }
+        .room-btn.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+
+        /* PHOTO UPLOAD */
+        .photo-upload-zone {
+            border: 2px dashed var(--gray-300); border-radius: 12px;
+            padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s;
+            background: var(--gray-50);
+        }
+        .photo-upload-zone:hover { border-color: var(--primary); background: #fef2f2; }
+        .photo-upload-zone input { display: none; }
+        .photo-preview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 1rem; }
+        .photo-preview-item {
+            position: relative; border-radius: 8px; overflow: hidden;
+            aspect-ratio: 4/3; background: var(--gray-100);
+        }
+        .photo-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-preview-item .remove-btn {
+            position: absolute; top: 0.25rem; right: 0.25rem;
+            width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,0.6);
+            border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; transition: background 0.2s;
+        }
+        .photo-preview-item .remove-btn:hover { background: var(--primary); }
+        .cover-badge {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(220,38,38,0.8); color: #fff; text-align: center;
+            font-size: 0.7rem; font-weight: 700; padding: 0.2rem;
+        }
+
+        /* NAV BUTTONS */
+        .step-nav {
+            display: flex; justify-content: space-between; margin-top: 1.5rem; gap: 1rem;
+        }
+        .btn-prev, .btn-next, .btn-submit {
+            padding: 0.85rem 2rem; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 0.5rem; border: none;
+        }
+        .btn-prev { background: var(--gray-100); color: var(--gray-700); }
+        .btn-prev:hover { background: var(--gray-200); }
+        .btn-next, .btn-submit { background: var(--primary); color: #fff; }
+        .btn-next:hover, .btn-submit:hover { background: var(--primary-dark); }
+
+        /* SUMMARY */
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .summary-item { padding: 0.75rem; background: var(--gray-50); border-radius: 8px; }
+        .summary-item .key { font-size: 0.75rem; color: var(--gray-500); font-weight: 600; margin-bottom: 0.25rem; }
+        .summary-item .val { font-size: 0.9rem; color: var(--gray-900); font-weight: 600; }
+
+        @media (max-width: 640px) {
+            .form-row { grid-template-columns: 1fr; }
+            .form-row.triple { grid-template-columns: 1fr 1fr; }
+            .checkbox-grid { grid-template-columns: repeat(2, 1fr); }
+            .photo-preview-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps { gap: 0; }
+            .step-label { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-inner">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+            <a href="index.html" class="logo-main">devret link</a>
+            <span class="logo-divider">|</span>
+            <a href="emlak.html" class="logo-sub">emlak</a>
+        </div>
+        <a href="emlak.html" class="btn-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            Geri Dön
+        </a>
+    </div>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+    <div class="progress-bar-inner">
+        <div class="steps">
+            <div class="step active" id="step-indicator-1">
+                <div class="step-top">
+                    <div class="step-top-line"></div>
+                    <div class="step-circle" id="step-circle-1">1</div>
+                    <div class="step-top-line"></div>
+                </div>
+                <span class="step-label">Temel Bilgiler</span>
+            </div>
+            <div class="step" id="step-indicator-2">
+                <div class="step-top">
+                    <div class="step-top-line"></div>
+                    <div class="step-circle" id="step-circle-2">2</div>
+                    <div class="step-top-line"></div>
+                </div>
+                <span class="step-label">Konut Detayları</span>
+            </div>
+            <div class="step" id="step-indicator-3">
+                <div class="step-top">
+                    <div class="step-top-line"></div>
+                    <div class="step-circle" id="step-circle-3">3</div>
+                    <div class="step-top-line"></div>
+                </div>
+                <span class="step-label">Özellikler</span>
+            </div>
+            <div class="step" id="step-indicator-4">
+                <div class="step-top">
+                    <div class="step-top-line"></div>
+                    <div class="step-circle" id="step-circle-4">4</div>
+                    <div class="step-top-line"></div>
+                </div>
+                <span class="step-label">Fotoğraflar</span>
+            </div>
+            <div class="step" id="step-indicator-5">
+                <div class="step-top">
+                    <div class="step-top-line"></div>
+                    <div class="step-circle" id="step-circle-5">5</div>
+                    <div class="step-top-line"></div>
+                </div>
+                <span class="step-label">İletişim & Özet</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- STEP 1: TEMEL BİLGİLER -->
+    <div class="step-page active" id="page-1">
+
+        <!-- İlan Tipi -->
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                İlan Tipi Seçin
+            </div>
+            <div class="type-toggle">
+                <div class="type-option kiralik selected" id="typeKiralik" onclick="selectType('kiralik')">
+                    <div class="type-option-icon">🔑</div>
+                    <div class="type-option-label">Kiralık</div>
+                    <div class="type-option-desc">Aylık kira bedeli</div>
+                </div>
+                <div class="type-option satilik" id="typeSatilik" onclick="selectType('satilik')">
+                    <div class="type-option-icon">🏠</div>
+                    <div class="type-option-label">Satılık</div>
+                    <div class="type-option-desc">Toplam satış fiyatı</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Başlık & Fiyat -->
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                İlan Başlığı ve Fiyat
+            </div>
+            <div class="form-row single">
+                <div class="form-group">
+                    <label class="form-label">İlan Başlığı <span class="req">*</span></label>
+                    <input type="text" class="form-input" id="title" placeholder="Örn: Kadıköy'de 2+1 Eşyalı Daire" maxlength="120">
+                    <span class="form-hint">En az 10 karakter girin</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" id="priceLabel">Kira Bedeli (₺) <span class="req">*</span></label>
+                    <div class="input-prefix">
+                        <span class="prefix">₺</span>
+                        <input type="number" class="form-input" id="price" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group" id="depositGroup">
+                    <label class="form-label">Depozito (₺)</label>
+                    <div class="input-prefix">
+                        <span class="prefix">₺</span>
+                        <input type="number" class="form-input" id="deposit" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Aidat (₺/ay)</label>
+                    <div class="input-prefix">
+                        <span class="prefix">₺</span>
+                        <input type="number" class="form-input" id="dues" placeholder="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Konum -->
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Konum
+            </div>
+
+            <div class="form-group" style="margin-bottom:1rem;">
+                <label class="form-label">Adres veya konum girin <span class="req">*</span></label>
+                <div style="position:relative;display:flex;align-items:center;border:1px solid var(--gray-300);border-radius:8px;background:#fff;overflow:visible;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         style="position:absolute;left:0.75rem;color:var(--gray-400);pointer-events:none;flex-shrink:0;">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <input type="text" id="emlakAddress" placeholder="Şehir, ilçe veya mahalle yazın..."
+                           autocomplete="off"
+                           style="width:100%;border:none;outline:none;padding:0.7rem 0.85rem 0.7rem 2.5rem;font-size:0.9rem;border-radius:8px;background:transparent;">
+                </div>
+                <input type="hidden" id="emlakLatitude">
+                <input type="hidden" id="emlakLongitude">
+            </div>
+
+            <div class="form-group" style="margin-bottom:1rem;">
+                <label class="form-label">Konum <span class="req">*</span></label>
+                <div id="emlakMap" style="height:360px;border-radius:10px;overflow:hidden;border:1px solid var(--gray-200);"></div>
+                <p style="font-size:0.78rem;color:var(--gray-400);margin-top:0.4rem;">
+                    💡 Haritayı tıklayarak veya pin'i sürükleyerek tam konumu belirleyin
+                </p>
+            </div>
+
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Vilayet</label>
+                    <input type="text" class="form-input" id="emlakCity" placeholder="Otomatik doldurulur" readonly
+                           style="background:var(--gray-50);color:var(--gray-600);">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">İlçe</label>
+                    <input type="text" class="form-input" id="emlakDistrict" placeholder="Otomatik doldurulur" readonly
+                           style="background:var(--gray-50);color:var(--gray-600);">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mahalle / Sokak</label>
+                    <input type="text" class="form-input" id="emlakNeighborhood" placeholder="Opsiyonel">
+                </div>
+            </div>
+        </div>
+
+        <div class="step-nav">
+            <div></div>
+            <button class="btn-next" onclick="goStep(2)">
+                Devam Et
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 2: KONUT DETAYLARI -->
+    <div class="step-page" id="page-2">
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                Konut Tipi ve Boyutu
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Konut Tipi <span class="req">*</span></label>
+                    <select class="form-select" id="propertyType">
+                        <option value="daire">Daire</option>
+                        <option value="mustakil">Müstakil Ev</option>
+                        <option value="villa">Villa</option>
+                        <option value="rezidans">Rezidans</option>
+                        <option value="stüdyo">Stüdyo</option>
+                        <option value="dubleks">Dubleks</option>
+                        <option value="tripleks">Tripleks</option>
+                        <option value="çatı_dubleks">Çatı Dubleksi</option>
+                        <option value="ara_kat_dubleks">Ara Kat Dubleksi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Oda Sayısı <span class="req">*</span></label>
+                    <div class="room-grid" id="roomGrid">
+                        <button class="room-btn" type="button" onclick="selectRoom(this, '1+0')">Stüdyo</button>
+                        <button class="room-btn" type="button" onclick="selectRoom(this, '1+1')">1+1</button>
+                        <button class="room-btn" type="button" onclick="selectRoom(this, '2+1')">2+1</button>
+                        <button class="room-btn" type="button" onclick="selectRoom(this, '3+1')">3+1</button>
+                        <button class="room-btn" type="button" onclick="selectRoom(this, '4+1')">4+1</button>
+                        <button class="room-btn" type="button" onclick="selectRoom(this, '5+1')">5+1</button>
+                        <button class="room-btn" type="button" onclick="selectRoom(this, '6+1+')">6+1+</button>
+                    </div>
+                    <input type="hidden" id="roomCount">
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Brüt m² <span class="req">*</span></label>
+                    <input type="number" class="form-input" id="areaGross" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Net m²</label>
+                    <input type="number" class="form-input" id="areaNet" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Banyo Sayısı</label>
+                    <select class="form-select" id="bathroomCount">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4+</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Bina ve Kat Bilgileri
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Bulunduğu Kat</label>
+                    <input type="number" class="form-input" id="floorNumber" placeholder="0 = Zemin">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Toplam Kat</label>
+                    <input type="number" class="form-input" id="totalFloors" placeholder="Bina kat sayısı">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Bina Yaşı</label>
+                    <select class="form-select" id="buildingAge">
+                        <option value="">Seçin</option>
+                        <option value="0-5">0-5 Yıl</option>
+                        <option value="5-10">5-10 Yıl</option>
+                        <option value="10-15">10-15 Yıl</option>
+                        <option value="15-20">15-20 Yıl</option>
+                        <option value="20+">20+ Yıl</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Isıtma</label>
+                    <select class="form-select" id="heatingType">
+                        <option value="">Seçin</option>
+                        <option value="kombi">Kombi (Doğalgaz)</option>
+                        <option value="merkezi">Merkezi</option>
+                        <option value="yerden">Yerden Isıtma</option>
+                        <option value="klima">Klima</option>
+                        <option value="soba">Soba</option>
+                        <option value="yok">Isıtma Yok</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Zemin</label>
+                    <select class="form-select" id="floorType">
+                        <option value="">Seçin</option>
+                        <option value="parke">Parke</option>
+                        <option value="laminat">Laminat</option>
+                        <option value="seramik">Seramik</option>
+                        <option value="mermer">Mermer</option>
+                        <option value="halı">Halı</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mutfak</label>
+                    <select class="form-select" id="kitchenType">
+                        <option value="">Seçin</option>
+                        <option value="açık_amerikan">Açık (Amerikan)</option>
+                        <option value="kapalı">Kapalı</option>
+                        <option value="amerikan">Amerikan</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Cephe</label>
+                    <select class="form-select" id="facing">
+                        <option value="">Seçin</option>
+                        <option value="kuzey">Kuzey</option>
+                        <option value="güney">Güney</option>
+                        <option value="doğu">Doğu</option>
+                        <option value="batı">Batı</option>
+                        <option value="güneydoğu">Güneydoğu</option>
+                        <option value="güneybatı">Güneybatı</option>
+                        <option value="kuzeydoğu">Kuzeydoğu</option>
+                        <option value="kuzeybatı">Kuzeybatı</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tapu Durumu</label>
+                    <select class="form-select" id="deedType">
+                        <option value="">Seçin</option>
+                        <option value="kat_mülkiyeti">Kat Mülkiyeti</option>
+                        <option value="kat_irtifakı">Kat İrtifakı</option>
+                        <option value="hisseli">Hisseli Tapu</option>
+                        <option value="arsa">Arsa</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-nav">
+            <button class="btn-prev" onclick="goStep(1)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                Geri
+            </button>
+            <button class="btn-next" onclick="goStep(3)">
+                Devam Et
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 3: ÖZELLİKLER & AÇIKLAMA -->
+    <div class="step-page" id="page-3">
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Özellikler
+            </div>
+            <div class="checkbox-grid">
+                <label class="check-option"><input type="checkbox" id="hasElevator"><label for="hasElevator">🛗 Asansör</label></label>
+                <label class="check-option"><input type="checkbox" id="hasParking"><label for="hasParking">🚗 Otopark</label></label>
+                <label class="check-option"><input type="checkbox" id="isFurnished"><label for="isFurnished">🛋️ Eşyalı</label></label>
+                <label class="check-option"><input type="checkbox" id="isInComplex"><label for="isInComplex">🏘️ Site İçinde</label></label>
+                <label class="check-option"><input type="checkbox" id="allowsPets"><label for="allowsPets">🐾 Evcil Hayvan</label></label>
+                <label class="check-option"><input type="checkbox" id="isExchangeable"><label for="isExchangeable">🔄 Takas</label></label>
+                <label class="check-option"><input type="checkbox" id="hasBalcony"><label for="hasBalcony">🌿 Balkon</label></label>
+                <label class="check-option"><input type="checkbox" id="fromOwner" checked><label for="fromOwner">🏷️ Sahibinden</label></label>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+                İlan Açıklaması
+            </div>
+            <textarea class="form-textarea" id="description" placeholder="Konutunuz hakkında detaylı bilgi verin. Konum avantajları, yakın çevre, özel özellikler..."></textarea>
+            <p class="form-hint" style="margin-top:0.5rem;">En az 50 karakter (daha fazla detay = daha fazla ilgi)</p>
+        </div>
+
+        <div class="step-nav">
+            <button class="btn-prev" onclick="goStep(2)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                Geri
+            </button>
+            <button class="btn-next" onclick="goStep(4)">
+                Devam Et
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 4: FOTOĞRAFLAR -->
+    <div class="step-page" id="page-4">
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Fotoğraflar
+            </div>
+            <p style="font-size:0.85rem;color:var(--gray-500);margin-bottom:1rem;">İlk fotoğraf kapak görseli olarak kullanılır. En fazla 10 fotoğraf yükleyebilirsiniz.</p>
+            <div class="photo-upload-zone" onclick="document.getElementById('photoInput').click()">
+                <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotos(this)">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--gray-400);margin-bottom:0.75rem;">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <p style="font-size:0.9rem;font-weight:600;color:var(--gray-600);">Fotoğraf Yükle</p>
+                <p style="font-size:0.8rem;color:var(--gray-400);">PNG, JPG, WEBP — Maks. 5MB</p>
+            </div>
+            <div class="photo-preview-grid" id="photoPreviewGrid"></div>
+        </div>
+
+        <div class="step-nav">
+            <button class="btn-prev" onclick="goStep(3)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                Geri
+            </button>
+            <button class="btn-next" onclick="goStep(5)">
+                Devam Et
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 5: İLETİŞİM & ÖZET -->
+    <div class="step-page" id="page-5">
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                İletişim Bilgileri
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Ad Soyad <span class="req">*</span></label>
+                    <input type="text" class="form-input" id="contactName" placeholder="Adınız Soyadınız">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefon <span class="req">*</span></label>
+                    <input type="tel" class="form-input" id="contactPhone" placeholder="0555 555 55 55">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">E-posta</label>
+                    <input type="email" class="form-input" id="contactEmail" placeholder="ornek@mail.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefon Görünürlüğü</label>
+                    <select class="form-select" id="showPhone">
+                        <option value="true">Herkese Göster</option>
+                        <option value="false">Gizle (Mesaj ile iletişim)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                İlan Özeti
+            </div>
+            <div class="summary-grid" id="summaryGrid"></div>
+        </div>
+
+        <div class="step-nav">
+            <button class="btn-prev" onclick="goStep(4)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                Geri
+            </button>
+            <button class="btn-submit" id="submitBtn" onclick="submitListing()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                İlanı Yayınla
+            </button>
+        </div>
+    </div>
+
+</div><!-- /main -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="backend/api.js"></script>
+<script>
+let currentStep = 1;
+let selectedType = 'kiralik';
+let selectedRoom = '';
+let uploadedPhotos = []; // {file, dataUrl}
+
+// ---- Init ----
+let editMode = false;
+let editId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Check for edit mode
+    const params = new URLSearchParams(window.location.search);
+    editId = params.get('edit');
+    if (editId) {
+        editMode = true;
+        await loadEmlakForEdit(editId);
+    }
+});
+
+async function loadEmlakForEdit(id) {
+    try {
+        const { data, error } = await supabase
+            .from('emlak_listings')
+            .select('*')
+            .eq('id', id)
+            .single();
+        if (error || !data) { alert('İlan bulunamadı.'); return; }
+
+        // Update page title and button
+        document.querySelector('.create-hero h1') && (document.querySelector('.create-hero h1').textContent = 'Emlak İlanını Düzenle');
+        const submitBtn = document.getElementById('submitBtn');
+        if (submitBtn) submitBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Değişiklikleri Kaydet`;
+
+        // Fill form fields
+        selectType(data.listing_type || 'kiralik');
+        document.getElementById('title').value = data.title || '';
+        document.getElementById('description').value = data.description || '';
+        document.getElementById('price').value = data.price || '';
+        document.getElementById('deposit').value = data.deposit || '';
+        document.getElementById('dues').value = data.dues || '';
+        document.getElementById('propertyType').value = data.property_type || '';
+        document.getElementById('areaGross').value = data.area_gross || '';
+        document.getElementById('areaNet').value = data.area_net || '';
+        document.getElementById('bathroomCount').value = data.bathroom_count || 1;
+        document.getElementById('floorNumber').value = data.floor_number ?? '';
+        document.getElementById('totalFloors').value = data.total_floors || '';
+        document.getElementById('buildingAge').value = data.building_age || '';
+        document.getElementById('heatingType').value = data.heating_type || '';
+        document.getElementById('floorType').value = data.floor_type || '';
+        document.getElementById('kitchenType').value = data.kitchen_type || '';
+        document.getElementById('facing').value = data.facing || '';
+        document.getElementById('deedType').value = data.deed_type || '';
+        document.getElementById('hasElevator').checked = !!data.has_elevator;
+        document.getElementById('hasParking').checked = !!data.has_parking;
+        document.getElementById('isFurnished').checked = !!data.is_furnished;
+        document.getElementById('isInComplex').checked = !!data.is_in_complex;
+        document.getElementById('allowsPets').checked = !!data.allows_pets;
+        document.getElementById('isExchangeable').checked = !!data.is_exchangeable;
+        document.getElementById('hasBalcony').checked = !!data.balcony;
+        document.getElementById('fromOwner').checked = !!data.from_owner;
+        document.getElementById('contactName').value = data.contact_name || '';
+        document.getElementById('contactPhone').value = data.contact_phone || '';
+        document.getElementById('contactEmail').value = data.contact_email || '';
+        document.getElementById('showPhone').value = data.show_phone ? 'true' : 'false';
+        document.getElementById('emlakCity').value = data.city_name || '';
+        document.getElementById('emlakDistrict').value = data.district_name || '';
+        document.getElementById('emlakNeighborhood').value = data.neighborhood_name || '';
+        document.getElementById('emlakAddress').value = data.address || '';
+        document.getElementById('emlakLatitude').value = data.latitude || '';
+        document.getElementById('emlakLongitude').value = data.longitude || '';
+
+        // Room count
+        if (data.room_count) {
+            selectedRoom = data.room_count;
+            document.getElementById('roomCount').value = data.room_count;
+            document.querySelectorAll('.room-btn').forEach(b => {
+                if (b.dataset && b.getAttribute('onclick')?.includes(data.room_count)) b.classList.add('active');
+            });
+        }
+
+        // Existing cover image
+        if (data.cover_image) {
+            uploadedPhotos.push({ existing: true, dataUrl: data.cover_image, url: data.cover_image });
+            renderPhotoPreviews();
+        }
+    } catch(e) {
+        console.error('Edit load error:', e);
+    }
+}
+
+// ---- Type Select ----
+function selectType(type) {
+    selectedType = type;
+    document.getElementById('typeKiralik').classList.toggle('selected', type === 'kiralik');
+    document.getElementById('typeSatilik').classList.toggle('selected', type === 'satilik');
+    document.getElementById('typeKiralik').classList.toggle('kiralik', true);
+    document.getElementById('typeSatilik').classList.toggle('satilik', true);
+
+    const priceLabel = document.getElementById('priceLabel');
+    const depositGroup = document.getElementById('depositGroup');
+    if (type === 'kiralik') {
+        priceLabel.innerHTML = 'Kira Bedeli (₺) <span class="req">*</span>';
+        depositGroup.style.display = '';
+    } else {
+        priceLabel.innerHTML = 'Satış Fiyatı (₺) <span class="req">*</span>';
+        depositGroup.style.display = 'none';
+    }
+}
+
+// ---- Room Select ----
+function selectRoom(btn, value) {
+    document.querySelectorAll('.room-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedRoom = value;
+    document.getElementById('roomCount').value = value;
+}
+
+// ---- Photo Upload ----
+function handlePhotos(input) {
+    const files = Array.from(input.files);
+    const remaining = 10 - uploadedPhotos.length;
+    files.slice(0, remaining).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            uploadedPhotos.push({ file, dataUrl: e.target.result });
+            renderPhotoPreviews();
+        };
+        reader.readAsDataURL(file);
+    });
+    if (files.length > remaining) alert(`En fazla 10 fotoğraf yükleyebilirsiniz.`);
+    input.value = '';
+}
+function removePhoto(index) {
+    uploadedPhotos.splice(index, 1);
+    renderPhotoPreviews();
+}
+function renderPhotoPreviews() {
+    const grid = document.getElementById('photoPreviewGrid');
+    grid.innerHTML = uploadedPhotos.map((p, i) => `
+        <div class="photo-preview-item">
+            <img src="${p.dataUrl}" alt="">
+            <button class="remove-btn" onclick="removePhoto(${i})">×</button>
+            ${i === 0 ? '<div class="cover-badge">Kapak</div>' : ''}
+        </div>
+    `).join('');
+}
+
+// ---- Step Navigation ----
+function goStep(n) {
+    if (n > currentStep && !validateStep(currentStep)) return;
+
+    if (n === 5) buildSummary();
+
+    document.getElementById(`page-${currentStep}`).classList.remove('active');
+    currentStep = n;
+    document.getElementById(`page-${currentStep}`).classList.add('active');
+    updateProgressBar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgressBar() {
+    for (let i = 1; i <= 5; i++) {
+        const indicator = document.getElementById(`step-indicator-${i}`);
+        const circle = document.getElementById(`step-circle-${i}`);
+        indicator.classList.remove('active', 'done');
+        if (i < currentStep) {
+            indicator.classList.add('done');
+            circle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+        } else if (i === currentStep) {
+            indicator.classList.add('active');
+            circle.textContent = i;
+        } else {
+            circle.textContent = i;
+        }
+    }
+}
+
+// ---- Validation ----
+function validateStep(step) {
+    if (step === 1) {
+        const title = document.getElementById('title').value.trim();
+        const price = document.getElementById('price').value;
+        const address = document.getElementById('emlakAddress').value.trim();
+
+        if (title.length < 10) {
+            document.getElementById('title').classList.add('error');
+            alert('Lütfen en az 10 karakter uzunluğunda bir başlık girin.');
+            return false;
+        }
+        if (!price || parseFloat(price) <= 0) {
+            document.getElementById('price').classList.add('error');
+            alert('Lütfen geçerli bir fiyat girin.');
+            return false;
+        }
+        if (!address) {
+            alert('Lütfen bir konum girin veya haritadan seçin.');
+            return false;
+        }
+    }
+    if (step === 2) {
+        const area = document.getElementById('areaGross').value;
+        if (!area || parseInt(area) <= 0) {
+            document.getElementById('areaGross').classList.add('error');
+            alert('Lütfen brüt metrekare girin.');
+            return false;
+        }
+        if (!selectedRoom) {
+            alert('Lütfen oda sayısı seçin.');
+            return false;
+        }
+    }
+    if (step === 5) {
+        const name = document.getElementById('contactName').value.trim();
+        const phone = document.getElementById('contactPhone').value.trim();
+        if (!name) { alert('Lütfen ad soyad girin.'); return false; }
+        if (!phone) { alert('Lütfen telefon numarası girin.'); return false; }
+    }
+    return true;
+}
+
+// ---- Summary ----
+function buildSummary() {
+    const typeLabel = selectedType === 'kiralik' ? 'Kiralık' : 'Satılık';
+    const price = Number(document.getElementById('price').value || 0).toLocaleString('tr-TR');
+    const priceSuffix = selectedType === 'kiralik' ? '/ay' : '';
+    const cityOpt = document.getElementById('emlakCity');
+    const distOpt = document.getElementById('emlakDistrict');
+
+    const items = [
+        ['İlan Tipi', typeLabel],
+        ['Başlık', document.getElementById('title').value || '—'],
+        ['Fiyat', `₺${price}${priceSuffix}`],
+        ['Şehir / İlçe', [document.getElementById('emlakCity').value, document.getElementById('emlakDistrict').value].filter(Boolean).join(' / ') || document.getElementById('emlakAddress').value || '—'],
+        ['Oda Sayısı', selectedRoom || '—'],
+        ['Brüt m²', document.getElementById('areaGross').value ? `${document.getElementById('areaGross').value} m²` : '—'],
+        ['Konut Tipi', document.getElementById('propertyType').value || '—'],
+        ['Fotoğraf', `${uploadedPhotos.length} adet`],
+    ];
+
+    document.getElementById('summaryGrid').innerHTML = items.map(([k,v]) => `
+        <div class="summary-item">
+            <div class="key">${k}</div>
+            <div class="val">${v}</div>
+        </div>
+    `).join('');
+}
+
+// ---- Submit ----
+async function submitListing() {
+    if (!validateStep(5)) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Yükleniyor...';
+
+    try {
+        // Check auth
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            alert('İlan vermek için giriş yapmalısınız.');
+            window.location.href = 'login.html?redirect=add-emlak.html';
+            return;
+        }
+
+        // Upload photos
+        let coverImageUrl = null;
+        const photoUrls = [];
+
+        for (let i = 0; i < uploadedPhotos.length; i++) {
+            try {
+                const { file } = uploadedPhotos[i];
+                const fileName = `${user.id}/${Date.now()}-${i}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('emlak-images')
+                    .upload(fileName, file, { upsert: true });
+
+                if (uploadError) {
+                    console.error('Upload error:', uploadError.message);
+                } else {
+                    const { data: { publicUrl } } = supabase.storage.from('emlak-images').getPublicUrl(fileName);
+                    photoUrls.push(publicUrl);
+                    if (i === 0) coverImageUrl = publicUrl;
+                }
+            } catch(e) { console.warn('Photo upload error:', e); }
+        }
+
+        // Build listing data
+        const fullAddress = [
+            document.getElementById('emlakNeighborhood').value.trim(),
+            document.getElementById('emlakDistrict').value.trim(),
+            document.getElementById('emlakCity').value.trim()
+        ].filter(Boolean).join(', ') || document.getElementById('emlakAddress').value.trim();
+
+        const listingData = {
+            ...(editMode ? {} : { user_id: user.id }),
+            listing_type: selectedType,
+            title: document.getElementById('title').value.trim(),
+            description: document.getElementById('description').value.trim(),
+            price: parseFloat(document.getElementById('price').value) || 0,
+            deposit: parseFloat(document.getElementById('deposit').value) || null,
+            dues: parseFloat(document.getElementById('dues').value) || null,
+            city_id: null,
+            district_id: null,
+            city_name: document.getElementById('emlakCity').value.trim() || null,
+            district_name: document.getElementById('emlakDistrict').value.trim() || null,
+            neighborhood_name: document.getElementById('emlakNeighborhood').value.trim() || null,
+            address: fullAddress || null,
+            latitude: parseFloat(document.getElementById('emlakLatitude').value) || null,
+            longitude: parseFloat(document.getElementById('emlakLongitude').value) || null,
+            property_type: document.getElementById('propertyType').value,
+            room_count: selectedRoom || null,
+            area_gross: parseInt(document.getElementById('areaGross').value) || null,
+            area_net: parseInt(document.getElementById('areaNet').value) || null,
+            bathroom_count: parseInt(document.getElementById('bathroomCount').value) || 1,
+            floor_number: document.getElementById('floorNumber').value !== '' ? parseInt(document.getElementById('floorNumber').value) : null,
+            total_floors: parseInt(document.getElementById('totalFloors').value) || null,
+            building_age: document.getElementById('buildingAge').value || null,
+            heating_type: document.getElementById('heatingType').value || null,
+            floor_type: document.getElementById('floorType').value || null,
+            kitchen_type: document.getElementById('kitchenType').value || null,
+            facing: document.getElementById('facing').value || null,
+            deed_type: document.getElementById('deedType').value || null,
+            has_elevator: document.getElementById('hasElevator').checked,
+            has_parking: document.getElementById('hasParking').checked,
+            is_furnished: document.getElementById('isFurnished').checked,
+            is_in_complex: document.getElementById('isInComplex').checked,
+            allows_pets: document.getElementById('allowsPets').checked,
+            is_exchangeable: document.getElementById('isExchangeable').checked,
+            balcony: document.getElementById('hasBalcony').checked,
+            from_owner: document.getElementById('fromOwner').checked,
+            contact_name: document.getElementById('contactName').value.trim(),
+            contact_phone: document.getElementById('contactPhone').value.trim(),
+            contact_email: document.getElementById('contactEmail').value.trim() || null,
+            show_phone: document.getElementById('showPhone').value === 'true',
+            cover_image: coverImageUrl,
+            status: 'pending',
+        };
+
+        const { data: newListing, error } = editMode
+            ? await supabase.from('emlak_listings').update(listingData).eq('id', editId).select().single()
+            : await supabase.from('emlak_listings').insert([listingData]).select().single();
+
+        if (error) throw error;
+
+        // Save additional photos (only for new listings or newly uploaded photos)
+        if (!editMode && photoUrls.length > 0 && newListing) {
+            const imageRows = photoUrls.map((url, i) => ({
+                listing_id: newListing.id,
+                image_url: url,
+                is_cover: i === 0,
+                display_order: i
+            }));
+            await supabase.from('emlak_images').insert(imageRows);
+        }
+
+        alert(editMode ? 'İlanınız başarıyla güncellendi!' : 'İlanınız başarıyla oluşturuldu! Onay sürecinden sonra yayınlanacaktır.');
+        window.location.href = editMode ? 'panel/#emlak' : 'emlak.html';
+
+    } catch(e) {
+        console.error(e);
+        alert('Hata: ' + e.message);
+        btn.disabled = false;
+        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> İlanı Yayınla`;
+    }
+}
+
+// Remove error class on input
+document.querySelectorAll('.form-input, .form-select').forEach(el => {
+    el.addEventListener('input', () => el.classList.remove('error'));
+    el.addEventListener('change', () => el.classList.remove('error'));
+});
+
+const style = document.createElement('style');
+style.textContent = '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
+document.head.appendChild(style);
+</script>
+
+<!-- Google Maps API -->
+<script>
+    window.emlakMapsLoaded = false;
+    function initEmlakMaps() {
+        window.emlakMapsLoaded = true;
+        if (window.initEmlakMapWhenReady) window.initEmlakMapWhenReady();
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC4r_aAIPvRAEGPqARc-Y9s-UstldmSqk&libraries=places&language=tr&callback=initEmlakMaps" async defer></script>
+<script>
+// ===== GOOGLE MAPS INTEGRATION FOR EMLAK =====
+let emlakMap = null;
+let emlakMarker = null;
+let emlakAutocomplete = null;
+let emlakGeocoder = null;
+
+window.initEmlakMapWhenReady = function() {
+    if (typeof google !== 'undefined' && google.maps) initEmlakMap();
+};
+
+// Also try on DOMContentLoaded in case API loads first
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.emlakMapsLoaded) window.initEmlakMapWhenReady();
+});
+
+function initEmlakMap() {
+    const mapEl = document.getElementById('emlakMap');
+    if (!mapEl) return;
+
+    const defaultLat = 41.0082, defaultLng = 28.9784;
+
+    emlakMap = new google.maps.Map(mapEl, {
+        center: { lat: defaultLat, lng: defaultLng },
+        zoom: 11,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        streetViewControl: false,
+        zoomControl: true
+    });
+
+    emlakGeocoder = new google.maps.Geocoder();
+
+    emlakMarker = new google.maps.Marker({
+        position: { lat: defaultLat, lng: defaultLng },
+        map: emlakMap,
+        draggable: true,
+        animation: google.maps.Animation.DROP
+    });
+
+    // Click on map → move marker & reverse geocode
+    emlakMap.addListener('click', function(e) {
+        const lat = e.latLng.lat(), lng = e.latLng.lng();
+        emlakMarker.setPosition(e.latLng);
+        emlakReverseGeocode(lat, lng);
+    });
+
+    // Drag marker → reverse geocode
+    emlakMarker.addListener('dragend', function(e) {
+        const lat = e.latLng.lat(), lng = e.latLng.lng();
+        emlakReverseGeocode(lat, lng);
+    });
+
+    // Places Autocomplete on address input
+    const input = document.getElementById('emlakAddress');
+    emlakAutocomplete = new google.maps.places.Autocomplete(input, {
+        componentRestrictions: { country: 'tr' },
+        fields: ['address_components', 'geometry', 'formatted_address', 'name']
+    });
+
+    emlakAutocomplete.addListener('place_changed', function() {
+        const place = emlakAutocomplete.getPlace();
+        if (!place.geometry) return;
+
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+
+        emlakMap.setCenter(place.geometry.location);
+        emlakMap.setZoom(15);
+        emlakMarker.setPosition(place.geometry.location);
+
+        emlakParseAndFill(place.address_components, lat, lng);
+    });
+}
+
+function emlakParseAndFill(components, lat, lng) {
+    let city = '', district = '', neighborhood = '';
+
+    components.forEach(c => {
+        if (c.types.includes('administrative_area_level_1')) city = c.long_name;
+        if (c.types.includes('administrative_area_level_2')) district = c.long_name;
+        if (!city && c.types.includes('locality')) city = c.long_name;
+        if (!district && (c.types.includes('sublocality') || c.types.includes('sublocality_level_1'))) district = c.long_name;
+        if (c.types.includes('neighborhood') && !neighborhood) neighborhood = c.long_name;
+    });
+    if (!district && neighborhood) district = neighborhood;
+
+    document.getElementById('emlakLatitude').value = lat;
+    document.getElementById('emlakLongitude').value = lng;
+    document.getElementById('emlakCity').value = city;
+    document.getElementById('emlakDistrict').value = district;
+}
+
+function emlakReverseGeocode(lat, lng) {
+    document.getElementById('emlakLatitude').value = lat;
+    document.getElementById('emlakLongitude').value = lng;
+
+    if (!emlakGeocoder) return;
+    emlakGeocoder.geocode({ location: { lat, lng } }, function(results, status) {
+        if (status === 'OK' && results[0]) {
+            const place = results[0];
+            let city = '', district = '', neighborhood = '';
+
+            place.address_components.forEach(c => {
+                if (c.types.includes('administrative_area_level_1')) city = c.long_name;
+                if (c.types.includes('administrative_area_level_2')) district = c.long_name;
+                if (c.types.includes('sublocality') || c.types.includes('neighborhood')) neighborhood = c.long_name;
+            });
+
+            // Build display address
+            const parts = [neighborhood, district, city].filter(Boolean);
+            document.getElementById('emlakAddress').value = parts.join(', ');
+            document.getElementById('emlakCity').value = city;
+            document.getElementById('emlakDistrict').value = district;
+        }
+    });
+}
+</script>
+</body>
+</html>

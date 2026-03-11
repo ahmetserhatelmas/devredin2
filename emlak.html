@@ -150,8 +150,12 @@
             width: 100%; height: 200px; background: var(--gray-100);
             display: flex; align-items: center; justify-content: center; color: var(--gray-400);
         }
+        .card-img-wrapper {
+            position: relative; overflow: hidden;
+        }
         .card-badge-row {
-            position: relative; margin-top: -32px; padding: 0 0.75rem; display: flex; gap: 0.4rem;
+            position: absolute; bottom: 0.5rem; left: 0.5rem;
+            display: flex; gap: 0.4rem; flex-wrap: wrap;
         }
         .badge {
             padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700;
@@ -173,7 +177,8 @@
         .listing-grid.list-view .listing-card { display: flex; }
         .listing-grid.list-view .card-img { width: 220px; height: 160px; flex-shrink: 0; }
         .listing-grid.list-view .card-img-placeholder { width: 220px; height: 160px; flex-shrink: 0; }
-        .listing-grid.list-view .card-badge-row { position: static; margin-top: 0; padding: 0.75rem 0 0; }
+        .listing-grid.list-view .card-img-wrapper { width: 220px; flex-shrink: 0; }
+        .listing-grid.list-view .card-badge-row { bottom: 0.5rem; left: 0.5rem; }
         .listing-grid.list-view .card-body { display: flex; flex-direction: column; justify-content: center; flex: 1; }
 
         /* Loading & empty states */
@@ -350,11 +355,15 @@
         <div class="search-box">
             <div class="search-field">
                 <label>Şehir</label>
-                <input type="text" id="searchCity" placeholder="İstanbul, Ankara..." oninput="applyFiltersDebounced()">
+                <select id="searchCity" onchange="onSearchCityChange()" style="border:1px solid var(--gray-300);border-radius:8px;padding:0.6rem 0.75rem;font-size:0.9rem;color:var(--gray-900);background:#fff;outline:none;width:100%;">
+                    <option value="">İstanbul, Ankara...</option>
+                </select>
             </div>
             <div class="search-field">
                 <label>İlçe</label>
-                <input type="text" id="searchDistrict" placeholder="Kadıköy, Çankaya..." oninput="applyFiltersDebounced()">
+                <select id="searchDistrict" onchange="applyFiltersDebounced()" disabled style="border:1px solid var(--gray-300);border-radius:8px;padding:0.6rem 0.75rem;font-size:0.9rem;color:var(--gray-900);background:#fff;outline:none;width:100%;">
+                    <option value="">Önce şehir seçin</option>
+                </select>
             </div>
             <div class="search-field">
                 <label>Oda Sayısı</label>
@@ -495,6 +504,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="backend/api.js"></script>
+<script src="js/turkey-cities.js"></script>
 <script src="script.js"></script>
 <script src="js/auth.js"></script>
 <script>
@@ -508,8 +518,20 @@
         await checkAuth();
         const params = new URLSearchParams(window.location.search);
         if (params.get('type') === 'satilik') setType('satilik');
+
+        // İl/ilçe dropdown'larını doldur
+        populateCityDropdown(document.getElementById('searchCity'), 'İstanbul, Ankara...');
+        populateDistrictDropdown(document.getElementById('searchDistrict'), '', 'Önce şehir seçin');
+
         applyFilters();
     });
+
+    function onSearchCityChange() {
+        const city = document.getElementById('searchCity').value;
+        const districtSel = document.getElementById('searchDistrict');
+        populateDistrictDropdown(districtSel, city, city ? 'Tüm İlçeler' : 'Önce şehir seçin');
+        applyFiltersDebounced();
+    }
 
     // ---- Type Toggle ----
     function setType(type) {
@@ -561,8 +583,8 @@
                 .eq('status', 'active');
 
             // City / District
-            const cityText = document.getElementById('searchCity').value.trim();
-            const districtText = document.getElementById('searchDistrict').value.trim();
+            const cityText = document.getElementById('searchCity').value;
+            const districtText = document.getElementById('searchDistrict').value;
             if (cityText) query = query.ilike('city_name', `%${cityText}%`);
             if (districtText) query = query.ilike('district_name', `%${districtText}%`);
 
@@ -653,11 +675,13 @@
                 : `<div class="card-img-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>`;
 
             return `<a href="emlak-detail.html?id=${l.id}" class="listing-card">
-                ${img}
-                <div class="card-badge-row">
-                    <span class="badge badge-${currentType}">${currentType === 'kiralik' ? 'Kiralık' : 'Satılık'}</span>
-                    ${l.room_count ? `<span class="badge badge-rooms">${l.room_count}</span>` : ''}
-                    ${l.is_featured ? `<span class="badge badge-featured">Öne Çıkan</span>` : ''}
+                <div class="card-img-wrapper">
+                    ${img}
+                    <div class="card-badge-row">
+                        <span class="badge badge-${currentType}">${currentType === 'kiralik' ? 'Kiralık' : 'Satılık'}</span>
+                        ${l.room_count ? `<span class="badge badge-rooms">${l.room_count}</span>` : ''}
+                        ${l.is_featured ? `<span class="badge badge-featured">Öne Çıkan</span>` : ''}
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="card-title">${l.title}</div>
@@ -696,6 +720,8 @@
 
     function resetFilters() {
         document.getElementById('searchCity').value = '';
+        const districtSel = document.getElementById('searchDistrict');
+        populateDistrictDropdown(districtSel, '', 'Önce şehir seçin');
         document.getElementById('searchDistrict').value = '';
         document.getElementById('searchRooms').value = '';
         document.getElementById('searchMaxPrice').value = '';

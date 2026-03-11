@@ -1052,23 +1052,41 @@
             if (!input.files || !input.files[0]) return coverImageUrl;
 
             const file = input.files[0];
-            const fileName = `blog-${Date.now()}-${file.name}`;
+            const fileName = `blog/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
 
             try {
-                const { data, error } = await supabase.storage
+                // listing-images bucket'ına yükle (blog-images bucket'ı yoksa)
+                let { data, error } = await supabase.storage
                     .from('blog-images')
-                    .upload(fileName, file);
+                    .upload(fileName, file, { upsert: true });
 
-                if (error) throw error;
+                // blog-images bucket yoksa listing-images'ı dene
+                if (error) {
+                    console.warn('blog-images bucket hatası, listing-images deneniyor:', error.message);
+                    const result = await supabase.storage
+                        .from('listing-images')
+                        .upload(fileName, file, { upsert: true });
+                    data = result.data;
+                    error = result.error;
+                    if (error) throw error;
+
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('listing-images')
+                        .getPublicUrl(fileName);
+                    coverImageUrl = publicUrl;
+                    return publicUrl;
+                }
 
                 const { data: { publicUrl } } = supabase.storage
                     .from('blog-images')
                     .getPublicUrl(fileName);
 
+                coverImageUrl = publicUrl;
                 return publicUrl;
             } catch (e) {
                 console.error('Upload hatası:', e);
-                return null;
+                alert('Görsel yüklenemedi: ' + e.message + '\n\nSupabase Storage\'da "blog-images" bucket oluşturmanız gerekiyor.');
+                return coverImageUrl;
             }
         }
 

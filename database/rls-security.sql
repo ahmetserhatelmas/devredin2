@@ -3,6 +3,16 @@
 -- Supabase SQL Editor'de TÜMÜNÜ çalıştırın
 -- ============================================
 -- Admin e-postaları merkezi tanım
+
+-- ============================================
+-- KULLANICI KONUM KOLONLARI (users tablosuna ekle)
+-- Bu SQL'i önce çalıştırın
+-- ============================================
+ALTER TABLE users ADD COLUMN IF NOT EXISTS city TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS district TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS latitude DECIMAL(10,8);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS longitude DECIMAL(11,8);
 -- ============================================
 
 -- ============================================

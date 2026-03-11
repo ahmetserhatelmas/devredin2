@@ -253,7 +253,7 @@
             });
             
             const readTime = Math.ceil((post.content?.length || 0) / 1000) || 3;
-            const imageUrl = post.cover_image || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=250&fit=crop';
+            const imageUrl = post.cover_image || null;
             
             const categoryLabels = {
                 'devralanlar': 'Devralanlar İçin',
@@ -267,7 +267,10 @@
             return `
                 <article class="blog-card" onclick="window.location.href='blog-detail.html?id=${post.id}'">
                     <div class="blog-image">
-                        <img src="${imageUrl}" alt="${post.title}">
+                        ${imageUrl 
+                            ? `<img src="${imageUrl}" alt="${post.title}">`
+                            : `<div style="width:100%;height:100%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;color:var(--gray-400);"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
+                        }
                     </div>
                     <div class="blog-content">
                         <div class="blog-tags">

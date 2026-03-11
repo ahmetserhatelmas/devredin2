@@ -149,8 +149,8 @@
                 </header>
 
                 <!-- Cover Image -->
-                <div class="article-cover" id="articleCover">
-                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=500&fit=crop" alt="">
+                <div class="article-cover" id="articleCover" style="display:none;">
+                    <img src="" alt="">
                 </div>
 
                 <!-- Article Content -->
@@ -285,7 +285,9 @@
 
                 // Update cover image
                 if (post.cover_image) {
-                    document.querySelector('#articleCover img').src = post.cover_image;
+                    const cover = document.getElementById('articleCover');
+                    cover.querySelector('img').src = post.cover_image;
+                    cover.style.display = '';
                 }
 
                 // Update content
@@ -331,7 +333,7 @@
 
                 document.getElementById('relatedPosts').innerHTML = posts.map(post => `
                     <a href="blog-detail.html?id=${post.id}" class="related-card">
-                        <img src="${post.cover_image || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=250&fit=crop'}" alt="">
+                        <img src="${post.cover_image || ''}" alt="" ${!post.cover_image ? 'style="display:none"' : ''}>
                         <div class="related-content">
                             <span class="related-category">${categoryLabels[post.category] || 'Genel'}</span>
                             <h3>${post.title}</h3>

@@ -116,14 +116,6 @@
                             Kayıtlı Filtreler
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                         </a>
-                        <a href="#sasirt" class="nav-item" data-section="sasirt">
-                            Şaşırt Beni Geçmişi
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-                        </a>
-                        <a href="#tercihler" class="nav-item" data-section="tercihler">
-                            Tercihlerim
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-                        </a>
                     </nav>
                 </aside>
 
@@ -298,6 +290,7 @@
                                     <input type="text" id="profileDistrict" placeholder="Konum seçildikten sonra otomatik doldurulur" readonly>
                                 </div>
                             </div>
+                            <div id="profileMap" style="width:100%;height:320px;border-radius:12px;overflow:hidden;margin:0.75rem 0;border:1px solid #e5e7eb;"></div>
                             <div class="map-note">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -423,6 +416,20 @@
                     document.getElementById('dropdownAvatar').textContent = initials;
                     document.getElementById('dropdownName').textContent = profile.full_name || 'Kullanıcı';
                     document.getElementById('avatarPreview').textContent = initials;
+
+                    // Konum alanlarını doldur
+                    if (profile.city) document.getElementById('profileCity').value = profile.city;
+                    if (profile.district) document.getElementById('profileDistrict').value = profile.district;
+                    if (profile.address) document.getElementById('profileAddress').value = profile.address;
+
+                    // Haritada kayıtlı konumu göster
+                    if (profile.latitude && profile.longitude && profileMap) {
+                        const pos = { lat: parseFloat(profile.latitude), lng: parseFloat(profile.longitude) };
+                        profileMap.setCenter(pos);
+                        profileMap.setZoom(13);
+                        profileMarker.setPosition(pos);
+                        profileMarker.setVisible(true);
+                    }
                 }
             } catch (e) {
                 console.error('Settings load error:', e);
@@ -457,10 +464,29 @@
                         id: user.id,
                         email: user.email,
                         full_name: fullName,
-                        phone: phone
+                        phone: phone,
                     });
                 
                 if (error) throw error;
+
+                // Konum bilgilerini kaydet (kolonlar varsa)
+                const cityVal = document.getElementById('profileCity').value || null;
+                const districtVal = document.getElementById('profileDistrict').value || null;
+                const addressVal = document.getElementById('profileAddress').value || null;
+                const latVal = profileMarker?.getVisible() ? profileMarker.getPosition().lat() : null;
+                const lngVal = profileMarker?.getVisible() ? profileMarker.getPosition().lng() : null;
+
+                if (cityVal || districtVal || addressVal) {
+                    await supabase.from('users').update({
+                        city: cityVal,
+                        district: districtVal,
+                        address: addressVal,
+                        latitude: latVal,
+                        longitude: lngVal,
+                    }).eq('id', user.id);
+                    // Hata olursa sessizce geç (kolon yoksa)
+                }
+
                 alert('Ayarlar kaydedildi!');
             } catch (e) {
                 alert('Kaydetme hatası: ' + e.message);
@@ -472,6 +498,100 @@
         function toggleSearch() {
             alert('Arama özelliği yakında eklenecek');
         }
+
+        // ===== GOOGLE MAPS - PROFIL KONUM =====
+        let profileMap = null;
+        let profileMarker = null;
+        let profileAutocomplete = null;
+        let profileGeocoder = null;
+
+        function initProfileMap() {
+            const mapEl = document.getElementById('profileMap');
+            if (!mapEl) return;
+
+            const defaultLat = 39.9334, defaultLng = 32.8597; // Türkiye merkezi
+
+            profileMap = new google.maps.Map(mapEl, {
+                center: { lat: defaultLat, lng: defaultLng },
+                zoom: 6,
+                mapTypeControl: false,
+                streetViewControl: false,
+            });
+
+            profileMarker = new google.maps.Marker({
+                position: { lat: defaultLat, lng: defaultLng },
+                map: profileMap,
+                draggable: true,
+                visible: false,
+            });
+
+            profileGeocoder = new google.maps.Geocoder();
+
+            // Haritaya tıklama
+            profileMap.addListener('click', function(e) {
+                const lat = e.latLng.lat(), lng = e.latLng.lng();
+                profileMarker.setPosition(e.latLng);
+                profileMarker.setVisible(true);
+                profileMap.setCenter(e.latLng);
+                profileReverseGeocode(lat, lng);
+            });
+
+            // Marker sürükleme
+            profileMarker.addListener('dragend', function(e) {
+                profileReverseGeocode(e.latLng.lat(), e.latLng.lng());
+            });
+
+            // Adres alanına autocomplete
+            const input = document.getElementById('profileAddress');
+            profileAutocomplete = new google.maps.places.Autocomplete(input, {
+                componentRestrictions: { country: 'tr' },
+                fields: ['address_components', 'geometry', 'formatted_address']
+            });
+
+            profileAutocomplete.addListener('place_changed', function() {
+                const place = profileAutocomplete.getPlace();
+                if (!place.geometry) return;
+
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+
+                profileMap.setCenter(place.geometry.location);
+                profileMap.setZoom(14);
+                profileMarker.setPosition(place.geometry.location);
+                profileMarker.setVisible(true);
+
+                profileFillFromComponents(place.address_components);
+            });
+        }
+
+        function profileReverseGeocode(lat, lng) {
+            if (!profileGeocoder) return;
+            profileGeocoder.geocode({ location: { lat, lng } }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    document.getElementById('profileAddress').value = results[0].formatted_address;
+                    profileFillFromComponents(results[0].address_components);
+                }
+            });
+        }
+
+        function profileFillFromComponents(components) {
+            let city = '', district = '';
+            components.forEach(c => {
+                if (c.types.includes('administrative_area_level_1')) city = c.long_name;
+                if (c.types.includes('administrative_area_level_2')) district = c.long_name;
+                if (!city && c.types.includes('locality')) city = c.long_name;
+                if (!district && (c.types.includes('sublocality') || c.types.includes('sublocality_level_1'))) district = c.long_name;
+            });
+            document.getElementById('profileCity').value = city;
+            document.getElementById('profileDistrict').value = district;
+        }
+
+        // Maps callback
+        window.initProfileMapCallback = function() {
+            initProfileMap();
+        };
     </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC4r_aAIPvRAEGPqARc-Y9s-UstldmSqk&libraries=places&language=tr&callback=initProfileMapCallback" async defer></script>
 </body>
 </html>

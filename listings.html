@@ -7,6 +7,26 @@
     <link rel="stylesheet" href="styles.css?v=18">
     <link rel="stylesheet" href="listings.css?v=22">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .searchable-select { position: relative; }
+        .searchable-select input[type="text"] {
+            width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0;
+            border-radius: 6px; font-size: 0.875rem; color: #1a202c;
+            background: #fff; outline: none; cursor: pointer; box-sizing: border-box;
+        }
+        .searchable-select input[type="text"]:focus { border-color: #e53e3e; }
+        .search-dropdown {
+            position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 1000;
+            max-height: 200px; overflow-y: auto;
+        }
+        .search-dropdown-item {
+            padding: 0.5rem 0.75rem; font-size: 0.875rem; cursor: pointer; color: #2d3748;
+        }
+        .search-dropdown-item:hover { background: #fef2f2; color: #e53e3e; }
+        .search-dropdown-empty { padding: 0.75rem; font-size: 0.875rem; color: #a0aec0; text-align: center; }
+    </style>
 </head>
 <body class="listings-page">
     <!-- Navigation -->
@@ -165,12 +185,18 @@
                         <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
                     </button>
                     <div class="filter-content">
-                        <select id="filterCity" onchange="applyFilters()">
-                            <option value="">Tüm Şehirler</option>
-                        </select>
-                        <select id="filterDistrict" onchange="applyFilters()">
-                            <option value="">Tüm İlçeler</option>
-                        </select>
+                        <div class="searchable-select" id="filterCityWrapper">
+                            <input type="text" id="filterCityInput" placeholder="İl seçin veya yazın..." autocomplete="off"
+                                oninput="filterListingsCityOptions()" onfocus="openListingsCityDropdown()" onclick="openListingsCityDropdown()">
+                            <input type="hidden" id="filterCity">
+                            <div id="filterCityOptionsList" class="search-dropdown" style="display:none;"></div>
+                        </div>
+                        <div class="searchable-select" id="filterDistrictWrapper" style="margin-top:0.5rem;">
+                            <input type="text" id="filterDistrictInput" placeholder="Önce şehir seçin..." autocomplete="off" disabled
+                                oninput="filterListingsDistrictOptions()" onfocus="openListingsDistrictDropdown()" onclick="openListingsDistrictDropdown()">
+                            <input type="hidden" id="filterDistrict">
+                            <div id="filterDistrictOptionsList" class="search-dropdown" style="display:none;"></div>
+                        </div>
                     </div>
                     </div>
 
@@ -365,18 +391,98 @@
         // Auth functions loaded from js/auth.js
         // Map is initialized by listings-map.js via Google Maps callback
 
+        // ---- Searchable City/District Dropdowns (Listings) ----
+        let listingsAllCities = [];
+        let listingsAllDistricts = [];
+
+        function initListingsDropdowns() {
+            listingsAllCities = Object.keys(TURKEY_CITIES).sort();
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#filterCityWrapper')) document.getElementById('filterCityOptionsList').style.display = 'none';
+                if (!e.target.closest('#filterDistrictWrapper')) document.getElementById('filterDistrictOptionsList').style.display = 'none';
+            }, true);
+        }
+
+        function openListingsCityDropdown() {
+            renderListingsCityOptions(document.getElementById('filterCityInput').value);
+            document.getElementById('filterCityOptionsList').style.display = '';
+        }
+        function filterListingsCityOptions() {
+            renderListingsCityOptions(document.getElementById('filterCityInput').value);
+            document.getElementById('filterCityOptionsList').style.display = '';
+            if (!document.getElementById('filterCityInput').value) {
+                document.getElementById('filterCity').value = '';
+                resetListingsDistrictDropdown();
+                applyFilters();
+            }
+        }
+        function renderListingsCityOptions(query) {
+            const list = document.getElementById('filterCityOptionsList');
+            const q = query.toLowerCase().trim();
+            const filtered = q ? listingsAllCities.filter(c => c.toLowerCase().includes(q)) : listingsAllCities;
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="search-dropdown-empty">Sonuç bulunamadı</div>';
+            } else {
+                list.innerHTML = filtered.map(c =>
+                    `<div class="search-dropdown-item" onclick="selectListingsCity('${c}')">${c}</div>`
+                ).join('');
+            }
+        }
+        function selectListingsCity(city) {
+            document.getElementById('filterCityInput').value = city;
+            document.getElementById('filterCity').value = city;
+            document.getElementById('filterCityOptionsList').style.display = 'none';
+            listingsAllDistricts = (TURKEY_CITIES[city] || []).sort();
+            document.getElementById('filterDistrictInput').disabled = false;
+            document.getElementById('filterDistrictInput').placeholder = 'İlçe seçin veya yazın...';
+            document.getElementById('filterDistrictInput').value = '';
+            document.getElementById('filterDistrict').value = '';
+            applyFilters();
+        }
+        function openListingsDistrictDropdown() {
+            if (!document.getElementById('filterCity').value) return;
+            renderListingsDistrictOptions(document.getElementById('filterDistrictInput').value);
+            document.getElementById('filterDistrictOptionsList').style.display = '';
+        }
+        function filterListingsDistrictOptions() {
+            renderListingsDistrictOptions(document.getElementById('filterDistrictInput').value);
+            document.getElementById('filterDistrictOptionsList').style.display = '';
+            if (!document.getElementById('filterDistrictInput').value) {
+                document.getElementById('filterDistrict').value = '';
+                applyFilters();
+            }
+        }
+        function renderListingsDistrictOptions(query) {
+            const list = document.getElementById('filterDistrictOptionsList');
+            const q = query.toLowerCase().trim();
+            const filtered = q ? listingsAllDistricts.filter(d => d.toLowerCase().includes(q)) : listingsAllDistricts;
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="search-dropdown-empty">Sonuç bulunamadı</div>';
+            } else {
+                list.innerHTML = filtered.map(d =>
+                    `<div class="search-dropdown-item" onclick="selectListingsDistrict('${d}')">${d}</div>`
+                ).join('');
+            }
+        }
+        function selectListingsDistrict(district) {
+            document.getElementById('filterDistrictInput').value = district;
+            document.getElementById('filterDistrict').value = district;
+            document.getElementById('filterDistrictOptionsList').style.display = 'none';
+            applyFilters();
+        }
+        function resetListingsDistrictDropdown() {
+            listingsAllDistricts = [];
+            document.getElementById('filterDistrictInput').value = '';
+            document.getElementById('filterDistrictInput').disabled = true;
+            document.getElementById('filterDistrictInput').placeholder = 'Önce şehir seçin...';
+            document.getElementById('filterDistrict').value = '';
+        }
+
         // Load filters
         async function loadFilters() {
             try {
-                // Cities - Türkiye il/ilçe verisinden doldur
-                const citySelect = document.getElementById('filterCity');
-                populateCityDropdown(citySelect, 'Tüm İller');
-                citySelect.addEventListener('change', function() {
-                    const districtSelect = document.getElementById('filterDistrict');
-                    populateDistrictDropdown(districtSelect, this.value, 'Tüm İlçeler');
-                    applyFilters();
-                });
-                populateDistrictDropdown(document.getElementById('filterDistrict'), '', 'Tüm İlçeler');
+                // Cities - Searchable dropdown başlat
+                initListingsDropdowns();
 
                 // Categories
                 const { data: categories } = await supabase.from('categories').select('id, name, icon').is('parent_id', null).order('name');
@@ -428,8 +534,12 @@
                     };
                     cityName = cityMap[urlCity.toLowerCase()] || urlCity;
                     document.getElementById('filterCity').value = cityName;
+                    document.getElementById('filterCityInput').value = cityName;
+                    // İlçeleri de doldur
+                    listingsAllDistricts = (TURKEY_CITIES[cityName] || []).sort();
+                    document.getElementById('filterDistrictInput').disabled = false;
+                    document.getElementById('filterDistrictInput').placeholder = 'İlçe seçin veya yazın...';
                 }
-                
                 // Kategori ID'sini bul (isim veya slug'dan)
                 let categoryId = urlCategory || document.getElementById('filterCategory').value;
                 if (urlSector && !categoryId) {

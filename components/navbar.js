@@ -23,9 +23,11 @@ function createNavbar(options = {}) {
                     ` : `
                         <li><a href="listings.html" class="nav-link ${activePage === 'devral' ? 'active' : ''}">İşletme Devral</a></li>
                         <li><a href="add-listing.html" class="nav-link ${activePage === 'devret' ? 'active' : ''}">İşletmeni Devret</a></li>
+                        <li><a href="emlak.html" class="nav-link ${activePage === 'emlak' ? 'active' : ''}">Emlak</a></li>
                         <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link ${activePage === 'panel' ? 'active' : ''}">Panel</a></li>
                     `}
-                    <li><a href="#" class="nav-link ${activePage === 'blog' ? 'active' : ''}">Blog</a></li>
+                    <li><a href="blog.html" class="nav-link ${activePage === 'blog' ? 'active' : ''}">Blog</a></li>
+                    ${!isFranchise ? `<li><a href="add-listing.html" class="create-listing-mobile" style="display:none;">Ücretsiz İlan Oluştur</a></li>` : ''}
                 </ul>
                 
                 <div class="nav-actions">

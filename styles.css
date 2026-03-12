@@ -1155,6 +1155,14 @@ body {
     .mobile-menu-btn {
         display: flex;
     }
+
+    .btn-primary-nav {
+        display: none;
+    }
+
+    .nav-actions {
+        gap: 0.5rem;
+    }
     
     .nav-menu.active {
         display: flex;
@@ -1167,11 +1175,27 @@ body {
         padding: 1rem;
         border-bottom: 1px solid var(--border);
         gap: 0;
+        z-index: 999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     
     .nav-menu.active .nav-link {
         padding: 1rem;
         border-bottom: 1px solid var(--border);
+        font-size: 1rem;
+    }
+
+    .nav-menu.active .create-listing-mobile {
+        display: block;
+        margin-top: 0.75rem;
+        background: var(--primary);
+        color: #fff;
+        text-align: center;
+        padding: 0.85rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.95rem;
     }
     
     .hero h1 {

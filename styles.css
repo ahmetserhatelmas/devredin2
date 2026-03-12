@@ -329,12 +329,13 @@ body {
 .btn-primary-nav {
     background: var(--primary);
     color: var(--white);
-    padding: 0.65rem 1.25rem;
+    padding: 0.55rem 1rem;
     border-radius: 8px;
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: background 0.2s;
+    white-space: nowrap;
 }
 
 .btn-primary-nav:hover {
@@ -1158,11 +1159,11 @@ body {
     }
 
     .btn-primary-nav {
-        display: none;
+        display: none !important;
     }
 
     .lang-selector {
-        display: none;
+        display: none !important;
     }
 
     .nav-actions {

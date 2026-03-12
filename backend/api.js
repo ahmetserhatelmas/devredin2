@@ -250,10 +250,8 @@ async function handleLogout() {
     }
 }
 
-// Auto-initialize navbar when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    initializeNavbar()
-})
+// initializeNavbar is available to call manually from pages that need it
+// Most pages use checkAuth() from auth.js instead
 
 // Initialize cache on script load
 initCachedData()

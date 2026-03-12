@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devret Link - Türkiye'nin En Güvenilir İşletme Pazaryeri</title>
     <!-- Preconnect to critical origins for faster first load -->
+    <link rel="preconnect" href="https://higrbnrjpwjnypzeodpm.supabase.co" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://higrbnrjpwjnypzeodpm.supabase.co">
-    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
     <link rel="stylesheet" href="styles.css?v=22">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
@@ -150,7 +150,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-bg">
-            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80" alt="İşletme" decoding="async" fetchpriority="high" />
+            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1280&q=70&auto=format" alt="İşletme" decoding="async" fetchpriority="high" loading="eager" />
             <div class="hero-overlay"></div>
         </div>
         <div class="container">
@@ -560,7 +560,7 @@
             }
         });
 
-        // Timeout wrapper: reject after ms so one slow request doesn't block the page
+        // --- Performance helpers ---
         function withTimeout(promise, ms) {
             return Promise.race([
                 promise,
@@ -568,24 +568,56 @@
             ]);
         }
 
-        // Page load: run all in parallel so page feels instant; max 12s per request
+        const CACHE_TTL = 5 * 60 * 1000; // 5 min
+        function cacheGet(key) {
+            try {
+                const raw = sessionStorage.getItem(key);
+                if (!raw) return null;
+                const { data, ts } = JSON.parse(raw);
+                if (Date.now() - ts > CACHE_TTL) { sessionStorage.removeItem(key); return null; }
+                return data;
+            } catch { return null; }
+        }
+        function cacheSet(key, data) {
+            try { sessionStorage.setItem(key, JSON.stringify({ data, ts: Date.now() })); } catch {}
+        }
+
+        // Lazy-load: only fetch data when section scrolls into view
+        function lazyLoad(sectionSelector, loadFn) {
+            const el = document.querySelector(sectionSelector);
+            if (!el) return;
+            const obs = new IntersectionObserver((entries, observer) => {
+                if (entries[0].isIntersecting) {
+                    observer.disconnect();
+                    loadFn();
+                }
+            }, { rootMargin: '200px' });
+            obs.observe(el);
+        }
+
+        // Page load: only above-fold data loads immediately
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🏠 Ana sayfa yükleniyor...');
             checkAuth();
-            const timeout = 12000;
+            const T = 8000;
+            // Above the fold: hero sectors + featured listings
             Promise.allSettled([
-                withTimeout(loadHeroSectors(), timeout),
-                withTimeout(loadFeaturedListings(), timeout),
-                withTimeout(loadRecentListings(), timeout),
-                withTimeout(loadFranchiseListings(), timeout),
-                withTimeout(loadStatistics(), timeout)
-            ]).then(() => console.log('🏠 Ana sayfa verileri tamamlandı'));
+                withTimeout(loadHeroSectors(), T),
+                withTimeout(loadFeaturedListings(), T)
+            ]);
+            // Below the fold: lazy load when user scrolls near them
+            lazyLoad('.stats-section', () => withTimeout(loadStatistics(), T));
+            lazyLoad('.recent-section', () => withTimeout(loadRecentListings(), T));
+            lazyLoad('.franchise-section', () => withTimeout(loadFranchiseListings(), T));
         });
 
-        // Load hero sectors
         async function loadHeroSectors() {
             try {
-                const { data } = await supabase.from('categories').select('id, name, icon').is('parent_id', null).order('name');
+                let data = cacheGet('hero_sectors');
+                if (!data) {
+                    const res = await supabase.from('categories').select('id, name, icon').is('parent_id', null).order('name');
+                    data = res.data;
+                    if (data) cacheSet('hero_sectors', data);
+                }
                 const select = document.getElementById('heroSector');
                 if (data) {
                     select.innerHTML = '<option value="">Sektör Seçiniz</option>' + 
@@ -600,17 +632,20 @@
             window.location.href = sector ? `listings.html?category=${sector}` : 'listings.html';
         }
 
-        // Load featured listings (only is_featured = true)
         async function loadFeaturedListings() {
             try {
-                const { data } = await supabase
-                    .from('listings')
-                    .select('id, title, price, created_at, city, district, slug, category:categories!category_id(name), images:listing_images(image_url, is_primary)')
-                    .eq('status', 'active')
-                    .eq('is_featured', true)
-                    .order('created_at', { ascending: false })
-                    .limit(8);
-                
+                let data = cacheGet('featured_listings');
+                if (!data) {
+                    const res = await supabase
+                        .from('listings')
+                        .select('id, title, price, created_at, city, district, slug, category:categories!category_id(name), images:listing_images(image_url, is_primary)')
+                        .eq('status', 'active')
+                        .eq('is_featured', true)
+                        .order('created_at', { ascending: false })
+                        .limit(8);
+                    data = res.data;
+                    if (data) cacheSet('featured_listings', data);
+                }
                 const track = document.querySelector('#featuredListings .slider-track');
                 if (data && data.length > 0) {
                     track.innerHTML = data.map(l => createListingCard(l, true)).join('');
@@ -620,16 +655,19 @@
             } catch (e) { console.error(e); }
         }
 
-        // Load recent listings
         async function loadRecentListings() {
             try {
-                const { data } = await supabase
-                    .from('listings')
-                    .select('id, title, price, created_at, city, district, slug, category:categories!category_id(name), images:listing_images(image_url, is_primary)')
-                    .eq('status', 'active')
-                    .order('created_at', { ascending: false })
-                    .limit(8);
-                
+                let data = cacheGet('recent_listings');
+                if (!data) {
+                    const res = await supabase
+                        .from('listings')
+                        .select('id, title, price, created_at, city, district, slug, category:categories!category_id(name), images:listing_images(image_url, is_primary)')
+                        .eq('status', 'active')
+                        .order('created_at', { ascending: false })
+                        .limit(8);
+                    data = res.data;
+                    if (data) cacheSet('recent_listings', data);
+                }
                 const track = document.querySelector('#recentListings .slider-track');
                 if (data && data.length > 0) {
                     track.innerHTML = data.map(l => createListingCard(l, false)).join('');
@@ -639,16 +677,19 @@
             } catch (e) { console.error(e); }
         }
 
-        // Load franchise listings
         async function loadFranchiseListings() {
             try {
-                const { data } = await supabase
-                    .from('franchises')
-                    .select('id, brand_name, logo_url, min_investment, max_investment, sector:categories!sector_id(name)')
-                    .eq('status', 'active')
-                    .order('created_at', { ascending: false })
-                    .limit(8);
-                
+                let data = cacheGet('franchise_listings');
+                if (!data) {
+                    const res = await supabase
+                        .from('franchises')
+                        .select('id, brand_name, logo_url, min_investment, max_investment, sector:categories!sector_id(name)')
+                        .eq('status', 'active')
+                        .order('created_at', { ascending: false })
+                        .limit(8);
+                    data = res.data;
+                    if (data) cacheSet('franchise_listings', data);
+                }
                 const track = document.querySelector('#franchiseListings .slider-track');
                 if (data && data.length > 0) {
                     track.innerHTML = data.map(f => createFranchiseCard(f)).join('');
@@ -737,31 +778,28 @@
             requestAnimationFrame(updateCount);
         }
 
-        // Load statistics
         async function loadStatistics() {
             try {
-                // Sadece sayı al (veri çekme) - hızlı
-                const { count } = await supabase
-                    .from('listings')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('status', 'active');
-
-                const total = count || 0;
-                // Toplam değer için max 500 kayıt kullan (sayfa hızlı açılsın)
-                const { data: sample } = await supabase
-                    .from('listings')
-                    .select('price')
-                    .eq('status', 'active')
-                    .limit(500);
-                const totalVal = sample?.reduce((s, l) => s + (l.price || 0), 0) || 0;
-                const avg = total > 0 && sample?.length ? totalVal / sample.length : 0;
-
+                let stats = cacheGet('home_stats');
+                if (!stats) {
+                    // Single query: count + small price sample in parallel
+                    const [countRes, priceRes] = await Promise.all([
+                        supabase.from('listings').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+                        supabase.from('listings').select('price').eq('status', 'active').order('created_at', { ascending: false }).limit(100)
+                    ]);
+                    const total = countRes.count || 0;
+                    const prices = priceRes.data || [];
+                    const totalVal = prices.reduce((s, l) => s + (l.price || 0), 0);
+                    const ratio = prices.length > 0 ? total / prices.length : 1;
+                    stats = { total, totalVal: Math.round(totalVal * ratio), avg: prices.length ? Math.round(totalVal / prices.length) : 0 };
+                    cacheSet('home_stats', stats);
+                }
                 const elTotal = document.getElementById('totalListings');
                 const elValue = document.getElementById('totalValue');
                 const elAvg = document.getElementById('avgValue');
-                if (elTotal) animateCount(elTotal, total, 2000, '', '+');
-                if (elValue) animateCount(elValue, totalVal, 2500, '₺', '+');
-                if (elAvg) animateCount(elAvg, Math.round(avg), 2000, '₺', '');
+                if (elTotal) animateCount(elTotal, stats.total, 2000, '', '+');
+                if (elValue) animateCount(elValue, stats.totalVal, 2500, '₺', '+');
+                if (elAvg) animateCount(elAvg, stats.avg, 2000, '₺', '');
             } catch (e) { console.error(e); }
         }
 

@@ -1151,19 +1151,35 @@ body {
     .nav-menu {
         display: none;
     }
-    
+
     .mobile-menu-btn {
         display: flex;
+        flex-shrink: 0;
     }
 
     .btn-primary-nav {
         display: none;
     }
 
+    .lang-selector {
+        display: none;
+    }
+
     .nav-actions {
+        gap: 0.25rem;
+        flex-shrink: 0;
+    }
+
+    .nav-wrapper {
+        height: 60px;
         gap: 0.5rem;
     }
-    
+
+    .logo-main,
+    .logo-sub {
+        font-size: 1.2rem;
+    }
+
     .nav-menu.active {
         display: flex;
         position: absolute;
@@ -1172,17 +1188,22 @@ body {
         right: 0;
         flex-direction: column;
         background: var(--white);
-        padding: 1rem;
+        padding: 1rem 1.25rem;
         border-bottom: 1px solid var(--border);
         gap: 0;
         z-index: 999;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
-    
+
     .nav-menu.active .nav-link {
-        padding: 1rem;
+        padding: 0.9rem 0;
         border-bottom: 1px solid var(--border);
-        font-size: 1rem;
+        font-size: 0.95rem;
+        display: block;
+    }
+
+    .nav-menu.active li:last-child .nav-link {
+        border-bottom: none;
     }
 
     .nav-menu.active .create-listing-mobile {
@@ -1191,11 +1212,16 @@ body {
         background: var(--primary);
         color: #fff;
         text-align: center;
-        padding: 0.85rem 1rem;
+        padding: 0.8rem 1rem;
         border-radius: 8px;
         font-weight: 600;
         text-decoration: none;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        transition: background 0.2s;
+    }
+
+    .nav-menu.active .create-listing-mobile:hover {
+        background: var(--primary-dark);
     }
     
     .hero h1 {

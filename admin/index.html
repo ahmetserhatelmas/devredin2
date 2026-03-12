@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Devret Link</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css?v=4">
+    <link rel="stylesheet" href="admin.css?v=5">
 </head>
 <body style="display:none;">
+    <link rel="stylesheet" href="admin.css?v=5">
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -483,7 +484,7 @@
                     return;
                 }
                 document.getElementById('adminUser').textContent = user.email;
-                document.body.style.display = '';
+                document.body.style.display = 'flex';
             } catch (e) {
                 window.location.href = '../login.html?redirect=admin/';
             }

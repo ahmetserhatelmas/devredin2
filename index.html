@@ -482,10 +482,10 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="backend/api.js" defer></script>
-    <script src="js/auth.js" defer></script>
-    <script src="script.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="script.js"></script>
     
     <script>
         // Filter tabs functionality
@@ -560,15 +560,26 @@
             }
         });
 
-        // Page load
-        document.addEventListener('DOMContentLoaded', async () => {
+        // Timeout wrapper: reject after ms so one slow request doesn't block the page
+        function withTimeout(promise, ms) {
+            return Promise.race([
+                promise,
+                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+            ]);
+        }
+
+        // Page load: run all in parallel so page feels instant; max 12s per request
+        document.addEventListener('DOMContentLoaded', () => {
             console.log('🏠 Ana sayfa yükleniyor...');
-            await loadHeroSectors();
-            await loadFeaturedListings();
-            await loadRecentListings();
-            await loadFranchiseListings();
-            await loadStatistics();
             checkAuth();
+            const timeout = 12000;
+            Promise.allSettled([
+                withTimeout(loadHeroSectors(), timeout),
+                withTimeout(loadFeaturedListings(), timeout),
+                withTimeout(loadRecentListings(), timeout),
+                withTimeout(loadFranchiseListings(), timeout),
+                withTimeout(loadStatistics(), timeout)
+            ]).then(() => console.log('🏠 Ana sayfa verileri tamamlandı'));
         });
 
         // Load hero sectors
@@ -729,19 +740,28 @@
         // Load statistics
         async function loadStatistics() {
             try {
-                const { data, count } = await supabase
+                // Sadece sayı al (veri çekme) - hızlı
+                const { count } = await supabase
                     .from('listings')
-                    .select('price', { count: 'exact' })
+                    .select('*', { count: 'exact', head: true })
                     .eq('status', 'active');
-                
-                const total = count || 0;
-                const totalVal = data?.reduce((s, l) => s + (l.price || 0), 0) || 0;
-                const avg = total > 0 ? totalVal / total : 0;
 
-                // Animate the counts
-                animateCount(document.getElementById('totalListings'), total, 2000, '', '+');
-                animateCount(document.getElementById('totalValue'), totalVal, 2500, '₺', '+');
-                animateCount(document.getElementById('avgValue'), Math.round(avg), 2000, '₺', '');
+                const total = count || 0;
+                // Toplam değer için max 500 kayıt kullan (sayfa hızlı açılsın)
+                const { data: sample } = await supabase
+                    .from('listings')
+                    .select('price')
+                    .eq('status', 'active')
+                    .limit(500);
+                const totalVal = sample?.reduce((s, l) => s + (l.price || 0), 0) || 0;
+                const avg = total > 0 && sample?.length ? totalVal / sample.length : 0;
+
+                const elTotal = document.getElementById('totalListings');
+                const elValue = document.getElementById('totalValue');
+                const elAvg = document.getElementById('avgValue');
+                if (elTotal) animateCount(elTotal, total, 2000, '', '+');
+                if (elValue) animateCount(elValue, totalVal, 2500, '₺', '+');
+                if (elAvg) animateCount(elAvg, Math.round(avg), 2000, '₺', '');
             } catch (e) { console.error(e); }
         }
 

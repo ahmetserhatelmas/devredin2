@@ -475,7 +475,7 @@
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) {
-                    window.location.href = '../login.html?redirect=admin/';
+                    window.location.href = '../login?redirect=admin/';
                     return;
                 }
                 if (!adminEmails.includes(user.email)) {
@@ -485,7 +485,7 @@
                 document.getElementById('adminUser').textContent = user.email;
                 document.body.style.display = 'flex';
             } catch (e) {
-                window.location.href = '../login.html?redirect=admin/';
+                window.location.href = '../login?redirect=admin/';
             }
         }
 
@@ -736,7 +736,7 @@
                         <td>${b.views || 0}</td>
                         <td>${new Date(b.created_at).toLocaleDateString('tr-TR')}</td>
                         <td>
-                            <button class="action-btn" onclick="window.location.href='blog-editor.html?id=${b.id}'">Düzenle</button>
+                            <button class="action-btn" onclick="window.location.href='blog-editor?id=${b.id}'">Düzenle</button>
                             <button class="action-btn delete" onclick="deleteBlog('${b.id}')">Sil</button>
                         </td>
                     </tr>

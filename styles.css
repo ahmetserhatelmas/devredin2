@@ -105,6 +105,10 @@ body {
     list-style: none;
 }
 
+.create-listing-mobile {
+    display: none;
+}
+
 .nav-link {
     color: var(--gray-700);
     text-decoration: none;
@@ -1160,10 +1164,6 @@ body {
     .mobile-menu-btn {
         display: flex;
         flex-shrink: 0;
-    }
-
-    .create-listing-mobile {
-        display: none;
     }
 
     .btn-primary-nav {

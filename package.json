@@ -2,7 +2,7 @@
   "name": "devretlink",
   "version": "1.0.0",
   "scripts": {
-    "start": "npx serve . -l 8000",
-    "dev": "npx serve . -l 8000"
+    "start": "npx live-server --port=8000 --no-browser",
+    "dev": "npx live-server --port=8000 --no-browser"
   }
 }

@@ -934,7 +934,7 @@ async function submitListing() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
             alert('İlan vermek için giriş yapmalısınız.');
-            window.location.href = 'login.html?redirect=add-emlak.html';
+            window.location.href = 'login?redirect=add-emlak.html';
             return;
         }
 

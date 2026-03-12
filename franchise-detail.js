@@ -5,9 +5,13 @@ let currentFranchise = null;
 // Initialize
 function initFranchiseDetail() {
     console.log('🏢 Franchise detay sayfası yükleniyor...')
+    console.log('🔗 Full URL:', window.location.href)
+    console.log('🔗 Search:', window.location.search)
     
     const urlParams = new URLSearchParams(window.location.search)
     const franchiseId = urlParams.get('id')
+    
+    console.log('🔗 Franchise ID from URL:', franchiseId)
     
     if (!franchiseId) {
         showError('Franchise ID bulunamadı!')

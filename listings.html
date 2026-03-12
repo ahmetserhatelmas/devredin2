@@ -128,8 +128,14 @@
                         </div>
                     </div>
                     
-                    <a href="add-listing.html" class="btn btn-primary-nav">İlan Oluştur</a>
+                    <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
                 </div>
+
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </nav>
@@ -381,6 +387,10 @@
         let currentSort = 'date_desc';
         let currentView = 'list';
 
+        function toggleMobileMenu() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('📋 İlanlar sayfası yükleniyor...');
             // checkAuth removed - not needed for public listings page
@@ -586,7 +596,8 @@
                         category:categories!category_id(name, icon),
                         images:listing_images(image_url, is_primary)
                     `)
-                    .eq('status', 'active');
+                    .neq('status', 'deleted')
+                    .neq('status', 'rejected');
 
                 // Filtreleri uygula
                 if (categoryId) query = query.eq('category_id', categoryId);
@@ -691,8 +702,12 @@
                 `${listing.district} / ${listing.city}` : listing.city || '-';
             const category = listing.category?.name || '';
 
+            const detailUrl = listing.slug
+                ? `listing-detail.html?slug=${listing.slug}`
+                : `listing-detail.html?id=${listing.id}`;
+
             return `
-                <a href="listing-detail.html?slug=${listing.slug}" class="listing-item">
+                <a href="${detailUrl}" class="listing-item">
                     <div class="listing-item-image" ${imgUrl ? `style="background-image: url('${imgUrl}')"` : ''}>
                         ${!imgUrl ? '<span class="no-img">🏪</span>' : ''}
                         <button class="favorite-btn" onclick="event.preventDefault(); toggleFavorite('${listing.id}')">

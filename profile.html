@@ -80,13 +80,17 @@
                         </div>
                     </div>
                     
-                    <a href="add-listing.html" class="btn btn-primary-nav">İlan Oluştur</a>
+                    <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
                 </div>
+
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </nav>
-
-    <!-- Profile Content -->
     <main class="profile-main">
         <div class="container">
             <!-- Profile Header -->
@@ -248,6 +252,10 @@
     <script src="backend/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
+        function toggleMobileMenu() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const user = await getCurrentUser();
             if (!user) {

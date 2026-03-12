@@ -129,7 +129,7 @@
                     </div>
                     </div>
                     
-                    <a href="add-listing.html" class="btn btn-primary-nav" id="ctaNavBtn">İlan Oluştur</a>
+                    <a href="add-listing.html" class="btn btn-primary-nav" id="ctaNavBtn">Ücretsiz İlan Oluştur</a>
                 </div>
                 
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
@@ -645,8 +645,8 @@
                 : listing.city || '';
             
             // Use slug if available, otherwise use id
-            const detailUrl = listing.slug 
-                ? `listing-detail.html?slug=${listing.slug}` 
+            const detailUrl = listing.slug
+                ? `listing-detail.html?slug=${listing.slug}`
                 : `listing-detail.html?id=${listing.id}`;
 
             return `

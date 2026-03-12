@@ -113,8 +113,14 @@
                         </div>
                     </div>
                     
-                    <a href="add-listing.html" class="btn btn-primary-nav">İlan Oluştur</a>
+                    <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
                 </div>
+
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </nav>
@@ -530,16 +536,21 @@
         let currentListing = null;
         let currentImages = [];
 
+        function toggleMobileMenu() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check auth first
             await checkAuth();
             
             const urlParams = new URLSearchParams(window.location.search);
             const listingId = urlParams.get('id');
             const listingSlug = urlParams.get('slug');
+
+            console.log('🔍 URL params:', { listingId, listingSlug, search: window.location.search });
             
             if (!listingId && !listingSlug) {
-                alert('İlan bulunamadı');
+                console.warn('❌ ID veya slug bulunamadı, listings.html\'e yönlendiriliyor');
                 window.location.href = 'listings.html';
                 return;
             }
@@ -550,6 +561,7 @@
 
         async function loadListing(id, slug) {
             try {
+                console.log('📡 loadListing başladı:', { id, slug });
                 let query = supabase
                     .from('listings')
                     .select(`
@@ -566,6 +578,8 @@
                 }
                 
                 const { data, error } = await query.single();
+
+                console.log('📊 Supabase sonucu:', { data, error });
 
                 if (error) {
                     console.error('Supabase error:', error);
@@ -714,7 +728,7 @@
                 let docsHtml = '';
                 
                 if (listing.document_url) {
-                    const viewerUrl = `document-viewer.html?url=${encodeURIComponent(listing.document_url)}&title=${encodeURIComponent('Tanıtım Dökümanı')}&listing=${encodeURIComponent(listing.title)}`;
+                    const viewerUrl = `document-viewer?url=${encodeURIComponent(listing.document_url)}&title=${encodeURIComponent('Tanıtım Dökümanı')}&listing=${encodeURIComponent(listing.title)}`;
                     docsHtml += `
                         <div class="document-item">
                             <div class="document-icon">

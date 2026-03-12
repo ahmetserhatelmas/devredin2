@@ -110,7 +110,7 @@ function createNavbar(options = {}) {
                         </div>
                         <a href="login.html?register=true" class="btn btn-primary-nav" id="ctaBtn">Üye Ol</a>
                     ` : `
-                        <a href="add-listing.html" class="btn btn-primary-nav">İlan Oluştur</a>
+                        <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
                     `}
                 </div>
             </div>

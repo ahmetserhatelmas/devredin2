@@ -689,77 +689,156 @@
         await loadListings();
     }
 
+    // Ortak filtreler (oda, fiyat, alan, tür, özellikler)
+    function applyBaseFilters(q) {
+        const heroRooms = document.getElementById('searchRooms').value;
+        const checkedRooms = [...document.querySelectorAll('#roomFilter input:checked')].map(i => i.value);
+        if (heroRooms) q = q.eq('room_count', heroRooms);
+        else if (checkedRooms.length > 0) q = q.in('room_count', checkedRooms);
+        const maxPriceHero = document.getElementById('searchMaxPrice').value;
+        const minPrice = document.getElementById('filterMinPrice').value;
+        const maxPrice = document.getElementById('filterMaxPrice').value;
+        if (maxPriceHero) q = q.lte('price', parseFloat(maxPriceHero));
+        if (minPrice) q = q.gte('price', parseFloat(minPrice));
+        if (maxPrice) q = q.lte('price', parseFloat(maxPrice));
+        const minArea = document.getElementById('filterMinArea').value;
+        const maxArea = document.getElementById('filterMaxArea').value;
+        if (minArea) q = q.gte('area_net', parseInt(minArea));
+        if (maxArea) q = q.lte('area_net', parseInt(maxArea));
+        const propType = document.getElementById('filterPropertyType').value;
+        if (propType) q = q.eq('property_type', propType);
+        const buildingAge = document.getElementById('filterBuildingAge').value;
+        if (buildingAge) q = q.eq('building_age', buildingAge);
+        if (document.getElementById('fElevator').checked) q = q.eq('has_elevator', true);
+        if (document.getElementById('fParking').checked) q = q.eq('has_parking', true);
+        if (document.getElementById('fFurnished').checked) q = q.eq('is_furnished', true);
+        if (document.getElementById('fComplex').checked) q = q.eq('is_in_complex', true);
+        if (document.getElementById('fPets').checked) q = q.eq('allows_pets', true);
+        return q;
+    }
+
     async function loadListings() {
         const grid = document.getElementById('listingGrid');
         grid.innerHTML = '<div class="state-msg"><div class="skeleton" style="width:100%;height:200px;border-radius:12px;"></div></div>';
 
         try {
-            let query = supabase
-                .from('emlak_listings')
-                .select('*, city:cities(name), district:districts(name)', { count: 'exact' })
-                .eq('listing_type', currentType)
-                .eq('status', 'active');
+            const cityHidden = (document.getElementById('searchCity').value || '').trim();
+            const cityVisible = (document.getElementById('searchCityInput').value || '').trim();
+            const cityText = cityHidden || cityVisible;
+            const districtHidden = (document.getElementById('searchDistrict').value || '').trim();
+            const districtVisible = (document.getElementById('searchDistrictInput').value || '').trim();
+            const districtText = districtHidden || districtVisible;
 
-            // City / District
-            const cityText = document.getElementById('searchCity').value;
-            const districtText = document.getElementById('searchDistrict').value;
-            if (cityText) query = query.ilike('city_name', `%${cityText}%`);
-            if (districtText) query = query.ilike('district_name', `%${districtText}%`);
+            const cityVariants = cityText ? (() => {
+                const v = [cityText];
+                if (cityText.includes('İ')) v.push(cityText.replace(/İ/g, 'I'));
+                if (cityText.includes('I') && !cityText.includes('İ')) v.push(cityText.replace(/I/g, 'İ'));
+                return [...new Set(v)];
+            })() : [];
+            const districtVariants = districtText ? (() => {
+                const v = [districtText];
+                if (districtText.includes('İ')) v.push(districtText.replace(/İ/g, 'I'));
+                if (districtText.includes('I') && !districtText.includes('İ')) v.push(districtText.replace(/I/g, 'İ'));
+                return [...new Set(v)];
+            })() : [];
 
-            // Rooms (from hero search bar or checkboxes)
-            const heroRooms = document.getElementById('searchRooms').value;
-            const checkedRooms = [...document.querySelectorAll('#roomFilter input:checked')].map(i => i.value);
-            if (heroRooms) query = query.eq('room_count', heroRooms);
-            else if (checkedRooms.length > 0) query = query.in('room_count', checkedRooms);
+            const hasCityFilter = cityVariants.length > 0;
+            const hasDistrictFilter = districtVariants.length > 0;
 
-            // Price
-            const maxPriceHero = document.getElementById('searchMaxPrice').value;
-            const minPrice = document.getElementById('filterMinPrice').value;
-            const maxPrice = document.getElementById('filterMaxPrice').value;
-            if (maxPriceHero) query = query.lte('price', parseFloat(maxPriceHero));
-            if (minPrice) query = query.gte('price', parseFloat(minPrice));
-            if (maxPrice) query = query.lte('price', parseFloat(maxPrice));
+            let listings = [];
+            let totalCount = 0;
 
-            // Area
-            const minArea = document.getElementById('filterMinArea').value;
-            const maxArea = document.getElementById('filterMaxArea').value;
-            if (minArea) query = query.gte('area_net', parseInt(minArea));
-            if (maxArea) query = query.lte('area_net', parseInt(maxArea));
+            if (hasCityFilter || hasDistrictFilter) {
+                // Tüm aktif ilanları çek, JS tarafında normalize ederek filtrele
+                // (city_name, district_name, city.name, district.name alanlarından herhangi biri eşleşirse)
+                const { data: allListings, error: fetchErr } = await supabase
+                    .from('emlak_listings')
+                    .select('*, city:cities(name), district:districts(name)')
+                    .eq('listing_type', currentType)
+                    .eq('status', 'active');
+                if (fetchErr) throw fetchErr;
 
-            // Property type
-            const propType = document.getElementById('filterPropertyType').value;
-            if (propType) query = query.eq('property_type', propType);
+                if (!allListings || allListings.length === 0) {
+                    renderListings([], 0);
+                    return;
+                }
 
-            // Building age
-            const buildingAge = document.getElementById('filterBuildingAge').value;
-            if (buildingAge) query = query.eq('building_age', buildingAge);
+                function normalize(s) {
+                    return (s || '').toLowerCase()
+                        .replace(/İ/g, 'i').replace(/I/g, 'i').replace(/ı/g, 'i')
+                        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                }
 
-            // Feature checkboxes
-            if (document.getElementById('fElevator').checked) query = query.eq('has_elevator', true);
-            if (document.getElementById('fParking').checked) query = query.eq('has_parking', true);
-            if (document.getElementById('fFurnished').checked) query = query.eq('is_furnished', true);
-            if (document.getElementById('fComplex').checked) query = query.eq('is_in_complex', true);
-            if (document.getElementById('fPets').checked) query = query.eq('allows_pets', true);
+                const lowerCity = normalize(cityText);
+                const lowerDistrict = normalize(districtText);
 
-            // Sort
-            const sort = document.getElementById('sortSelect').value;
-            if (sort === 'price_asc') query = query.order('price', { ascending: true });
-            else if (sort === 'price_desc') query = query.order('price', { ascending: false });
-            else if (sort === 'area_desc') query = query.order('area_net', { ascending: false });
-            else query = query.order('created_at', { ascending: false });
+                let filtered = allListings.filter(l => {
+                    const cn = normalize(l.city_name || l.city?.name || l.address || '');
+                    const dn = normalize(l.district_name || l.district?.name || '');
+                    const cityMatch = !hasCityFilter || cn.includes(lowerCity);
+                    const districtMatch = !hasDistrictFilter || dn.includes(lowerDistrict);
+                    return cityMatch && districtMatch;
+                });
 
-            // Featured first
-            query = query.order('is_featured', { ascending: false });
+                // Diğer filtreler JS tarafında
+                const heroRooms = document.getElementById('searchRooms').value;
+                const checkedRooms = [...document.querySelectorAll('#roomFilter input:checked')].map(i => i.value);
+                if (heroRooms) filtered = filtered.filter(l => l.room_count === heroRooms);
+                else if (checkedRooms.length > 0) filtered = filtered.filter(l => checkedRooms.includes(l.room_count));
 
-            // Pagination
-            const from = (currentPage - 1) * PAGE_SIZE;
-            query = query.range(from, from + PAGE_SIZE - 1);
+                const maxPriceHero = parseFloat(document.getElementById('searchMaxPrice').value);
+                const minPrice = parseFloat(document.getElementById('filterMinPrice').value);
+                const maxPrice = parseFloat(document.getElementById('filterMaxPrice').value);
+                if (!isNaN(maxPriceHero)) filtered = filtered.filter(l => l.price <= maxPriceHero);
+                if (!isNaN(minPrice)) filtered = filtered.filter(l => l.price >= minPrice);
+                if (!isNaN(maxPrice)) filtered = filtered.filter(l => l.price <= maxPrice);
 
-            const { data: listings, count, error } = await query;
+                const propType = document.getElementById('filterPropertyType').value;
+                if (propType) filtered = filtered.filter(l => l.property_type === propType);
+                const buildingAge = document.getElementById('filterBuildingAge').value;
+                if (buildingAge) filtered = filtered.filter(l => l.building_age === buildingAge);
+                if (document.getElementById('fElevator').checked) filtered = filtered.filter(l => l.has_elevator);
+                if (document.getElementById('fParking').checked) filtered = filtered.filter(l => l.has_parking);
+                if (document.getElementById('fFurnished').checked) filtered = filtered.filter(l => l.is_furnished);
+                if (document.getElementById('fComplex').checked) filtered = filtered.filter(l => l.is_in_complex);
+                if (document.getElementById('fPets').checked) filtered = filtered.filter(l => l.allows_pets);
 
-            if (error) throw error;
+                // Sort
+                const sort = document.getElementById('sortSelect').value;
+                filtered.sort((a, b) => {
+                    if (b.is_featured !== a.is_featured) return (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0);
+                    if (sort === 'price_asc') return a.price - b.price;
+                    if (sort === 'price_desc') return b.price - a.price;
+                    if (sort === 'area_desc') return (b.area_net || 0) - (a.area_net || 0);
+                    return new Date(b.created_at) - new Date(a.created_at);
+                });
 
-            renderListings(listings || [], count || 0);
+                totalCount = filtered.length;
+                const from = (currentPage - 1) * PAGE_SIZE;
+                listings = filtered.slice(from, from + PAGE_SIZE);
+            } else {
+                // Şehir/ilçe filtresi yok — tek sorgu
+                let query = supabase
+                    .from('emlak_listings')
+                    .select('*, city:cities(name), district:districts(name)', { count: 'exact' })
+                    .eq('listing_type', currentType)
+                    .eq('status', 'active');
+                query = applyBaseFilters(query);
+                const sort = document.getElementById('sortSelect').value;
+                if (sort === 'price_asc') query = query.order('price', { ascending: true });
+                else if (sort === 'price_desc') query = query.order('price', { ascending: false });
+                else if (sort === 'area_desc') query = query.order('area_net', { ascending: false });
+                else query = query.order('created_at', { ascending: false });
+                query = query.order('is_featured', { ascending: false });
+                const from = (currentPage - 1) * PAGE_SIZE;
+                query = query.range(from, from + PAGE_SIZE - 1);
+                const { data, count, error } = await query;
+                if (error) throw error;
+                listings = data || [];
+                totalCount = count || 0;
+            }
+
+            renderListings(listings, totalCount);
         } catch(e) {
             console.error(e);
             grid.innerHTML = `<div class="state-msg">

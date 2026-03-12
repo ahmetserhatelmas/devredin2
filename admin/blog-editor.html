@@ -510,9 +510,7 @@
         }
     </style>
 </head>
-<body>
-    <!-- Header -->
-    <header class="editor-header">
+<body style="display:none;">
         <div class="header-left">
             <button class="back-btn" onclick="window.location.href='../blog.html'">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -837,41 +835,25 @@
         async function checkAdminAccess() {
             try {
                 const { data: { user }, error } = await supabase.auth.getUser();
-                
-                console.log('🔐 Auth check:', { user, error });
-                
                 if (error || !user) {
-                    console.error('❌ No user found');
-                    alert('Bu sayfaya erişim için giriş yapmalısınız.');
-                    window.location.href = '../login.html';
+                    window.location.href = '../login.html?redirect=admin/blog-editor.html';
                     return;
                 }
-                
-                console.log('👤 Current user email:', user.email);
-                
                 const adminEmails = [
-                    'admin@devretlink.com', 
+                    'admin@devretlink.com',
                     'admin@devretlinkplatform.com',
                     'ahmetserhatelmas@hotmail.com',
                     'ahmetserhatelmas@hotmaail.com',
-                    'ahmetserhatelmas@gmail.com'
+                    'ahmetserhatelmas@gmail.com',
+                    'admin@admin.com'
                 ];
-                
-                console.log('📋 Admin emails:', adminEmails);
-                console.log('✅ Is admin?', adminEmails.includes(user.email));
-                
                 if (!adminEmails.includes(user.email)) {
-                    console.error('❌ Access denied for:', user.email);
-                    alert('Bu sayfaya erişim yetkiniz yok. Email: ' + user.email);
                     window.location.href = '../index.html';
                     return;
                 }
-                
-                console.log('✅ Access granted!');
+                document.body.style.display = '';
             } catch (e) {
-                console.error('❌ Auth error:', e);
-                alert('Kimlik doğrulama hatası: ' + e.message);
-                window.location.href = '../login.html';
+                window.location.href = '../login.html?redirect=admin/blog-editor.html';
             }
         }
 

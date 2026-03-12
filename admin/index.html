@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css?v=4">
 </head>
-<body>
+<body style="display:none;">
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -461,7 +461,7 @@
         let rejectingId = null;
         let rejectingType = null;
 
-        const adminEmails = ['admin@devretlink.com', 'admin@devretlinkplatform.com', 'ahmetserhatelmas@hotmail.com', 'ahmetserhatelmas@hotmaail.com', 'ahmetserhatelmas@gmail.com'];
+        const adminEmails = ['admin@devretlink.com', 'admin@devretlinkplatform.com', 'admin@admin.com', 'ahmetserhatelmas@hotmail.com', 'ahmetserhatelmas@hotmaail.com', 'ahmetserhatelmas@gmail.com'];
 
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAdminAccess();
@@ -475,20 +475,17 @@
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) {
-                    alert('Admin paneline erişim için giriş yapmalısınız.');
-                    window.location.href = '../login.html';
+                    window.location.href = '../login.html?redirect=admin/';
                     return;
                 }
-                
                 if (!adminEmails.includes(user.email)) {
-                    alert('Bu sayfaya erişim yetkiniz yok.');
                     window.location.href = '../index.html';
                     return;
                 }
-
                 document.getElementById('adminUser').textContent = user.email;
+                document.body.style.display = '';
             } catch (e) {
-                window.location.href = '../login.html';
+                window.location.href = '../login.html?redirect=admin/';
             }
         }
 

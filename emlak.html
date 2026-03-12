@@ -749,73 +749,31 @@
             let totalCount = 0;
 
             if (hasCityFilter || hasDistrictFilter) {
-                // Tüm aktif ilanları çek, JS tarafında normalize ederek filtrele
-                // (city_name, district_name, city.name, district.name alanlarından herhangi biri eşleşirse)
-                const { data: allListings, error: fetchErr } = await supabase
+                // city_name ve district_name TEXT kolonu — ilike ile Türkçe karakter duyarsız arama
+                let query = supabase
                     .from('emlak_listings')
-                    .select('*, city:cities(name), district:districts(name)')
+                    .select('*, city:cities(name), district:districts(name)', { count: 'exact' })
                     .eq('listing_type', currentType)
                     .eq('status', 'active');
-                if (fetchErr) throw fetchErr;
 
-                if (!allListings || allListings.length === 0) {
-                    renderListings([], 0);
-                    return;
-                }
+                if (hasCityFilter) query = query.ilike('city_name', `%${cityText}%`);
+                if (hasDistrictFilter) query = query.ilike('district_name', `%${districtText}%`);
+                query = applyBaseFilters(query);
 
-                function normalize(s) {
-                    return (s || '').toLowerCase()
-                        .replace(/İ/g, 'i').replace(/I/g, 'i').replace(/ı/g, 'i')
-                        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                }
-
-                const lowerCity = normalize(cityText);
-                const lowerDistrict = normalize(districtText);
-
-                let filtered = allListings.filter(l => {
-                    const cn = normalize(l.city_name || l.city?.name || l.address || '');
-                    const dn = normalize(l.district_name || l.district?.name || '');
-                    const cityMatch = !hasCityFilter || cn.includes(lowerCity);
-                    const districtMatch = !hasDistrictFilter || dn.includes(lowerDistrict);
-                    return cityMatch && districtMatch;
-                });
-
-                // Diğer filtreler JS tarafında
-                const heroRooms = document.getElementById('searchRooms').value;
-                const checkedRooms = [...document.querySelectorAll('#roomFilter input:checked')].map(i => i.value);
-                if (heroRooms) filtered = filtered.filter(l => l.room_count === heroRooms);
-                else if (checkedRooms.length > 0) filtered = filtered.filter(l => checkedRooms.includes(l.room_count));
-
-                const maxPriceHero = parseFloat(document.getElementById('searchMaxPrice').value);
-                const minPrice = parseFloat(document.getElementById('filterMinPrice').value);
-                const maxPrice = parseFloat(document.getElementById('filterMaxPrice').value);
-                if (!isNaN(maxPriceHero)) filtered = filtered.filter(l => l.price <= maxPriceHero);
-                if (!isNaN(minPrice)) filtered = filtered.filter(l => l.price >= minPrice);
-                if (!isNaN(maxPrice)) filtered = filtered.filter(l => l.price <= maxPrice);
-
-                const propType = document.getElementById('filterPropertyType').value;
-                if (propType) filtered = filtered.filter(l => l.property_type === propType);
-                const buildingAge = document.getElementById('filterBuildingAge').value;
-                if (buildingAge) filtered = filtered.filter(l => l.building_age === buildingAge);
-                if (document.getElementById('fElevator').checked) filtered = filtered.filter(l => l.has_elevator);
-                if (document.getElementById('fParking').checked) filtered = filtered.filter(l => l.has_parking);
-                if (document.getElementById('fFurnished').checked) filtered = filtered.filter(l => l.is_furnished);
-                if (document.getElementById('fComplex').checked) filtered = filtered.filter(l => l.is_in_complex);
-                if (document.getElementById('fPets').checked) filtered = filtered.filter(l => l.allows_pets);
-
-                // Sort
                 const sort = document.getElementById('sortSelect').value;
-                filtered.sort((a, b) => {
-                    if (b.is_featured !== a.is_featured) return (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0);
-                    if (sort === 'price_asc') return a.price - b.price;
-                    if (sort === 'price_desc') return b.price - a.price;
-                    if (sort === 'area_desc') return (b.area_net || 0) - (a.area_net || 0);
-                    return new Date(b.created_at) - new Date(a.created_at);
-                });
+                if (sort === 'price_asc') query = query.order('price', { ascending: true });
+                else if (sort === 'price_desc') query = query.order('price', { ascending: false });
+                else if (sort === 'area_desc') query = query.order('area_net', { ascending: false });
+                else query = query.order('created_at', { ascending: false });
+                query = query.order('is_featured', { ascending: false });
 
-                totalCount = filtered.length;
                 const from = (currentPage - 1) * PAGE_SIZE;
-                listings = filtered.slice(from, from + PAGE_SIZE);
+                query = query.range(from, from + PAGE_SIZE - 1);
+
+                const { data, count, error } = await query;
+                if (error) throw error;
+                listings = data || [];
+                totalCount = count || 0;
             } else {
                 // Şehir/ilçe filtresi yok — tek sorgu
                 let query = supabase

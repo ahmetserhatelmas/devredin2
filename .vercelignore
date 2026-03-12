@@ -3,4 +3,5 @@ node_modules
 database
 *.md
 serve.json
+package.json
 package-lock.json

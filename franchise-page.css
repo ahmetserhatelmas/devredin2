@@ -913,12 +913,21 @@ section {
     grid-template-columns: 1fr 1fr;
 }
 
+.form-group {
+    min-width: 0;
+}
+
 .form-group label {
     display: block;
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--gray-700);
     margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.form-group .phone-input {
+    margin-top: 0.5rem;
 }
 
 .form-group input,
@@ -951,10 +960,13 @@ section {
 .phone-input {
     display: flex;
     gap: 0.5rem;
+    min-width: 0;
 }
 
 .phone-input .country-code {
     width: 100px;
+    min-width: 80px;
+    flex-shrink: 0;
     padding: 0.75rem;
     border: 1px solid var(--gray-300);
     border-radius: 8px;
@@ -964,6 +976,7 @@ section {
 
 .phone-input input {
     flex: 1;
+    min-width: 0;
 }
 
 .form-actions {
@@ -1248,6 +1261,27 @@ section {
     
     .contact-form .form-row {
         grid-template-columns: 1fr;
+    }
+    
+    .contact-form-wrapper {
+        padding: 1.25rem;
+    }
+    
+    /* Telefon alanı: etiket kutunun içine girmesin (padding çökmez) */
+    .contact-form .form-group-phone label {
+        margin-bottom: 0;
+        padding-bottom: 0.9rem;
+        display: block;
+        line-height: 1.35;
+    }
+    
+    .contact-form .form-group-phone .phone-input {
+        margin-top: 0;
+    }
+    
+    .phone-input .country-code {
+        width: 90px;
+        min-width: 70px;
     }
     
     .range-buttons {

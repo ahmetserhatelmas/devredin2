@@ -6,15 +6,22 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: #fff;
     color: #1f2937;
     line-height: 1.6;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 .container {
     max-width: 1280px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 24px;
 }
@@ -212,11 +219,17 @@ body {
     grid-template-columns: 1fr 360px;
     gap: 2rem;
     margin-bottom: 3rem;
+    min-width: 0;
+}
+
+.detail-left {
+    min-width: 0;
 }
 
 /* Gallery */
 .gallery {
     margin-bottom: 1.5rem;
+    overflow: visible;
 }
 
 .gallery-main {
@@ -259,6 +272,10 @@ body {
     display: flex;
     gap: 0.75rem;
     overflow-x: auto;
+    overflow-y: visible;
+    min-height: 84px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .thumb {
@@ -286,6 +303,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
 /* Info Section */
@@ -295,6 +313,7 @@ body {
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+    min-width: 0;
 }
 
 .price-box {
@@ -335,6 +354,8 @@ body {
 .spec-row {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
     padding: 0.75rem 0;
     border-bottom: 1px solid #f3f4f6;
 }
@@ -346,12 +367,18 @@ body {
 .spec-label {
     color: #6b7280;
     font-size: 0.9rem;
+    flex-shrink: 0;
+    min-width: 0;
 }
 
 .spec-value {
     color: #1f2937;
     font-weight: 500;
     font-size: 0.9rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-align: right;
 }
 
 /* Tabs */
@@ -361,6 +388,7 @@ body {
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 2rem;
+    min-width: 0;
 }
 
 .tabs-header {
@@ -409,6 +437,12 @@ body {
 }
 
 /* Description */
+.description-content {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
 .description-content p {
     margin-bottom: 1rem;
     line-height: 1.7;
@@ -428,6 +462,8 @@ body {
 .detail-row {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
     padding: 1rem 0;
     border-bottom: 1px solid #f3f4f6;
 }
@@ -439,6 +475,8 @@ body {
 .detail-label {
     color: #374151;
     font-size: 0.95rem;
+    flex-shrink: 0;
+    min-width: 0;
 }
 
 .detail-value {
@@ -446,6 +484,9 @@ body {
     font-weight: 500;
     font-size: 0.95rem;
     text-align: right;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 /* Map */
@@ -488,6 +529,7 @@ body {
 .detail-sidebar {
     position: sticky;
     top: 90px;
+    min-width: 0;
 }
 
 .seller-card {
@@ -742,6 +784,7 @@ body {
 
 .similar-content {
     padding: 1rem;
+    min-width: 0;
 }
 
 .similar-content h4 {
@@ -772,10 +815,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.5rem;
     padding-top: 0.75rem;
     border-top: 1px solid #f3f4f6;
     font-size: 0.8rem;
     color: #6b7280;
+    min-width: 0;
+}
+
+.similar-footer a {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    flex-shrink: 0;
 }
 
 .no-similar {
@@ -835,6 +886,11 @@ body {
     font-weight: 500;
     color: #374151;
     margin-bottom: 0.5rem;
+}
+
+/* Telefon alanı: etiket kutunun içine girmesin */
+.form-group .phone-input {
+    margin-top: 0.35rem;
 }
 
 .form-group input,
@@ -1012,25 +1068,81 @@ body {
         display: none;
     }
     
+    /* Sağa taşmayı önle: container ve içerik tam sığsın */
+    .container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    
     .detail-main {
         padding-top: 70px;
+        max-width: 100vw;
     }
     
     .detail-header {
         flex-direction: column;
+        gap: 0.75rem;
     }
     
     .detail-actions {
         width: 100%;
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
     
     .action-btn {
         flex: 1;
+        min-width: 0;
         justify-content: center;
     }
     
     .gallery-main img {
         height: 300px;
+    }
+    
+    /* Galeri: thumbnail'lar tam görünsün, kesilmesin */
+    .gallery {
+        overflow: visible;
+    }
+    
+    .gallery-thumbs {
+        min-height: 88px;
+        padding-bottom: 8px;
+        margin-bottom: 4px;
+    }
+    
+    .thumb {
+        width: 110px;
+        height: 82px;
+    }
+    
+    /* İletişim butonları: Mesaj Gönder + Ara tam sığsın */
+    .seller-actions {
+        flex-wrap: wrap;
+    }
+    
+    .seller-actions .btn-whatsapp,
+    .seller-actions .btn-call {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    
+    /* Benzer ilanlar kartı: Detayları görü kesilmesin */
+    .similar-card {
+        min-width: 0;
+    }
+    
+    /* İlan detayları: mobilde etiket üstte, değer altta - yazılar tam sığsın */
+    .spec-row,
+    .detail-row {
+        flex-direction: column;
+        gap: 0.35rem;
+        align-items: stretch;
+    }
+    
+    .spec-value,
+    .detail-value {
+        text-align: left;
     }
     
     .tabs-header {
@@ -1063,6 +1175,19 @@ body {
     
     .form-group-large {
         grid-row: auto;
+    }
+    
+    /* Telefon Numarası etiketi kutunun içine girmesin */
+    /* Telefon etiketi kutunun içine girmesin (padding çökmez) */
+    .contact-form .form-group-phone label {
+        margin-bottom: 0;
+        padding-bottom: 0.9rem;
+        display: block;
+        line-height: 1.35;
+    }
+    
+    .contact-form .form-group-phone .phone-input {
+        margin-top: 0;
     }
     
     .footer-grid {

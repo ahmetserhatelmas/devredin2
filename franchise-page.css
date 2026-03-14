@@ -46,14 +46,13 @@ body {
     background: var(--white);
     border-bottom: 1px solid var(--gray-200);
     z-index: 1000;
-    height: 70px;
 }
 
 .nav-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 70px;
+    height: 72px;
     gap: 1rem;
 }
 
@@ -1168,6 +1167,19 @@ section {
 
 /* Responsive */
 @media (max-width: 1024px) {
+    /* Mobil header ana sayfayla aynı boyut */
+    .navbar {
+        height: auto;
+    }
+    .nav-wrapper {
+        height: 60px;
+        gap: 0.5rem;
+    }
+    .logo-devredin,
+    .logo-fr {
+        font-size: 1.2rem;
+    }
+
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }

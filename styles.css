@@ -1166,17 +1166,22 @@ body {
         flex-shrink: 0;
     }
 
-    .btn-primary-nav {
-        display: none !important;
+    /* Mobilde CTA hamburgerin yanında; arama ve kullanıcı ikonu sola */
+    .nav-actions {
+        gap: 0.35rem;
+        flex-shrink: 0;
+    }
+
+    .nav-actions .btn-primary-nav {
+        display: inline-flex !important;
+        padding: 0.45rem 0.65rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        margin-left: auto;
     }
 
     .lang-selector {
         display: none !important;
-    }
-
-    .nav-actions {
-        gap: 0.25rem;
-        flex-shrink: 0;
     }
 
     .nav-wrapper {
@@ -1223,22 +1228,9 @@ body {
         border-bottom: none;
     }
 
+    /* CTA artık header'da hamburgerin yanında; menüde tekrar gösterme */
     .nav-menu.active .create-listing-mobile {
-        display: block;
-        margin-top: 0.75rem;
-        background: var(--primary);
-        color: #fff;
-        text-align: center;
-        padding: 0.8rem 1rem;
-        border-radius: 8px;
-        font-weight: 600;
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: background 0.2s;
-    }
-
-    .nav-menu.active .create-listing-mobile:hover {
-        background: var(--primary-dark);
+        display: none;
     }
     
     .hero h1 {

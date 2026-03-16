@@ -29,7 +29,7 @@
                     </div>
             <div class="step" data-step="4">
                 <span class="step-number">04</span>
-                <span class="step-text">Yapay Zeka & Önizleme</span>
+                <span class="step-text">Önizleme</span>
                     </div>
                 </div>
         
@@ -384,46 +384,9 @@
                 </div>
                             </div>
 
-            <!-- Step 4: Yapay Zeka & Önizleme -->
+            <!-- Step 4: Önizleme -->
             <div class="form-step" id="step4">
-                <div class="preview-grid">
-                    <div class="ai-section">
-                        <div class="ai-header">
-                            <span class="ai-icon">✨</span>
-                            <div>
-                                <h3>Yapay Zeka İyileştirmeleri</h3>
-                                <p>Başlığınızı ve açıklamanızı yapay zeka ile geliştirin.</p>
-                            </div>
-                            </div>
-
-                            <div class="form-group">
-                            <label>Listeleme başlığı <span class="required">*</span></label>
-                            <input type="text" id="aiTitle" readonly>
-                            </div>
-
-                            <div class="form-group">
-                            <label>Listeleme açıklaması <span class="required">*</span></label>
-                            <div class="rich-editor readonly">
-                                <div class="editor-toolbar">
-                                    <button type="button"><b>B</b></button>
-                                    <button type="button"><i>I</i></button>
-                                    <button type="button"><u>U</u></button>
-                                    <button type="button">H₁</button>
-                                    <button type="button">H₂</button>
-                                    <button type="button">☰</button>
-                                    <button type="button">1.</button>
-                            </div>
-                                <div class="editor-content" id="aiDescription"></div>
-                        </div>
-                    </div>
-
-                        <div class="ai-actions">
-                            <button class="btn btn-primary" onclick="approveAI()">Onayla</button>
-                            <button class="btn btn-outline" onclick="rejectAI()">İptal Et</button>
-                            <span class="ai-note">*Yapay zeka önerileri yalnızca yardımcı niteliktedir. İlanın yayımlanan metni ve içerikten doğabilecek sonuçlar kullanıcı tarafından onaylanmış sayılır.</span>
-                    </div>
-                </div>
-
+                <div class="preview-grid preview-grid-single">
                     <div class="preview-section">
                         <div class="preview-header">
                             <span class="preview-icon">📋</span>
@@ -1072,10 +1035,6 @@
         function generatePreview() {
             const title = document.getElementById('title').value;
             const price = document.getElementById('price').value;
-            const desc = document.getElementById('description').innerHTML;
-            
-            document.getElementById('aiTitle').value = title;
-            document.getElementById('aiDescription').innerHTML = desc;
             
             document.getElementById('previewCards').innerHTML = `
                 <div class="preview-card">
@@ -1089,15 +1048,6 @@
                     <p class="preview-price">₺${parseInt(price || 0).toLocaleString('tr-TR')}</p>
                 </div>
             `;
-        }
-
-        function approveAI() {
-            alert('Yapay zeka önerileri onaylandı!');
-        }
-
-        function rejectAI() {
-            document.getElementById('aiTitle').value = document.getElementById('title').value;
-            document.getElementById('aiDescription').innerHTML = document.getElementById('description').innerHTML;
         }
 
         function openPreview() {
@@ -1151,7 +1101,7 @@
                     }
                 }
 
-                const title = document.getElementById('aiTitle').value || document.getElementById('title').value;
+                const title = document.getElementById('title').value;
                 const slug = title.toLowerCase()
                     .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
                     .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
@@ -1172,7 +1122,7 @@
                     user_id: user.id,
                     title: title,
                     slug: slug,
-                    description: document.getElementById('aiDescription')?.innerHTML || document.getElementById('description')?.innerHTML || '',
+                    description: document.getElementById('description')?.innerHTML || '',
                     price: parseInt(document.getElementById('price')?.value) || 0,
                     category_id: document.getElementById('categoryId')?.value || null,
                     sector: sectorValue,

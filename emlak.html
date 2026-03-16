@@ -53,6 +53,7 @@
             align-items: flex-end;
         }
         .search-field { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; min-width: 140px; }
+        .search-field-price { min-width: 200px; }
         .search-field label { font-size: 0.75rem; font-weight: 600; color: var(--gray-500); text-transform: uppercase; }
         .search-field select,
         .search-field input {
@@ -63,9 +64,10 @@
         .search-field select:focus, .search-field input:focus { border-color: var(--primary); }
         .search-btn {
             background: var(--primary); color: #fff; border: none; border-radius: 8px;
-            padding: 0.75rem 1.5rem; font-size: 0.95rem; font-weight: 600;
+            padding: 0.6rem 1.5rem; font-size: 0.95rem; font-weight: 600;
             cursor: pointer; display: flex; align-items: center; gap: 0.5rem;
             transition: background 0.2s; white-space: nowrap;
+            height: 2.5rem; box-sizing: border-box;
         }
         .search-btn:hover { background: var(--primary-dark); }
 
@@ -221,9 +223,25 @@
         /* MOBILE */
         @media (max-width: 768px) {
             .sidebar { display: none; }
-            .type-tab { padding: 0.5rem 1rem; font-size: 0.8rem; }
-            .search-box { border-radius: 12px; }
-            .search-field { min-width: 130px; }
+            .search-hero { padding: 1.25rem 1rem; }
+            .search-hero h1 { font-size: 1.35rem; margin-bottom: 0.75rem; }
+            .type-tabs {
+                display: flex; gap: 0; margin-bottom: 1rem;
+                border-radius: 10px; overflow: hidden; border: 1px solid var(--gray-200);
+            }
+            .type-tab {
+                flex: 1; padding: 0.65rem 0.75rem; font-size: 0.875rem;
+                border-radius: 0; border: none; margin: 0;
+            }
+            .search-box {
+                border-radius: 12px;
+                flex-direction: column; align-items: stretch; gap: 1rem; padding: 1rem;
+            }
+            .search-field, .search-field-price {
+                width: 100%; min-width: 0; flex: none;
+            }
+            .search-field label { font-size: 0.7rem; }
+            .search-btn { width: 100%; justify-content: center; padding: 0.85rem; }
             .listing-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -349,7 +367,7 @@
                     </div>
                 </div>
 
-                <a href="add-emlak.html" class="btn btn-primary-nav">+ İlan Ver</a>
+                <a href="emlak-ilan-ver.html" class="btn btn-primary-nav">+ İlan Ver</a>
             </div>
 
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
@@ -364,7 +382,7 @@
 <!-- SEARCH HERO -->
 <div class="search-hero">
     <div class="search-hero-inner">
-        <h1>Konut İlanları</h1>
+        <h1>Emlak İlanları</h1>
         <div class="type-tabs">
             <button class="type-tab active" id="tabKiralik" onclick="setType('kiralik')">Kiralık</button>
             <button class="type-tab" id="tabSatilik" onclick="setType('satilik')">Satılık</button>
@@ -403,7 +421,7 @@
                     <option value="6+1+">6+1 ve üzeri</option>
                 </select>
             </div>
-            <div class="search-field" style="min-width:200px;">
+            <div class="search-field search-field-price">
                 <label id="priceLabel">Maks. Kira (₺)</label>
                 <input type="number" id="searchMaxPrice" placeholder="Sınır yok">
             </div>
@@ -426,6 +444,17 @@
                 <button onclick="resetFilters()" style="background:none;border:none;font-size:0.75rem;color:var(--primary);cursor:pointer;font-weight:600;">Temizle</button>
             </div>
             <div class="filter-card-body">
+
+                <div class="filter-group">
+                    <label>Kategoriler</label>
+                    <select id="filterEmlakCategory">
+                        <option value="">Tümü</option>
+                        <option value="konut">Konut</option>
+                        <option value="is_yeri">İş Yeri</option>
+                        <option value="komple_bina">Komple Bina</option>
+                        <option value="toprak">Toprak</option>
+                    </select>
+                </div>
 
                 <div class="filter-group">
                     <label>Konut Tipi</label>
@@ -700,6 +729,8 @@
 
     // Ortak filtreler (oda, fiyat, alan, tür, özellikler)
     function applyBaseFilters(q) {
+        const emlakCat = document.getElementById('filterEmlakCategory').value;
+        if (emlakCat) q = q.eq('emlak_category', emlakCat);
         const heroRooms = document.getElementById('searchRooms').value;
         const checkedRooms = [...document.querySelectorAll('#roomFilter input:checked')].map(i => i.value);
         if (heroRooms) q = q.eq('room_count', heroRooms);
@@ -843,7 +874,7 @@
                     ${img}
                     <div class="card-badge-row">
                         <span class="badge badge-${currentType}">${currentType === 'kiralik' ? 'Kiralık' : 'Satılık'}</span>
-                        ${l.room_count ? `<span class="badge badge-rooms">${l.room_count}</span>` : ''}
+                        ${l.emlak_category === 'is_yeri' ? '<span class="badge badge-rooms">İş Yeri</span>' : l.emlak_category === 'komple_bina' ? '<span class="badge badge-rooms">Komple Bina</span>' : l.emlak_category === 'toprak' ? '<span class="badge badge-rooms">Toprak</span>' : (l.room_count ? `<span class="badge badge-rooms">${l.room_count}</span>` : '')}
                         ${l.is_featured ? `<span class="badge badge-featured">Öne Çıkan</span>` : ''}
                     </div>
                 </div>
@@ -852,7 +883,7 @@
                     ${location ? `<div class="card-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${location}</div>` : ''}
                     <div class="card-price">₺${price} <span>${priceSuffix}</span></div>
                     <div class="card-specs">
-                        ${l.area_net ? `<span class="card-spec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v18h18V3z"/><path d="M3 9h18M9 21V9"/></svg> ${l.area_net} m²</span>` : ''}
+                        ${(l.area_net || l.area_gross) ? `<span class="card-spec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v18h18V3z"/><path d="M3 9h18M9 21V9"/></svg> ${l.area_net || l.area_gross} m²</span>` : ''}
                         ${l.room_count ? `<span class="card-spec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> ${l.room_count}</span>` : ''}
                         ${l.floor_number !== null && l.floor_number !== undefined ? `<span class="card-spec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg> ${l.floor_number}. Kat</span>` : ''}
                         ${l.is_furnished ? `<span class="card-spec">🛋️ Eşyalı</span>` : ''}
@@ -888,6 +919,7 @@
         resetDistrictDropdown();
         document.getElementById('searchRooms').value = '';
         document.getElementById('searchMaxPrice').value = '';
+        document.getElementById('filterEmlakCategory').value = '';
         document.getElementById('filterMinPrice').value = '';
         document.getElementById('filterMaxPrice').value = '';
         document.getElementById('filterMinArea').value = '';

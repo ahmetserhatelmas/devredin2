@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emlak İlanı Ver - Devret Link</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-dark: #b91c1c;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--gray-50); color: var(--gray-900); min-height: 100vh; }
+
+        .navbar {
+            background: #fff; border-bottom: 1px solid var(--gray-200);
+            position: sticky; top: 0; z-index: 100; padding: 0 1.5rem;
+        }
+        .nav-inner {
+            max-width: 1000px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between; height: 60px;
+        }
+        .logo-main { font-weight: 800; font-size: 1.25rem; color: var(--primary); text-decoration: none; }
+        .logo-divider { color: var(--gray-300); margin: 0 0.35rem; }
+        .logo-sub { font-weight: 700; color: var(--primary); text-decoration: none; font-size: 1rem; }
+        .btn-back {
+            display: flex; align-items: center; gap: 0.4rem;
+            color: var(--gray-500); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+        }
+        .btn-back:hover { color: var(--primary); }
+
+        .main { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem 3rem; }
+
+        .section-card {
+            background: #fff; border-radius: 12px; border: 1px solid var(--gray-200);
+            padding: 1.5rem; margin-bottom: 1.25rem;
+        }
+        .section-title {
+            font-size: 1rem; font-weight: 700; color: var(--gray-900);
+            margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-100);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .section-title svg { color: var(--primary); }
+
+        .type-toggle { display: flex; gap: 0.75rem; margin-bottom: 0; flex-wrap: wrap; }
+        .type-option {
+            flex: 1; min-width: 140px; padding: 1rem; border: 2px solid var(--gray-300); border-radius: 12px;
+            cursor: pointer; text-align: center; transition: all 0.2s; background: #fff;
+        }
+        .type-option:hover { border-color: var(--primary); background: #fef2f2; }
+        .type-option.selected.konut, .type-option.selected.isyeri, .type-option.selected.komplebina, .type-option.selected.toprak { border-color: var(--primary); background: #fef2f2; }
+        .type-option.selected.konut .type-option-label, .type-option.selected.isyeri .type-option-label, .type-option.selected.komplebina .type-option-label, .type-option.selected.toprak .type-option-label { color: var(--primary-dark); }
+        .type-option.toprak-sub.selected { border-color: var(--primary); background: #f0fdf4; }
+        .type-option.toprak-sub.selected .type-option-label { color: #166534; }
+        .type-option.selected.kiralik { border-color: #2563eb; background: #eff6ff; }
+        .type-option.selected.satilik { border-color: #16a34a; background: #f0fdf4; }
+        .type-option.selected.kiralik .type-option-label { color: #1d4ed8; }
+        .type-option.selected.satilik .type-option-label { color: #166534; }
+        .type-option-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .type-option-label { font-size: 0.9rem; font-weight: 700; color: var(--gray-800); }
+        .type-option-desc { font-size: 0.75rem; color: var(--gray-500); margin-top: 0.2rem; }
+
+        .btn-continue {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.85rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 700;
+            background: var(--primary); color: #fff; border: none; cursor: pointer;
+            text-decoration: none; margin-top: 1.5rem; transition: background 0.2s;
+        }
+        .btn-continue:hover { background: var(--primary-dark); color: #fff; }
+        .btn-continue:disabled, .btn-continue.disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+
+        .choice-summary { font-size: 0.9rem; color: var(--gray-500); margin-top: 1rem; }
+        .choice-summary strong { color: var(--gray-800); }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-inner">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+            <a href="index.html" class="logo-main">devret link</a>
+            <span class="logo-divider">|</span>
+            <a href="emlak.html" class="logo-sub">emlak</a>
+        </div>
+        <a href="emlak.html" class="btn-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            Geri Dön
+        </a>
+    </div>
+</nav>
+
+<div class="main">
+    <h1 style="font-size:1.5rem;margin-bottom:1.5rem;color:var(--gray-900);">Emlak İlanı Ver</h1>
+
+    <div class="section-card">
+        <div class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Ne tür bir ilan vereceksiniz?
+        </div>
+        <div class="type-toggle">
+            <div class="type-option konut selected" id="catKonut" data-category="konut" role="button" tabindex="0">
+                <div class="type-option-icon">🏠</div>
+                <div class="type-option-label">Konut</div>
+                <div class="type-option-desc">Daire, villa, müstakil</div>
+            </div>
+            <div class="type-option isyeri" id="catIsyeri" data-category="is_yeri" role="button" tabindex="0">
+                <div class="type-option-icon">🏢</div>
+                <div class="type-option-label">İş Yeri</div>
+                <div class="type-option-desc">Ofis, dükkan, spor tesisi</div>
+            </div>
+            <div class="type-option komplebina" id="catKompleBina" data-category="komple_bina" role="button" tabindex="0">
+                <div class="type-option-icon">🏗️</div>
+                <div class="type-option-label">Komple Bina</div>
+                <div class="type-option-desc">Tüm bina satılık / kiralık</div>
+            </div>
+            <div class="type-option toprak" id="catToprak" data-category="toprak" role="button" tabindex="0">
+                <div class="type-option-icon">🌾</div>
+                <div class="type-option-label">Toprak</div>
+                <div class="type-option-desc">Arsa, tarla, kat karşılığı</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card" id="toprakTypeCard" style="display:none;">
+        <div class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Toprak türü
+        </div>
+        <div class="type-toggle">
+            <div class="type-option toprak-sub selected" id="toprakArsa" data-toprak-type="arsa" role="button" tabindex="0">
+                <div class="type-option-icon">📐</div>
+                <div class="type-option-label">Arsa</div>
+                <div class="type-option-desc">İnşaat için arsa</div>
+            </div>
+            <div class="type-option toprak-sub" id="toprakTarla" data-toprak-type="tarla" role="button" tabindex="0">
+                <div class="type-option-icon">🌾</div>
+                <div class="type-option-label">Tarla</div>
+                <div class="type-option-desc">Tarım arazisi</div>
+            </div>
+            <div class="type-option toprak-sub" id="toprakIcar" data-toprak-type="icar" role="button" tabindex="0">
+                <div class="type-option-icon">📄</div>
+                <div class="type-option-label">İcar (Kiralık)</div>
+                <div class="type-option-desc">Kiralık arazi</div>
+            </div>
+            <div class="type-option toprak-sub" id="toprakKatKarsiligi" data-toprak-type="kat_karsiligi" role="button" tabindex="0">
+                <div class="type-option-icon">🏢</div>
+                <div class="type-option-label">Kat Karşılığı</div>
+                <div class="type-option-desc">Arsa karşılığı daire</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card" id="saleRentCard">
+        <div class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Satılık mı, kiralık mı?
+        </div>
+        <div class="type-toggle">
+            <div class="type-option kiralik selected" id="typeKiralik" data-type="kiralik" role="button" tabindex="0">
+                <div class="type-option-icon">🔑</div>
+                <div class="type-option-label">Kiralık</div>
+                <div class="type-option-desc">Aylık kira bedeli</div>
+            </div>
+            <div class="type-option satilik" id="typeSatilik" data-type="satilik" role="button" tabindex="0">
+                <div class="type-option-icon">🏠</div>
+                <div class="type-option-label">Satılık</div>
+                <div class="type-option-desc">Toplam satış fiyatı</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="choice-summary" id="choiceSummary">Konut · Kiralık ilanı gireceksiniz.</div>
+
+    <a href="#" class="btn-continue" id="btnContinue">
+        İlan girişine devam et
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+</div>
+
+<script>
+(function() {
+    var category = 'konut';
+    var type = 'kiralik';
+    var toprakType = 'arsa';
+
+    var catLabels = { konut: 'Konut', is_yeri: 'İş Yeri', komple_bina: 'Komple Bina', toprak: 'Toprak' };
+    var toprakTypeLabels = { arsa: 'Arsa', tarla: 'Tarla', icar: 'İcar (Kiralık)', kat_karsiligi: 'Kat Karşılığı' };
+    var typeLabels = { kiralik: 'Kiralık', satilik: 'Satılık' };
+
+    function getTypeForToprak() {
+        return toprakType === 'icar' ? 'kiralik' : 'satilik';
+    }
+
+    function updateSummary() {
+        if (category === 'toprak') {
+            type = getTypeForToprak();
+            var text = catLabels[category] + ' · ' + toprakTypeLabels[toprakType];
+            document.getElementById('choiceSummary').innerHTML = '<strong>' + text + '</strong> ilanı gireceksiniz.';
+        } else {
+            var text = catLabels[category] + ' · ' + typeLabels[type];
+            document.getElementById('choiceSummary').innerHTML = '<strong>' + text + '</strong> ilanı gireceksiniz.';
+        }
+        var href = 'add-emlak.html?category=' + encodeURIComponent(category) + '&type=' + encodeURIComponent(category === 'toprak' ? getTypeForToprak() : type);
+        if (category === 'toprak') href += '&toprak_type=' + encodeURIComponent(toprakType);
+        document.getElementById('btnContinue').href = href;
+    }
+
+    function setCategory(cat) {
+        category = cat;
+        document.getElementById('catKonut').classList.toggle('selected', cat === 'konut');
+        document.getElementById('catIsyeri').classList.toggle('selected', cat === 'is_yeri');
+        document.getElementById('catKompleBina').classList.toggle('selected', cat === 'komple_bina');
+        document.getElementById('catToprak').classList.toggle('selected', cat === 'toprak');
+        document.getElementById('toprakTypeCard').style.display = cat === 'toprak' ? 'block' : 'none';
+        var saleRentCard = document.getElementById('saleRentCard');
+        if (saleRentCard) saleRentCard.style.display = cat === 'toprak' ? 'none' : '';
+        if (cat === 'toprak') type = getTypeForToprak();
+        updateSummary();
+    }
+
+    function setToprakType(t) {
+        toprakType = t;
+        ['toprakArsa','toprakTarla','toprakIcar','toprakKatKarsiligi'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.toggle('selected', el.getAttribute('data-toprak-type') === t);
+        });
+        if (category === 'toprak') type = getTypeForToprak();
+        updateSummary();
+    }
+
+    function setType(t) {
+        type = t;
+        document.getElementById('typeKiralik').classList.toggle('selected', t === 'kiralik');
+        document.getElementById('typeSatilik').classList.toggle('selected', t === 'satilik');
+        updateSummary();
+    }
+
+    document.getElementById('catKonut').addEventListener('click', function() { setCategory('konut'); });
+    document.getElementById('catIsyeri').addEventListener('click', function() { setCategory('is_yeri'); });
+    document.getElementById('catKompleBina').addEventListener('click', function() { setCategory('komple_bina'); });
+    document.getElementById('catToprak').addEventListener('click', function() { setCategory('toprak'); });
+    document.getElementById('typeKiralik').addEventListener('click', function() { setType('kiralik'); });
+    document.getElementById('typeSatilik').addEventListener('click', function() { setType('satilik'); });
+    document.getElementById('toprakArsa').addEventListener('click', function() { setToprakType('arsa'); });
+    document.getElementById('toprakTarla').addEventListener('click', function() { setToprakType('tarla'); });
+    document.getElementById('toprakIcar').addEventListener('click', function() { setToprakType('icar'); });
+    document.getElementById('toprakKatKarsiligi').addEventListener('click', function() { setToprakType('kat_karsiligi'); });
+
+    document.getElementById('catKonut').addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCategory('konut'); } });
+    document.getElementById('catIsyeri').addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCategory('is_yeri'); } });
+    document.getElementById('catKompleBina').addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCategory('komple_bina'); } });
+    document.getElementById('catToprak').addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCategory('toprak'); } });
+    document.getElementById('typeKiralik').addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setType('kiralik'); } });
+    document.getElementById('typeSatilik').addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setType('satilik'); } });
+
+    updateSummary();
+})();
+</script>
+</body>
+</html>

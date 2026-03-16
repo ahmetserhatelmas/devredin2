@@ -571,26 +571,72 @@ function renderPage() {
     }
 }
 
+var kompleParkingLabels = { acik: 'Açık Otopark', kapali: 'Kapalı Otopark', acik_kapali: 'Açık / Kapalı Otopark', yok: 'Yok' };
+
+var toprakTypeLabels = { arsa: 'Arsa', tarla: 'Tarla', icar: 'İcar (Kiralık)', kat_karsiligi: 'Kat Karşılığı' };
+
 function renderSpecs(l, isKiralik) {
     const specs = [];
+    const isIsyeri = l.emlak_category === 'is_yeri';
+    const isKompleBina = l.emlak_category === 'komple_bina';
+    const isToprak = l.emlak_category === 'toprak';
 
     if (l.listing_type) specs.push(['İlan Tipi', isKiralik ? 'Kiralık' : 'Satılık']);
-    if (l.property_type) specs.push(['Konut Tipi', capitalize(l.property_type)]);
-    if (l.room_count) specs.push(['Oda Sayısı', l.room_count]);
-    if (l.area_gross) specs.push(['Brüt m²', `${l.area_gross} m²`]);
-    if (l.area_net) specs.push(['Net m²', `${l.area_net} m²`]);
-    if (l.floor_number !== null && l.floor_number !== undefined) specs.push(['Bulunduğu Kat', `${l.floor_number}. Kat`]);
-    if (l.total_floors) specs.push(['Kat Sayısı', `${l.total_floors}`]);
-    if (l.building_age) specs.push(['Bina Yaşı', `${l.building_age} Yıl`]);
-    if (l.bathroom_count) specs.push(['Banyo Sayısı', l.bathroom_count]);
-    if (l.heating_type) specs.push(['Isıtma', capitalize(l.heating_type.replace('_', ' '))]);
-    if (l.floor_type) specs.push(['Zemin', capitalize(l.floor_type)]);
-    if (l.kitchen_type) specs.push(['Mutfak', capitalize(l.kitchen_type.replace('_', ' '))]);
-    if (l.facing) specs.push(['Cephe', capitalize(l.facing)]);
-    if (l.deed_type) specs.push(['Tapu', capitalize(l.deed_type.replace('_', ' '))]);
-    if (l.dues) specs.push(['Aidat', `₺${Number(l.dues).toLocaleString('tr-TR')}/ay`]);
-    if (isKiralik && l.deposit) specs.push(['Depozito', `₺${Number(l.deposit).toLocaleString('tr-TR')}`]);
-    if (l.from_owner !== undefined) specs.push(['Kimden', l.from_owner ? 'Sahibinden' : 'Emlakçıdan']);
+    if (isIsyeri) specs.push(['Kategori', 'İş Yeri']);
+    if (isKompleBina) specs.push(['Kategori', 'Komple Bina']);
+    if (isToprak) specs.push(['Kategori', 'Toprak · ' + (toprakTypeLabels[l.toprak_type] || l.toprak_type || 'Arsa')]);
+    if (isIsyeri) {
+        if (l.area_gross) specs.push(['m²', `${l.area_gross} m²`]);
+        if (l.heating_type) specs.push(['Isıtma', capitalize((l.heating_type || '').replace(/_/g, ' '))]);
+        if (l.dues) specs.push(['Aidat', `₺${Number(l.dues).toLocaleString('tr-TR')}/ay`]);
+        if (l.building_age) specs.push(['Bina Yaşı', (l.building_age || '').replace(/-/g,'–') + ' Yıl']);
+        if (l.building_condition) specs.push(['Yapının Durumu', l.building_condition === 'sifir' ? 'Sıfır' : (l.building_condition === 'ikinci_el' ? 'İkinci El' : 'İnşa Halinde')]);
+        if (l.tenant_occupied !== undefined && l.tenant_occupied !== null) specs.push(['Kiracılı', l.tenant_occupied ? 'Evet' : 'Hayır']);
+        if (l.credit_eligibility) specs.push(['Krediye Uygunluk', capitalize(l.credit_eligibility)]);
+        if (l.property_owner_type) specs.push(['Mülk Sahibi', (l.property_owner_type === 'tc_vatandasi' ? 'T.C. Vatandaşı' : l.property_owner_type === 'yabanci' ? 'Yabancı Uyruklu' : l.property_owner_type === 'ozel_kurum' ? 'Özel Kurum' : 'Devlet / Kamu')]);
+        if (l.property_no) specs.push(['Taşınmaz No', l.property_no]);
+    } else if (isKompleBina) {
+        if (l.area_gross) specs.push(['m²', `${l.area_gross} m²`]);
+        if (l.apartments_per_floor) specs.push(['Bir Kattaki Daire', l.apartments_per_floor === 6 ? '6+' : String(l.apartments_per_floor)]);
+        if (l.total_floors) specs.push(['Kat Sayısı', l.total_floors]);
+        if (l.building_age) specs.push(['Bina Yaşı', (l.building_age || '').replace(/-/g,'–') + ' Yıl']);
+        if (l.has_elevator !== undefined && l.has_elevator !== null) specs.push(['Asansör', l.has_elevator ? 'Var' : 'Yok']);
+        if (l.parking_type) specs.push(['Otopark', kompleParkingLabels[l.parking_type] || l.parking_type]);
+        if (l.property_no) specs.push(['Taşınmaz No', l.property_no]);
+        if (l.property_owner_type) specs.push(['Mülk Sahibi', (l.property_owner_type === 'tc_vatandasi' ? 'T.C. Vatandaşı' : l.property_owner_type === 'yabanci' ? 'Yabancı Uyruklu' : l.property_owner_type === 'ozel_kurum' ? 'Özel Kurum' : 'Devlet / Kamu')]);
+        if (l.deed_type) specs.push(['Tapu Durumu', capitalize((l.deed_type || '').replace(/_/g, ' '))]);
+    } else if (isToprak) {
+        if (l.area_gross) specs.push(['m²', `${l.area_gross} m²`]);
+        if (l.price_per_sqm) specs.push(['m² Fiyatı', `₺${Number(l.price_per_sqm).toLocaleString('tr-TR')}`]);
+        if (l.imar_durumu) specs.push(['İmar Durumu', capitalize(l.imar_durumu)]);
+        if (l.ada_no) specs.push(['Ada No', l.ada_no]);
+        if (l.parsel_no) specs.push(['Parsel No', l.parsel_no]);
+        if (l.pafta_no) specs.push(['Pafta No', l.pafta_no]);
+        if (l.kaks) specs.push(['Kaks (Emsal)', l.kaks]);
+        if (l.gabari) specs.push(['Gabari', l.gabari + ' m']);
+        if (l.takasli) specs.push(['Takaslı', capitalize(l.takasli)]);
+        if (l.credit_eligibility) specs.push(['Krediye Uygunluk', capitalize(l.credit_eligibility)]);
+        if (l.property_owner_type) specs.push(['Mülk Sahibi', (l.property_owner_type === 'tc_vatandasi' ? 'T.C. Vatandaşı' : l.property_owner_type === 'yabanci' ? 'Yabancı Uyruklu' : l.property_owner_type === 'ozel_kurum' ? 'Özel Kurum' : 'Devlet / Kamu')]);
+        if (l.deed_type) specs.push(['Tapu Durumu', capitalize((l.deed_type || '').replace(/_/g, ' '))]);
+        if (l.property_no) specs.push(['Taşınmaz No', l.property_no]);
+    } else {
+        if (l.property_type) specs.push(['Konut Tipi', capitalize(l.property_type)]);
+        if (l.room_count) specs.push(['Oda Sayısı', l.room_count]);
+        if (l.area_gross) specs.push(['Brüt m²', `${l.area_gross} m²`]);
+        if (l.area_net) specs.push(['Net m²', `${l.area_net} m²`]);
+        if (l.floor_number !== null && l.floor_number !== undefined) specs.push(['Bulunduğu Kat', `${l.floor_number}. Kat`]);
+        if (l.total_floors) specs.push(['Kat Sayısı', `${l.total_floors}`]);
+        if (l.building_age) specs.push(['Bina Yaşı', `${l.building_age} Yıl`]);
+        if (l.bathroom_count) specs.push(['Banyo Sayısı', l.bathroom_count]);
+        if (l.heating_type) specs.push(['Isıtma', capitalize((l.heating_type || '').replace(/_/g, ' '))]);
+        if (l.floor_type) specs.push(['Zemin', capitalize(l.floor_type)]);
+        if (l.kitchen_type) specs.push(['Mutfak', capitalize((l.kitchen_type || '').replace(/_/g, ' '))]);
+        if (l.facing) specs.push(['Cephe', capitalize(l.facing)]);
+        if (l.deed_type) specs.push(['Tapu', capitalize((l.deed_type || '').replace(/_/g, ' '))]);
+        if (l.dues) specs.push(['Aidat', `₺${Number(l.dues).toLocaleString('tr-TR')}/ay`]);
+        if (isKiralik && l.deposit) specs.push(['Depozito', `₺${Number(l.deposit).toLocaleString('tr-TR')}`]);
+        if (l.from_owner !== undefined) specs.push(['Kimden', l.from_owner ? 'Sahibinden' : 'Emlakçıdan']);
+    }
     specs.push(['Tarih', new Date(l.created_at).toLocaleDateString('tr-TR')]);
 
     const grid = document.getElementById('specsGrid');
@@ -602,32 +648,53 @@ function renderSpecs(l, isKiralik) {
     `).join('');
 }
 
+var isyeriFeatureLabels = {
+    otopark: 'Otopark', klima: 'Klima', guvenlik_kamerasi: 'Güvenlik Kamerası', havalandirma: 'Havalandırma',
+    asansor: 'Asansör', jenerator: 'Jeneratör', cafe_bar: 'Cafe & Bar', duş: 'Duş', soyunma_odasi: 'Soyunma Odası',
+    havuz: 'Havuz', sauna: 'Sauna', ofis_malzemeleri: 'Ofis Malzemeleri'
+};
+
+var toprakAltyapiLabels = { elektrik: 'Elektrik', su: 'Su', kanalizasyon: 'Kanalizasyon', dogalgaz: 'Doğalgaz', yol_acik: 'Yolu Açılmış', zemin_etudu: 'Zemin Etüdü' };
+var toprakKonumLabels = { ana_yola_yakin: 'Ana Yola Yakın', denize_yakin: 'Denize Yakın', denize_sifir: 'Denize Sıfır', toplu_ulasim: 'Toplu Ulaşıma Yakın', havaalani: 'Havaalanına Yakın' };
+var toprakGenelLabels = { ifrazi: 'İfrazi', parselli: 'Parselli', kose_parsel: 'Köşe Parsel', projeli: 'Projeli' };
+var toprakManzaraLabels = { sehir: 'Şehir', deniz: 'Deniz', doga: 'Doğa', bogaz: 'Boğaz', gol: 'Göl' };
+
 function renderFeatures(l) {
-    const sections = [
-        {
-            title: 'Temel Özellikler',
-            items: [
-                ['has_elevator', 'Asansör'],
-                ['has_parking', 'Otopark'],
-                ['is_furnished', 'Eşyalı'],
-                ['is_in_complex', 'Site İçinde'],
-                ['allows_pets', 'Evcil Hayvan Kabul'],
-                ['is_exchangeable', 'Takas'],
-                ['balcony', 'Balkon'],
-            ]
-        }
-    ];
-
     let html = '';
-    sections.forEach(sec => {
-        const available = sec.items.filter(([key]) => l[key]);
-        if (available.length === 0) return;
-        html += `<div class="features-section-title">${sec.title}</div>`;
-        html += `<div class="features-list">` + available.map(([, label]) =>
-            `<span class="feature-tag active">${label}</span>`
+    if (l.emlak_category === 'is_yeri' && Array.isArray(l.general_features) && l.general_features.length > 0) {
+        html += `<div class="features-section-title">Genel Özellikler</div>`;
+        html += `<div class="features-list">` + l.general_features.map(key =>
+            `<span class="feature-tag active">${isyeriFeatureLabels[key] || key}</span>`
         ).join('') + `</div>`;
-    });
-
+    } else if (l.emlak_category === 'toprak') {
+        if (Array.isArray(l.altyapi) && l.altyapi.length > 0) {
+            html += `<div class="features-section-title">Altyapı</div><div class="features-list">` + l.altyapi.map(k => `<span class="feature-tag active">${toprakAltyapiLabels[k] || k}</span>`).join('') + `</div>`;
+        }
+        if (Array.isArray(l.konum_ozellik) && l.konum_ozellik.length > 0) {
+            html += `<div class="features-section-title">Konum</div><div class="features-list">` + l.konum_ozellik.map(k => `<span class="feature-tag active">${toprakKonumLabels[k] || k}</span>`).join('') + `</div>`;
+        }
+        if (Array.isArray(l.general_features) && l.general_features.length > 0) {
+            html += `<div class="features-section-title">Genel Özellikler</div><div class="features-list">` + l.general_features.map(k => `<span class="feature-tag active">${toprakGenelLabels[k] || k}</span>`).join('') + `</div>`;
+        }
+        if (Array.isArray(l.manzara) && l.manzara.length > 0) {
+            html += `<div class="features-section-title">Manzara</div><div class="features-list">` + l.manzara.map(k => `<span class="feature-tag active">${toprakManzaraLabels[k] || k}</span>`).join('') + `</div>`;
+        }
+    } else {
+        const sections = [
+            { title: 'Temel Özellikler', items: [
+                ['has_elevator', 'Asansör'], ['has_parking', 'Otopark'], ['is_furnished', 'Eşyalı'],
+                ['is_in_complex', 'Site İçinde'], ['allows_pets', 'Evcil Hayvan Kabul'], ['is_exchangeable', 'Takas'], ['balcony', 'Balkon'],
+            ]}
+        ];
+        sections.forEach(sec => {
+            const available = sec.items.filter(([key]) => l[key]);
+            if (available.length === 0) return;
+            html += `<div class="features-section-title">${sec.title}</div>`;
+            html += `<div class="features-list">` + available.map(([, label]) =>
+                `<span class="feature-tag active">${label}</span>`
+            ).join('') + `</div>`;
+        });
+    }
     if (html) {
         document.getElementById('featuresCard').style.display = '';
         document.getElementById('featuresContent').innerHTML = html;

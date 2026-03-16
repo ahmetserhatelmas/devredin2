@@ -645,6 +645,15 @@ section {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.range-panel {
+    margin-top: 0;
+}
+
+.range-loading {
+    color: var(--gray-500);
+    font-size: 0.9rem;
+}
+
 .range-buttons {
     display: flex;
     flex-wrap: wrap;

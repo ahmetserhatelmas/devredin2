@@ -650,6 +650,7 @@ body {
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1166,7 +1167,12 @@ body {
         flex-shrink: 0;
     }
 
-    /* Mobilde CTA hamburgerin yanında; arama ve kullanıcı ikonu sola */
+    /* Mobilde arama ikonu gizli (hem .search-btn hem sadece .nav-icon-btn olan sayfalar) */
+    .nav-actions .search-btn,
+    .nav-actions > .nav-icon-btn {
+        display: none !important;
+    }
+
     .nav-actions {
         gap: 0.35rem;
         flex-shrink: 0;
@@ -1244,6 +1250,18 @@ body {
     .footer-grid {
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
+    }
+}
+
+/* Çok dar mobilde CTA butonu küçült; sağ üstteki hamburger tam görünsün */
+@media (max-width: 480px) {
+    .nav-actions {
+        gap: 0.25rem;
+    }
+
+    .nav-actions .btn-primary-nav {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.7rem;
     }
 }
 

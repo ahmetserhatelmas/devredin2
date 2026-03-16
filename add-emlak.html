@@ -98,6 +98,8 @@
         }
         .type-option.selected.kiralik { border-color: #2563eb; background: #eff6ff; }
         .type-option.selected.satilik { border-color: #16a34a; background: #f0fdf4; }
+        .type-option.selected.konut, .type-option.selected.isyeri, .type-option.selected.komplebina { border-color: var(--primary); background: #fef2f2; }
+        .type-option.selected.konut .type-option-label, .type-option.selected.isyeri .type-option-label, .type-option.selected.komplebina .type-option-label { color: var(--primary-dark); }
         .type-option-icon { font-size: 1.5rem; margin-bottom: 0.25rem; }
         .type-option-label { font-size: 0.9rem; font-weight: 700; color: var(--gray-800); }
         .type-option-desc { font-size: 0.75rem; color: var(--gray-500); margin-top: 0.2rem; }
@@ -178,12 +180,14 @@
 
         /* NAV BUTTONS */
         .step-nav {
-            display: flex; justify-content: space-between; margin-top: 1.5rem; gap: 1rem;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 1.5rem; gap: 1rem;
         }
         .btn-prev, .btn-next, .btn-submit {
-            padding: 0.85rem 2rem; border-radius: 10px;
-            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; gap: 0.5rem; border: none;
+            padding: 0.65rem 1.5rem; border-radius: 10px;
+            font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 0.5rem; border: none;
+            flex-shrink: 0;
         }
         .btn-prev { background: var(--gray-100); color: var(--gray-700); }
         .btn-prev:hover { background: var(--gray-200); }
@@ -203,6 +207,20 @@
             .photo-preview-grid { grid-template-columns: repeat(2, 1fr); }
             .steps { gap: 0; }
             .step-label { display: none; }
+            /* Mobilde Devam Et / Geri tam genişlik, her zaman alanların altında tek satır */
+            .step-nav {
+                display: block;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            .step-nav > div:first-child { display: none; }
+            .step-nav .btn-prev,
+            .step-nav .btn-next,
+            .step-nav .btn-submit {
+                width: 100%;
+                justify-content: center;
+                display: flex;
+            }
         }
     </style>
 </head>
@@ -274,28 +292,8 @@
 <!-- MAIN -->
 <div class="main">
 
-    <!-- STEP 1: TEMEL BİLGİLER -->
+    <!-- STEP 1: TEMEL BİLGİLER (kategori ve tip emlak-ilan-ver.html'de seçildi, URL'den gelir) -->
     <div class="step-page active" id="page-1">
-
-        <!-- İlan Tipi -->
-        <div class="section-card">
-            <div class="section-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                İlan Tipi Seçin
-            </div>
-            <div class="type-toggle">
-                <div class="type-option kiralik selected" id="typeKiralik" onclick="selectType('kiralik')">
-                    <div class="type-option-icon">🔑</div>
-                    <div class="type-option-label">Kiralık</div>
-                    <div class="type-option-desc">Aylık kira bedeli</div>
-                </div>
-                <div class="type-option satilik" id="typeSatilik" onclick="selectType('satilik')">
-                    <div class="type-option-icon">🏠</div>
-                    <div class="type-option-label">Satılık</div>
-                    <div class="type-option-desc">Toplam satış fiyatı</div>
-                </div>
-            </div>
-        </div>
 
         <!-- Başlık & Fiyat -->
         <div class="section-card">
@@ -368,30 +366,30 @@
             <div class="form-row triple">
                 <div class="form-group">
                     <label class="form-label">Vilayet</label>
-                    <input type="text" class="form-input" id="emlakCity" placeholder="Örn: İstanbul"
+                    <input type="text" class="form-input" id="emlakCity" placeholder="Örn: İstanbul">
                 </div>
                 <div class="form-group">
                     <label class="form-label">İlçe</label>
-                    <input type="text" class="form-input" id="emlakDistrict" placeholder="Örn: Kadıköy"
+                    <input type="text" class="form-input" id="emlakDistrict" placeholder="Örn: Kadıköy">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Mahalle / Sokak</label>
                     <input type="text" class="form-input" id="emlakNeighborhood" placeholder="Opsiyonel">
                 </div>
             </div>
-        </div>
-
-        <div class="step-nav">
-            <div></div>
-            <button class="btn-next" onclick="goStep(2)">
-                Devam Et
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
+            <div class="step-nav step-nav-mobile-full">
+                <div></div>
+                <button class="btn-next" onclick="goStep(2)">
+                    Devam Et
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- STEP 2: KONUT DETAYLARI -->
+    <!-- STEP 2: KONUT / İŞ YERİ DETAYLARI -->
     <div class="step-page" id="page-2">
+        <div id="konutDetailsSection">
         <div class="section-card">
             <div class="section-title">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
@@ -533,6 +531,386 @@
                     </select>
                 </div>
             </div>
+        </div>
+        </div>
+        <!-- İş Yeri detayları (emlak_category = is_yeri) -->
+        <div id="isyeriDetailsSection" style="display:none;">
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                İş Yeri İlan Detayları
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Isıtma <span class="req">*</span></label>
+                    <select class="form-select" id="isyeriHeating">
+                        <option value="">Seçin</option>
+                        <option value="yok">Yok</option>
+                        <option value="soba">Soba</option>
+                        <option value="dogalgaz_sobasi">Doğalgaz Sobası</option>
+                        <option value="kat_kaloriferi">Kat Kaloriferi</option>
+                        <option value="merkezi">Merkezi</option>
+                        <option value="merkezi_pay_olcer">Merkezi (Pay Ölçer)</option>
+                        <option value="kombi_dogalgaz">Kombi (Doğalgaz)</option>
+                        <option value="kombi_elektrik">Kombi (Elektrik)</option>
+                        <option value="yerden">Yerden Isıtma</option>
+                        <option value="klima">Klima</option>
+                        <option value="fancoil">Fancoil Ünitesi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Aidat (₺/ay)</label>
+                    <div class="input-prefix">
+                        <span class="prefix">₺</span>
+                        <input type="number" class="form-input" id="isyeriDues" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">m² <span class="req">*</span></label>
+                    <input type="number" class="form-input" id="isyeriArea" placeholder="0">
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Bina Yaşı <span class="req">*</span></label>
+                    <select class="form-select" id="isyeriBuildingAge">
+                        <option value="">Seçin</option>
+                        <option value="0-5">0-5 Yıl</option>
+                        <option value="5-10">5-10 Yıl</option>
+                        <option value="10-15">10-15 Yıl</option>
+                        <option value="15-20">15-20 Yıl</option>
+                        <option value="20+">20+ Yıl</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Yapının Durumu <span class="req">*</span></label>
+                    <select class="form-select" id="isyeriBuildingCondition">
+                        <option value="">Seçin</option>
+                        <option value="sifir">Sıfır</option>
+                        <option value="ikinci_el">İkinci El</option>
+                        <option value="insa_halinde">İnşa Halinde</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kiracılı <span class="req">*</span></label>
+                    <select class="form-select" id="isyeriTenantOccupied">
+                        <option value="">Seçin</option>
+                        <option value="true">Evet</option>
+                        <option value="false">Hayır</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Krediye Uygunluk <span class="req">*</span></label>
+                    <select class="form-select" id="isyeriCreditEligibility">
+                        <option value="">Seçin</option>
+                        <option value="evet">Evet</option>
+                        <option value="hayir">Hayır</option>
+                        <option value="bilinmiyor">Bilinmiyor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mülk Sahibi <span class="req">*</span></label>
+                    <select class="form-select" id="isyeriPropertyOwner">
+                        <option value="">Seçin</option>
+                        <option value="tc_vatandasi">T.C. Vatandaşı</option>
+                        <option value="yabanci">Yabancı Uyruklu</option>
+                        <option value="ozel_kurum">Özel Kurum ve Kuruluşlar</option>
+                        <option value="devlet">Devlet / Kamu Kurumu</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Taşınmaz No</label>
+                    <input type="text" class="form-input" id="isyeriPropertyNo" placeholder="Opsiyonel">
+                </div>
+            </div>
+            <div class="form-row single">
+                <div class="form-group">
+                    <label class="form-label">Genel Özellikler</label>
+                    <div class="checkbox-grid" id="isyeriFeaturesGrid">
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="otopark"><label>Otopark</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="klima"><label>Klima</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="guvenlik_kamerasi"><label>Güvenlik Kamerası</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="havalandirma"><label>Havalandırma</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="asansor"><label>Asansör</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="jenerator"><label>Jeneratör</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="cafe_bar"><label>Cafe & Bar</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="duş"><label>Duş</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="soyunma_odasi"><label>Soyunma Odası</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="havuz"><label>Havuz</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="sauna"><label>Sauna</label></label>
+                        <label class="check-option"><input type="checkbox" name="isyeri_feature" value="ofis_malzemeleri"><label>Ofis Malzemeleri</label></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Komple Bina detayları (emlak_category = komple_bina) -->
+        <div id="kompleBinaDetailsSection" style="display:none;">
+        <div class="section-card">
+            <div class="section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><path d="M14 2h6v6"/><path d="M18 2v6h6"/></svg>
+                Komple Bina İlan Detayları
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">m² <span class="req">*</span></label>
+                    <input type="number" class="form-input" id="kompleArea" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Bir Kattaki Daire <span class="req">*</span></label>
+                    <select class="form-select" id="kompleApartmentsPerFloor">
+                        <option value="">Seçin</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kat Sayısı <span class="req">*</span></label>
+                    <input type="number" class="form-input" id="kompleFloorCount" placeholder="0" min="1">
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Bina Yaşı <span class="req">*</span></label>
+                    <select class="form-select" id="kompleBuildingAge">
+                        <option value="">Seçin</option>
+                        <option value="0-5">0-5 Yıl</option>
+                        <option value="5-10">5-10 Yıl</option>
+                        <option value="10-15">10-15 Yıl</option>
+                        <option value="15-20">15-20 Yıl</option>
+                        <option value="20+">20+ Yıl</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Asansör <span class="req">*</span></label>
+                    <select class="form-select" id="kompleElevator">
+                        <option value="">Seçin</option>
+                        <option value="true">Var</option>
+                        <option value="false">Yok</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Otopark <span class="req">*</span></label>
+                    <select class="form-select" id="kompleParking">
+                        <option value="">Seçin</option>
+                        <option value="acik">Açık Otopark</option>
+                        <option value="kapali">Kapalı Otopark</option>
+                        <option value="acik_kapali">Açık / Kapalı Otopark</option>
+                        <option value="yok">Yok</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Taşınmaz No</label>
+                    <input type="text" class="form-input" id="komplePropertyNo" placeholder="Opsiyonel">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mülk Sahibi <span class="req">*</span></label>
+                    <select class="form-select" id="komplePropertyOwner">
+                        <option value="">Seçin</option>
+                        <option value="tc_vatandasi">T.C. Vatandaşı</option>
+                        <option value="yabanci">Yabancı Uyruklu</option>
+                        <option value="ozel_kurum">Özel Kurum ve Kuruluşlar</option>
+                        <option value="devlet">Devlet / Kamu Kurumu</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tapu Durumu <span class="req">*</span></label>
+                    <select class="form-select" id="kompleDeedStatus">
+                        <option value="">Seçin</option>
+                        <option value="kat_mülkiyeti">Kat Mülkiyetli</option>
+                        <option value="kat_irtifakı">Kat İrtifaklı</option>
+                        <option value="hisseli">Hisseli Tapu</option>
+                        <option value="müstakil">Müstakil Tapulu</option>
+                        <option value="arsa">Arsa Tapulu</option>
+                        <option value="kooperatif">Kooperatif Hisseli Tapu</option>
+                        <option value="yurt_disi">Yurt Dışı Tapulu</option>
+                        <option value="yok">Tapu Kaydı Yok</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Toprak / Arsa detayları (emlak_category = toprak) -->
+        <div id="toprakDetailsSection" style="display:none;">
+        <div class="section-card">
+            <div class="section-title" id="toprakSectionTitle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Arsa İlan Detayları
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">m² <span class="req">*</span></label>
+                    <input type="number" class="form-input" id="toprakArea" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">m² Fiyatı (₺)</label>
+                    <input type="number" class="form-input" id="toprakPricePerSqm" placeholder="m² başı fiyat">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">İmar Durumu <span class="req">*</span></label>
+                    <select class="form-select" id="toprakImarDurumu">
+                        <option value="">Seçin</option>
+                        <option value="konut">Konut</option>
+                        <option value="ticari">Ticari</option>
+                        <option value="arazi">Arazi</option>
+                        <option value="sanayi">Sanayi</option>
+                        <option value="tarim">Tarım</option>
+                        <option value="muhtelif">Muhtelif</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Ada No</label>
+                    <input type="text" class="form-input" id="toprakAdaNo" placeholder="Opsiyonel">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Parsel No</label>
+                    <input type="text" class="form-input" id="toprakParselNo" placeholder="Opsiyonel">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Pafta No</label>
+                    <input type="text" class="form-input" id="toprakPaftaNo" placeholder="Opsiyonel">
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Kaks (Emsal)</label>
+                    <select class="form-select" id="toprakKaks">
+                        <option value="">Seçin</option>
+                        <option value="0.05">0.05</option>
+                        <option value="0.10">0.10</option>
+                        <option value="0.20">0.20</option>
+                        <option value="0.24">0.24</option>
+                        <option value="0.30">0.30</option>
+                        <option value="0.40">0.40</option>
+                        <option value="1.0">1.0</option>
+                        <option value="1.5">1.5</option>
+                        <option value="2.0">2.0</option>
+                        <option value="2.5">2.5</option>
+                        <option value="3.0">3.0</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Gabari</label>
+                    <select class="form-select" id="toprakGabari">
+                        <option value="">Seçin</option>
+                        <option value="3">3 m</option>
+                        <option value="6">6 m</option>
+                        <option value="9">9 m</option>
+                        <option value="12">12 m</option>
+                        <option value="15">15 m</option>
+                        <option value="21">21 m</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Takaslı <span class="req">*</span></label>
+                    <select class="form-select" id="toprakTakasli">
+                        <option value="">Seçin</option>
+                        <option value="evet">Evet</option>
+                        <option value="hayir">Hayır</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row triple">
+                <div class="form-group">
+                    <label class="form-label">Krediye Uygunluk <span class="req">*</span></label>
+                    <select class="form-select" id="toprakCreditEligibility">
+                        <option value="">Seçin</option>
+                        <option value="evet">Evet</option>
+                        <option value="hayir">Hayır</option>
+                        <option value="bilinmiyor">Bilinmiyor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mülk Sahibi <span class="req">*</span></label>
+                    <select class="form-select" id="toprakPropertyOwner">
+                        <option value="">Seçin</option>
+                        <option value="tc_vatandasi">T.C. Vatandaşı</option>
+                        <option value="yabanci">Yabancı Uyruklu</option>
+                        <option value="ozel_kurum">Özel Kurum ve Kuruluşlar</option>
+                        <option value="devlet">Devlet / Kamu Kurumu</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tapu Durumu <span class="req">*</span></label>
+                    <select class="form-select" id="toprakDeedStatus">
+                        <option value="">Seçin</option>
+                        <option value="hisseli">Hisseli Tapu</option>
+                        <option value="müstakil">Müstakil Tapulu</option>
+                        <option value="tahsis">Tahsis Tapu</option>
+                        <option value="zilliyet">Zilliyet Tapu</option>
+                        <option value="kooperatif">Kooperatif Hisseli Tapu</option>
+                        <option value="yurt_disi">Yurt Dışı Tapulu</option>
+                        <option value="yok">Tapu Kaydı Yok</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Taşınmaz No</label>
+                    <input type="text" class="form-input" id="toprakPropertyNo" placeholder="Opsiyonel">
+                </div>
+            </div>
+            <div class="form-row single">
+                <div class="form-group">
+                    <label class="form-label">Altyapı</label>
+                    <div class="checkbox-grid" id="toprakAltyapiGrid">
+                        <label class="check-option"><input type="checkbox" name="toprak_altyapi" value="elektrik"><label>Elektrik</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_altyapi" value="su"><label>Su</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_altyapi" value="kanalizasyon"><label>Kanalizasyon</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_altyapi" value="dogalgaz"><label>Doğalgaz</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_altyapi" value="yol_acik"><label>Yolu Açılmış</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_altyapi" value="zemin_etudu"><label>Zemin Etüdü</label></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row single">
+                <div class="form-group">
+                    <label class="form-label">Konum</label>
+                    <div class="checkbox-grid" id="toprakKonumGrid">
+                        <label class="check-option"><input type="checkbox" name="toprak_konum" value="ana_yola_yakin"><label>Ana Yola Yakın</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_konum" value="denize_yakin"><label>Denize Yakın</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_konum" value="denize_sifir"><label>Denize Sıfır</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_konum" value="toplu_ulasim"><label>Toplu Ulaşıma Yakın</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_konum" value="havaalani"><label>Havaalanına Yakın</label></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row single">
+                <div class="form-group">
+                    <label class="form-label">Genel Özellikler</label>
+                    <div class="checkbox-grid" id="toprakGenelGrid">
+                        <label class="check-option"><input type="checkbox" name="toprak_genel" value="ifrazi"><label>İfrazi</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_genel" value="parselli"><label>Parselli</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_genel" value="kose_parsel"><label>Köşe Parsel</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_genel" value="projeli"><label>Projeli</label></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row single">
+                <div class="form-group">
+                    <label class="form-label">Manzara</label>
+                    <div class="checkbox-grid" id="toprakManzaraGrid">
+                        <label class="check-option"><input type="checkbox" name="toprak_manzara" value="sehir"><label>Şehir</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_manzara" value="deniz"><label>Deniz</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_manzara" value="doga"><label>Doğa</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_manzara" value="bogaz"><label>Boğaz</label></label>
+                        <label class="check-option"><input type="checkbox" name="toprak_manzara" value="gol"><label>Göl</label></label>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
 
         <div class="step-nav">
@@ -677,21 +1055,62 @@
 <script>
 let currentStep = 1;
 let selectedType = 'kiralik';
+let emlakCategory = 'konut'; // konut | is_yeri | komple_bina | toprak
+let toprakType = 'arsa';     // arsa | tarla | icar | kat_karsiligi (URL'den)
 let selectedRoom = '';
 let uploadedPhotos = []; // {file, dataUrl}
+
+function applyCategoryVisibility() {
+    var cat = emlakCategory;
+    var konut = document.getElementById('konutDetailsSection');
+    var isyeri = document.getElementById('isyeriDetailsSection');
+    var komple = document.getElementById('kompleBinaDetailsSection');
+    var toprak = document.getElementById('toprakDetailsSection');
+    if (konut) konut.style.display = cat === 'konut' ? '' : 'none';
+    if (isyeri) isyeri.style.display = cat === 'is_yeri' ? '' : 'none';
+    if (komple) komple.style.display = cat === 'komple_bina' ? '' : 'none';
+    if (toprak) toprak.style.display = cat === 'toprak' ? '' : 'none';
+    var stepLabel = document.querySelector('#step-indicator-2 .step-label');
+    var toprakStepLabels = { arsa: 'Arsa Detayları', tarla: 'Tarla Detayları', icar: 'İcar (Kiralık) Detayları', kat_karsiligi: 'Kat Karşılığı Detayları' };
+    var label = cat === 'konut' ? 'Konut Detayları' : (cat === 'is_yeri' ? 'İş Yeri Detayları' : (cat === 'komple_bina' ? 'Komple Bina Detayları' : (cat === 'toprak' ? (toprakStepLabels[toprakType] || 'Toprak Detayları') : '')));
+    if (stepLabel) stepLabel.textContent = label;
+    var toprakTitle = document.getElementById('toprakSectionTitle');
+    if (toprakTitle && cat === 'toprak') toprakTitle.textContent = (toprakStepLabels[toprakType] || 'Toprak') + ' İlan Detayları';
+}
 
 // ---- Init ----
 let editMode = false;
 let editId = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Check for edit mode
-    const params = new URLSearchParams(window.location.search);
+    var params = new URLSearchParams(window.location.search);
     editId = params.get('edit');
     if (editId) {
         editMode = true;
         await loadEmlakForEdit(editId);
+        return;
     }
+    // Yeni ilan: kategori ve tip URL'de olmalı (emlak-ilan-ver.html'den gelir)
+    var cat = params.get('category');
+    var typ = params.get('type');
+    if (!cat || !typ) {
+        window.location.href = 'emlak-ilan-ver.html';
+        return;
+    }
+    if (['konut','is_yeri','komple_bina','toprak'].indexOf(cat) === -1) cat = 'konut';
+    if (['kiralik','satilik'].indexOf(typ) === -1) typ = 'kiralik';
+    if (cat === 'toprak') {
+        var tt = params.get('toprak_type');
+        if (!tt || ['arsa','tarla','icar','kat_karsiligi'].indexOf(tt) === -1) {
+            window.location.href = 'emlak-ilan-ver.html';
+            return;
+        }
+        toprakType = tt;
+    }
+    emlakCategory = cat;
+    selectedType = typ;
+    selectType(typ);
+    applyCategoryVisibility();
 });
 
 async function loadEmlakForEdit(id) {
@@ -708,7 +1127,8 @@ async function loadEmlakForEdit(id) {
         const submitBtn = document.getElementById('submitBtn');
         if (submitBtn) submitBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Değişiklikleri Kaydet`;
 
-        // Fill form fields
+        emlakCategory = (data.emlak_category || 'konut');
+        applyCategoryVisibility();
         selectType(data.listing_type || 'kiralik');
         document.getElementById('title').value = data.title || '';
         document.getElementById('description').value = data.description || '';
@@ -746,6 +1166,51 @@ async function loadEmlakForEdit(id) {
         document.getElementById('emlakLatitude').value = data.latitude || '';
         document.getElementById('emlakLongitude').value = data.longitude || '';
 
+        if (emlakCategory === 'is_yeri') {
+            document.getElementById('isyeriHeating').value = data.heating_type || '';
+            document.getElementById('isyeriDues').value = data.dues || '';
+            document.getElementById('isyeriArea').value = data.area_gross || '';
+            document.getElementById('isyeriBuildingAge').value = data.building_age || '';
+            document.getElementById('isyeriBuildingCondition').value = data.building_condition || '';
+            document.getElementById('isyeriTenantOccupied').value = data.tenant_occupied === true ? 'true' : (data.tenant_occupied === false ? 'false' : '');
+            document.getElementById('isyeriCreditEligibility').value = data.credit_eligibility || '';
+            document.getElementById('isyeriPropertyOwner').value = data.property_owner_type || '';
+            document.getElementById('isyeriPropertyNo').value = data.property_no || '';
+            const features = Array.isArray(data.general_features) ? data.general_features : [];
+            document.querySelectorAll('input[name="isyeri_feature"]').forEach(cb => { cb.checked = features.includes(cb.value); });
+        }
+        if (emlakCategory === 'komple_bina') {
+            document.getElementById('kompleArea').value = data.area_gross || '';
+            document.getElementById('kompleApartmentsPerFloor').value = data.apartments_per_floor || '';
+            document.getElementById('kompleFloorCount').value = data.total_floors || '';
+            document.getElementById('kompleBuildingAge').value = data.building_age || '';
+            document.getElementById('kompleElevator').value = data.has_elevator === true ? 'true' : (data.has_elevator === false ? 'false' : '');
+            document.getElementById('kompleParking').value = data.parking_type || '';
+            document.getElementById('komplePropertyNo').value = data.property_no || '';
+            document.getElementById('komplePropertyOwner').value = data.property_owner_type || '';
+            document.getElementById('kompleDeedStatus').value = data.deed_type || '';
+        }
+        if (emlakCategory === 'toprak') {
+            toprakType = data.toprak_type || 'arsa';
+            document.getElementById('toprakArea').value = data.area_gross || '';
+            document.getElementById('toprakPricePerSqm').value = data.price_per_sqm || '';
+            document.getElementById('toprakImarDurumu').value = data.imar_durumu || '';
+            document.getElementById('toprakAdaNo').value = data.ada_no || '';
+            document.getElementById('toprakParselNo').value = data.parsel_no || '';
+            document.getElementById('toprakPaftaNo').value = data.pafta_no || '';
+            document.getElementById('toprakKaks').value = data.kaks || '';
+            document.getElementById('toprakGabari').value = data.gabari || '';
+            document.getElementById('toprakTakasli').value = data.takasli || '';
+            document.getElementById('toprakCreditEligibility').value = data.credit_eligibility || '';
+            document.getElementById('toprakPropertyOwner').value = data.property_owner_type || '';
+            document.getElementById('toprakDeedStatus').value = data.deed_type || '';
+            document.getElementById('toprakPropertyNo').value = data.property_no || '';
+            if (Array.isArray(data.altyapi)) document.querySelectorAll('input[name="toprak_altyapi"]').forEach(cb => { cb.checked = data.altyapi.includes(cb.value); });
+            if (Array.isArray(data.konum_ozellik)) document.querySelectorAll('input[name="toprak_konum"]').forEach(cb => { cb.checked = data.konum_ozellik.includes(cb.value); });
+            if (Array.isArray(data.general_features)) document.querySelectorAll('input[name="toprak_genel"]').forEach(cb => { cb.checked = data.general_features.includes(cb.value); });
+            if (Array.isArray(data.manzara)) document.querySelectorAll('input[name="toprak_manzara"]').forEach(cb => { cb.checked = data.manzara.includes(cb.value); });
+        }
+
         // Room count
         if (data.room_count) {
             selectedRoom = data.room_count;
@@ -768,19 +1233,24 @@ async function loadEmlakForEdit(id) {
 // ---- Type Select ----
 function selectType(type) {
     selectedType = type;
-    document.getElementById('typeKiralik').classList.toggle('selected', type === 'kiralik');
-    document.getElementById('typeSatilik').classList.toggle('selected', type === 'satilik');
-    document.getElementById('typeKiralik').classList.toggle('kiralik', true);
-    document.getElementById('typeSatilik').classList.toggle('satilik', true);
+    var typeKiralik = document.getElementById('typeKiralik');
+    var typeSatilik = document.getElementById('typeSatilik');
+    if (typeKiralik) {
+        typeKiralik.classList.toggle('selected', type === 'kiralik');
+        typeKiralik.classList.toggle('kiralik', true);
+    }
+    if (typeSatilik) {
+        typeSatilik.classList.toggle('selected', type === 'satilik');
+        typeSatilik.classList.toggle('satilik', true);
+    }
 
     const priceLabel = document.getElementById('priceLabel');
     const depositGroup = document.getElementById('depositGroup');
-    if (type === 'kiralik') {
-        priceLabel.innerHTML = 'Kira Bedeli (₺) <span class="req">*</span>';
-        depositGroup.style.display = '';
-    } else {
-        priceLabel.innerHTML = 'Satış Fiyatı (₺) <span class="req">*</span>';
-        depositGroup.style.display = 'none';
+    if (priceLabel) {
+        priceLabel.innerHTML = type === 'kiralik' ? 'Kira Bedeli (₺) <span class="req">*</span>' : 'Satış Fiyatı (₺) <span class="req">*</span>';
+    }
+    if (depositGroup) {
+        depositGroup.style.display = type === 'kiralik' ? '' : 'none';
     }
 }
 
@@ -826,11 +1296,13 @@ function renderPhotoPreviews() {
 function goStep(n) {
     if (n > currentStep && !validateStep(currentStep)) return;
 
+    document.getElementById('page-' + currentStep).classList.remove('active');
+    currentStep = n;
+    document.getElementById('page-' + currentStep).classList.add('active');
+
+    applyCategoryVisibility();
     if (n === 5) buildSummary();
 
-    document.getElementById(`page-${currentStep}`).classList.remove('active');
-    currentStep = n;
-    document.getElementById(`page-${currentStep}`).classList.add('active');
     updateProgressBar();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -875,15 +1347,64 @@ function validateStep(step) {
         }
     }
     if (step === 2) {
-        const area = document.getElementById('areaGross').value;
-        if (!area || parseInt(area) <= 0) {
-            document.getElementById('areaGross').classList.add('error');
-            alert('Lütfen brüt metrekare girin.');
-            return false;
-        }
-        if (!selectedRoom) {
-            alert('Lütfen oda sayısı seçin.');
-            return false;
+        if (emlakCategory === 'konut') {
+            const area = document.getElementById('areaGross').value;
+            if (!area || parseInt(area) <= 0) {
+                document.getElementById('areaGross').classList.add('error');
+                alert('Lütfen brüt metrekare girin.');
+                return false;
+            }
+            if (!selectedRoom) {
+                alert('Lütfen oda sayısı seçin.');
+                return false;
+            }
+        } else if (emlakCategory === 'is_yeri') {
+            const a = document.getElementById('isyeriArea').value;
+            if (!a || parseInt(a) <= 0) {
+                document.getElementById('isyeriArea').classList.add('error');
+                alert('Lütfen m² girin.');
+                return false;
+            }
+            if (!document.getElementById('isyeriHeating').value) {
+                alert('Lütfen Isıtma seçin.');
+                return false;
+            }
+            if (!document.getElementById('isyeriBuildingAge').value || !document.getElementById('isyeriBuildingCondition').value ||
+                !document.getElementById('isyeriTenantOccupied').value || !document.getElementById('isyeriCreditEligibility').value ||
+                !document.getElementById('isyeriPropertyOwner').value) {
+                alert('Lütfen tüm zorunlu İş Yeri alanlarını doldurun.');
+                return false;
+            }
+        } else if (emlakCategory === 'komple_bina') {
+            const a = document.getElementById('kompleArea').value;
+            if (!a || parseInt(a) <= 0) {
+                document.getElementById('kompleArea').classList.add('error');
+                alert('Lütfen m² girin.');
+                return false;
+            }
+            if (!document.getElementById('kompleApartmentsPerFloor').value || !document.getElementById('kompleFloorCount').value ||
+                !document.getElementById('kompleBuildingAge').value || !document.getElementById('kompleElevator').value ||
+                !document.getElementById('kompleParking').value || !document.getElementById('komplePropertyOwner').value ||
+                !document.getElementById('kompleDeedStatus').value) {
+                alert('Lütfen tüm zorunlu Komple Bina alanlarını doldurun.');
+                return false;
+            }
+        } else if (emlakCategory === 'toprak') {
+            const a = document.getElementById('toprakArea').value;
+            if (!a || parseInt(a) <= 0) {
+                document.getElementById('toprakArea').classList.add('error');
+                alert('Lütfen m² girin.');
+                return false;
+            }
+            if (!document.getElementById('toprakImarDurumu').value) {
+                alert('Lütfen İmar Durumu seçin.');
+                return false;
+            }
+            if (!document.getElementById('toprakTakasli').value || !document.getElementById('toprakCreditEligibility').value ||
+                !document.getElementById('toprakPropertyOwner').value || !document.getElementById('toprakDeedStatus').value) {
+                alert('Lütfen Takaslı, Krediye Uygunluk, Mülk Sahibi ve Tapu Durumu alanlarını doldurun.');
+                return false;
+            }
         }
     }
     if (step === 5) {
@@ -898,21 +1419,27 @@ function validateStep(step) {
 // ---- Summary ----
 function buildSummary() {
     const typeLabel = selectedType === 'kiralik' ? 'Kiralık' : 'Satılık';
+    const toprakTypeLabels = { arsa: 'Arsa', tarla: 'Tarla', icar: 'İcar (Kiralık)', kat_karsiligi: 'Kat Karşılığı' };
+    const catLabel = emlakCategory === 'konut' ? 'Konut' : (emlakCategory === 'is_yeri' ? 'İş Yeri' : (emlakCategory === 'komple_bina' ? 'Komple Bina' : ('Toprak · ' + (toprakTypeLabels[toprakType] || toprakType))));
     const price = Number(document.getElementById('price').value || 0).toLocaleString('tr-TR');
     const priceSuffix = selectedType === 'kiralik' ? '/ay' : '';
-    const cityOpt = document.getElementById('emlakCity');
-    const distOpt = document.getElementById('emlakDistrict');
-
     const items = [
+        ['Kategori', catLabel],
         ['İlan Tipi', typeLabel],
         ['Başlık', document.getElementById('title').value || '—'],
         ['Fiyat', `₺${price}${priceSuffix}`],
         ['Şehir / İlçe', [document.getElementById('emlakCity').value, document.getElementById('emlakDistrict').value].filter(Boolean).join(' / ') || document.getElementById('emlakAddress').value || '—'],
-        ['Oda Sayısı', selectedRoom || '—'],
-        ['Brüt m²', document.getElementById('areaGross').value ? `${document.getElementById('areaGross').value} m²` : '—'],
-        ['Konut Tipi', document.getElementById('propertyType').value || '—'],
-        ['Fotoğraf', `${uploadedPhotos.length} adet`],
     ];
+    if (emlakCategory === 'konut') {
+        items.push(['Oda Sayısı', selectedRoom || '—'], ['Brüt m²', document.getElementById('areaGross').value ? `${document.getElementById('areaGross').value} m²` : '—'], ['Konut Tipi', document.getElementById('propertyType').value || '—']);
+    } else if (emlakCategory === 'is_yeri') {
+        items.push(['m²', document.getElementById('isyeriArea').value ? `${document.getElementById('isyeriArea').value} m²` : '—'], ['Yapı Durumu', document.getElementById('isyeriBuildingCondition').value || '—'], ['Isıtma', document.getElementById('isyeriHeating').value || '—']);
+    } else if (emlakCategory === 'komple_bina') {
+        items.push(['m²', document.getElementById('kompleArea').value ? `${document.getElementById('kompleArea').value} m²` : '—'], ['Kat Sayısı', document.getElementById('kompleFloorCount').value || '—'], ['Bir Kattaki Daire', document.getElementById('kompleApartmentsPerFloor').value || '—']);
+    } else if (emlakCategory === 'toprak') {
+        items.push(['Toprak Türü', toprakTypeLabels[toprakType] || toprakType], ['m²', document.getElementById('toprakArea').value ? `${document.getElementById('toprakArea').value} m²` : '—'], ['İmar Durumu', document.getElementById('toprakImarDurumu').value || '—']);
+    }
+    items.push(['Fotoğraf', `${uploadedPhotos.length} adet`]);
 
     document.getElementById('summaryGrid').innerHTML = items.map(([k,v]) => `
         <div class="summary-item">
@@ -968,8 +1495,13 @@ async function submitListing() {
             document.getElementById('emlakCity').value.trim()
         ].filter(Boolean).join(', ') || document.getElementById('emlakAddress').value.trim();
 
+        const isKonut = emlakCategory === 'konut';
+        const isIsyeri = emlakCategory === 'is_yeri';
+        const isKompleBina = emlakCategory === 'komple_bina';
+        const isToprak = emlakCategory === 'toprak';
         const listingData = {
             ...(editMode ? {} : { user_id: user.id }),
+            emlak_category: emlakCategory,
             listing_type: selectedType,
             title: document.getElementById('title').value.trim(),
             description: document.getElementById('description').value.trim(),
@@ -984,27 +1516,27 @@ async function submitListing() {
             address: fullAddress || null,
             latitude: parseFloat(document.getElementById('emlakLatitude').value) || null,
             longitude: parseFloat(document.getElementById('emlakLongitude').value) || null,
-            property_type: document.getElementById('propertyType').value,
-            room_count: selectedRoom || null,
-            area_gross: parseInt(document.getElementById('areaGross').value) || null,
-            area_net: parseInt(document.getElementById('areaNet').value) || null,
-            bathroom_count: parseInt(document.getElementById('bathroomCount').value) || 1,
-            floor_number: document.getElementById('floorNumber').value !== '' ? parseInt(document.getElementById('floorNumber').value) : null,
-            total_floors: parseInt(document.getElementById('totalFloors').value) || null,
-            building_age: document.getElementById('buildingAge').value || null,
-            heating_type: document.getElementById('heatingType').value || null,
-            floor_type: document.getElementById('floorType').value || null,
-            kitchen_type: document.getElementById('kitchenType').value || null,
-            facing: document.getElementById('facing').value || null,
-            deed_type: document.getElementById('deedType').value || null,
-            has_elevator: document.getElementById('hasElevator').checked,
-            has_parking: document.getElementById('hasParking').checked,
-            is_furnished: document.getElementById('isFurnished').checked,
-            is_in_complex: document.getElementById('isInComplex').checked,
-            allows_pets: document.getElementById('allowsPets').checked,
-            is_exchangeable: document.getElementById('isExchangeable').checked,
-            balcony: document.getElementById('hasBalcony').checked,
-            from_owner: document.getElementById('fromOwner').checked,
+            property_type: isKonut ? document.getElementById('propertyType').value : (isIsyeri ? 'is_yeri' : (isKompleBina ? 'komple_bina' : toprakType)),
+            room_count: isKonut ? (selectedRoom || null) : null,
+            area_gross: isKonut ? (parseInt(document.getElementById('areaGross').value) || null) : (isIsyeri ? (parseInt(document.getElementById('isyeriArea').value) || null) : (isKompleBina ? (parseInt(document.getElementById('kompleArea').value) || null) : (parseInt(document.getElementById('toprakArea').value) || null))),
+            area_net: isKonut ? (parseInt(document.getElementById('areaNet').value) || null) : null,
+            bathroom_count: isKonut ? (parseInt(document.getElementById('bathroomCount').value) || 1) : null,
+            floor_number: isKonut && document.getElementById('floorNumber').value !== '' ? parseInt(document.getElementById('floorNumber').value) : null,
+            total_floors: isKonut ? (parseInt(document.getElementById('totalFloors').value) || null) : (isKompleBina ? (parseInt(document.getElementById('kompleFloorCount').value) || null) : null),
+            building_age: isKonut ? (document.getElementById('buildingAge').value || null) : (isIsyeri ? (document.getElementById('isyeriBuildingAge').value || null) : (document.getElementById('kompleBuildingAge').value || null)),
+            heating_type: isKonut ? (document.getElementById('heatingType').value || null) : (isIsyeri ? document.getElementById('isyeriHeating').value || null : null),
+            floor_type: isKonut ? (document.getElementById('floorType').value || null) : null,
+            kitchen_type: isKonut ? (document.getElementById('kitchenType').value || null) : null,
+            facing: isKonut ? (document.getElementById('facing').value || null) : null,
+            deed_type: isKonut ? (document.getElementById('deedType').value || null) : (isKompleBina ? (document.getElementById('kompleDeedStatus').value || null) : null),
+            has_elevator: isKonut ? document.getElementById('hasElevator').checked : (isKompleBina ? (document.getElementById('kompleElevator').value === 'true') : false),
+            has_parking: isKonut ? document.getElementById('hasParking').checked : (isKompleBina ? (document.getElementById('kompleParking').value !== 'yok') : false),
+            is_furnished: isKonut ? document.getElementById('isFurnished').checked : false,
+            is_in_complex: isKonut ? document.getElementById('isInComplex').checked : false,
+            allows_pets: isKonut ? document.getElementById('allowsPets').checked : false,
+            is_exchangeable: isKonut ? document.getElementById('isExchangeable').checked : false,
+            balcony: isKonut ? document.getElementById('hasBalcony').checked : false,
+            from_owner: isKonut ? document.getElementById('fromOwner').checked : true,
             contact_name: document.getElementById('contactName').value.trim(),
             contact_phone: document.getElementById('contactPhone').value.trim(),
             contact_email: document.getElementById('contactEmail').value.trim() || null,
@@ -1012,6 +1544,45 @@ async function submitListing() {
             cover_image: coverImageUrl,
             status: 'pending',
         };
+        if (isIsyeri) {
+            listingData.dues = parseFloat(document.getElementById('isyeriDues').value) || null;
+            listingData.building_condition = document.getElementById('isyeriBuildingCondition').value || null;
+            listingData.tenant_occupied = document.getElementById('isyeriTenantOccupied').value === 'true';
+            listingData.credit_eligibility = document.getElementById('isyeriCreditEligibility').value || null;
+            listingData.property_owner_type = document.getElementById('isyeriPropertyOwner').value || null;
+            listingData.property_no = document.getElementById('isyeriPropertyNo').value.trim() || null;
+            const features = Array.from(document.querySelectorAll('input[name="isyeri_feature"]:checked')).map(cb => cb.value);
+            listingData.general_features = features.length ? features : null;
+        }
+        if (isKompleBina) {
+            listingData.apartments_per_floor = parseInt(document.getElementById('kompleApartmentsPerFloor').value) || null;
+            listingData.parking_type = document.getElementById('kompleParking').value || null;
+            listingData.property_owner_type = document.getElementById('komplePropertyOwner').value || null;
+            listingData.property_no = document.getElementById('komplePropertyNo').value.trim() || null;
+        }
+        if (isToprak) {
+            listingData.toprak_type = toprakType;
+            listingData.imar_durumu = document.getElementById('toprakImarDurumu').value || null;
+            listingData.price_per_sqm = parseFloat(document.getElementById('toprakPricePerSqm').value) || null;
+            listingData.ada_no = document.getElementById('toprakAdaNo').value.trim() || null;
+            listingData.parsel_no = document.getElementById('toprakParselNo').value.trim() || null;
+            listingData.pafta_no = document.getElementById('toprakPaftaNo').value.trim() || null;
+            listingData.kaks = document.getElementById('toprakKaks').value || null;
+            listingData.gabari = document.getElementById('toprakGabari').value || null;
+            listingData.takasli = document.getElementById('toprakTakasli').value || null;
+            listingData.credit_eligibility = document.getElementById('toprakCreditEligibility').value || null;
+            listingData.property_owner_type = document.getElementById('toprakPropertyOwner').value || null;
+            listingData.deed_type = document.getElementById('toprakDeedStatus').value || null;
+            listingData.property_no = document.getElementById('toprakPropertyNo').value.trim() || null;
+            const altyapi = Array.from(document.querySelectorAll('input[name="toprak_altyapi"]:checked')).map(cb => cb.value);
+            const konumOzellik = Array.from(document.querySelectorAll('input[name="toprak_konum"]:checked')).map(cb => cb.value);
+            const genelOzellik = Array.from(document.querySelectorAll('input[name="toprak_genel"]:checked')).map(cb => cb.value);
+            const manzara = Array.from(document.querySelectorAll('input[name="toprak_manzara"]:checked')).map(cb => cb.value);
+            listingData.altyapi = altyapi.length ? altyapi : null;
+            listingData.konum_ozellik = konumOzellik.length ? konumOzellik : null;
+            listingData.general_features = genelOzellik.length ? genelOzellik : null;
+            listingData.manzara = manzara.length ? manzara : null;
+        }
 
         const { data: newListing, error } = editMode
             ? await supabase.from('emlak_listings').update(listingData).eq('id', editId).select().single()

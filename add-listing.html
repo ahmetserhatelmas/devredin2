@@ -90,7 +90,7 @@
                             </div>
 
                             <div class="form-group">
-                            <label>Listeleme açıklaması <span class="required">*</span></label>
+                            <label>Listeleme açıklaması</label>
                             <div class="rich-editor">
                                 <div class="editor-toolbar">
                                     <button type="button" onclick="formatText('bold')"><b>B</b></button>
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="editor-content" id="description" contenteditable="true" placeholder="Örneğin; Merkezi Konumlu Cafe, Devren Kiralık Şarküteri..."></div>
                             </div>
-                            <span class="char-count"><span id="charCount">0</span> / 40 minimum karakter</span>
+                            <span class="char-count"><span id="charCount">0</span> karakter</span>
                                 </div>
                             </div>
 
@@ -911,7 +911,7 @@
                 
                 console.log('🔍 Step 1 validation:', { title, category, area, price, descLength: desc.length, city, lat, lng });
                 
-                return title && title.length > 0 && category && area && price && desc && desc.length >= 40 && city && lat && lng;
+                return title && title.length > 0 && category && area && price && city && lat && lng;
             }
             if (step === 2) {
                 const saleReason = document.getElementById('saleReason')?.value;
@@ -944,7 +944,6 @@
                 if (!category) errors.push('Sektör');
                 if (!area) errors.push('Metrekare');
                 if (!price) errors.push('İstenen fiyat');
-                if (!desc || desc.length < 40) errors.push('Listeleme açıklaması (min. 40 karakter)');
                 if (!city || !lat || !lng) errors.push('Konum');
             }
             
@@ -981,7 +980,6 @@
                 'Sektör': 'sectorSelect',
                 'Metrekare': 'area',
                 'İstenen fiyat': 'price',
-                'Listeleme açıklaması (min. 40 karakter)': 'description',
                 'Konum': 'address',
                 'Satış nedeni': 'saleReason',
                 'Aylık Kira': 'monthlyRent',

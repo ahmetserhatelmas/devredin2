@@ -3,7 +3,7 @@
   "cleanUrls": true,
   "framework": null,
   "buildCommand": "npm run build",
-  "installCommand": "",
+  "installCommand": "npm install",
   "devCommand": "",
   "outputDirectory": "."
 }

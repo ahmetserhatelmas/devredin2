@@ -3,5 +3,4 @@ node_modules
 database
 *.md
 serve.json
-package.json
-package-lock.json
+# package.json / package-lock.json ASLA ignore etme — Vercel build için gerekli

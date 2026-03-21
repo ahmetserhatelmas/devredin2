@@ -44,10 +44,17 @@ async function checkAuth() {
     // First, quick check from cache
     quickAuthCheck();
     
-    // Then verify with Supabase
+    // Önce getSession: yerel oturum (signIn sonrası yönlendirmede anında gelir).
+    // getUser() sunucuya gider; ilk yüklemede gecikince / hata verince navbar misafir kalabiliyordu.
     try {
-        const { data: { user } } = await supabase.auth.getUser();
-        
+        const { data: { session } } = await supabase.auth.getSession();
+        let user = session && session.user ? session.user : null;
+
+        if (!user) {
+            const { data: { user: fetched } } = await supabase.auth.getUser();
+            user = fetched;
+        }
+
         if (user) {
             let userName = user.email.split('@')[0];
             let initials = userName.slice(0, 2).toUpperCase();

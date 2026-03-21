@@ -246,7 +246,7 @@
         }
     </style>
 </head>
-<body>
+<body data-i18n-page="emlak">
 
 <!-- NAVBAR -->
 <nav class="navbar">
@@ -259,12 +259,12 @@
             </div>
 
             <ul class="nav-menu">
-                <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
-                <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                <li><a href="emlak.html" class="nav-link active">Emlak</a></li>
-                <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link">Panel</a></li>
-                <li><a href="blog.html" class="nav-link">Blog</a></li>
-                <li><a href="add-listing.html" class="create-listing-mobile">Ücretsiz İlan Oluştur</a></li>
+                <li><a href="listings.html" class="nav-link" data-i18n="nav_buy">İşletme Devral</a></li>
+                <li><a href="add-listing.html" class="nav-link" data-i18n="nav_sell">İşletmeni Devret</a></li>
+                <li><a href="emlak.html" class="nav-link active" data-i18n="nav_estate">Emlak</a></li>
+                <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link" data-i18n="nav_panel">Panel</a></li>
+                <li><a href="blog.html" class="nav-link" data-i18n="nav_blog">Blog</a></li>
+                <li><a href="add-listing.html" class="create-listing-mobile" data-i18n="nav_free_mobile">Ücretsiz İlan Oluştur</a></li>
             </ul>
 
             <div class="nav-actions">
@@ -292,7 +292,7 @@
                                     <polyline points="10 17 15 12 10 7"></polyline>
                                     <line x1="15" y1="12" x2="3" y2="12"></line>
                                 </svg>
-                                Giriş Yap
+                                <span data-i18n="nav_login">Giriş Yap</span>
                             </a>
                             <a href="login.html?register=true" class="dropdown-item">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -301,7 +301,7 @@
                                     <line x1="20" y1="8" x2="20" y2="14"></line>
                                     <line x1="23" y1="11" x2="17" y2="11"></line>
                                 </svg>
-                                Üye Ol
+                                <span data-i18n="nav_register">Üye Ol</span>
                             </a>
                         </div>
                         <div id="userMenu" style="display: none;">
@@ -314,7 +314,7 @@
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                Profil
+                                <span data-i18n="nav_profile">Profil</span>
                             </a>
                             <a href="panel/" class="dropdown-item">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -323,14 +323,14 @@
                                     <rect x="14" y="14" width="7" height="7"></rect>
                                     <rect x="3" y="14" width="7" height="7"></rect>
                                 </svg>
-                                Panel
+                                <span data-i18n="nav_panel">Panel</span>
                             </a>
                             <a href="settings.html" class="dropdown-item">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
                                     <circle cx="12" cy="12" r="3"></circle>
                                 </svg>
-                                Ayarlar
+                                <span data-i18n="nav_settings">Ayarlar</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <button onclick="logout()" class="dropdown-item logout">
@@ -339,7 +339,7 @@
                                     <polyline points="16 17 21 12 16 7"></polyline>
                                     <line x1="21" y1="12" x2="9" y2="12"></line>
                                 </svg>
-                                Çıkış Yap
+                                <span data-i18n="nav_logout">Çıkış Yap</span>
                             </button>
                         </div>
                     </div>
@@ -367,7 +367,7 @@
                     </div>
                 </div>
 
-                <a href="emlak-ilan-ver.html" class="btn btn-primary-nav">+ İlan Ver</a>
+                <a href="emlak-ilan-ver.html" class="btn btn-primary-nav" data-i18n="emlak_nav_cta">+ İlan Ver</a>
             </div>
 
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
@@ -382,16 +382,16 @@
 <!-- SEARCH HERO -->
 <div class="search-hero">
     <div class="search-hero-inner">
-        <h1>Emlak İlanları</h1>
+        <h1 data-i18n="emlak_title">Emlak İlanları</h1>
         <div class="type-tabs">
-            <button class="type-tab active" id="tabKiralik" onclick="setType('kiralik')">Kiralık</button>
-            <button class="type-tab" id="tabSatilik" onclick="setType('satilik')">Satılık</button>
+            <button class="type-tab active" id="tabKiralik" onclick="setType('kiralik')" data-i18n="emlak_rent">Kiralık</button>
+            <button class="type-tab" id="tabSatilik" onclick="setType('satilik')" data-i18n="emlak_sale">Satılık</button>
         </div>
         <div class="search-box">
             <div class="search-field" style="position:relative;">
-                <label>Şehir</label>
+                <label data-i18n="emlak_city">Şehir</label>
                 <div class="searchable-select" id="citySelectWrapper">
-                    <input type="text" id="searchCityInput" placeholder="İl seçin veya yazın..." autocomplete="off"
+                    <input type="text" id="searchCityInput" data-i18n-placeholder="emlak_ph_city" placeholder="İl seçin veya yazın..." autocomplete="off"
                         style="border:1px solid var(--gray-300);border-radius:8px;padding:0.6rem 0.75rem;font-size:0.9rem;color:var(--gray-900);background:#fff;outline:none;width:100%;cursor:pointer;"
                         oninput="filterCityOptions()" onfocus="openCityDropdown()" onclick="openCityDropdown()">
                     <input type="hidden" id="searchCity">
@@ -399,9 +399,9 @@
                 </div>
             </div>
             <div class="search-field" style="position:relative;">
-                <label>İlçe</label>
+                <label data-i18n="emlak_district">İlçe</label>
                 <div class="searchable-select" id="districtSelectWrapper">
-                    <input type="text" id="searchDistrictInput" placeholder="Önce şehir seçin..." autocomplete="off" disabled
+                    <input type="text" id="searchDistrictInput" data-i18n-placeholder="emlak_ph_district" placeholder="Önce şehir seçin..." autocomplete="off" disabled
                         style="border:1px solid var(--gray-300);border-radius:8px;padding:0.6rem 0.75rem;font-size:0.9rem;color:var(--gray-900);background:#fff;outline:none;width:100%;cursor:pointer;"
                         oninput="filterDistrictOptions()" onfocus="openDistrictDropdown()" onclick="openDistrictDropdown()">
                     <input type="hidden" id="searchDistrict">
@@ -409,25 +409,25 @@
                 </div>
             </div>
             <div class="search-field">
-                <label>Oda Sayısı</label>
+                <label data-i18n="emlak_rooms">Oda Sayısı</label>
                 <select id="searchRooms">
-                    <option value="">Tümü</option>
-                    <option value="1+0">Stüdyo</option>
+                    <option value="" data-i18n="emlak_rooms_all">Tümü</option>
+                    <option value="1+0" data-i18n="emlak_studio">Stüdyo</option>
                     <option value="1+1">1+1</option>
                     <option value="2+1">2+1</option>
                     <option value="3+1">3+1</option>
                     <option value="4+1">4+1</option>
                     <option value="5+1">5+1</option>
-                    <option value="6+1+">6+1 ve üzeri</option>
+                    <option value="6+1+" data-i18n="emlak_room_6plus">6+1 ve üzeri</option>
                 </select>
             </div>
             <div class="search-field search-field-price">
-                <label id="priceLabel">Maks. Kira (₺)</label>
-                <input type="number" id="searchMaxPrice" placeholder="Sınır yok">
+                <label id="priceLabel" for="searchMaxPrice">Maks. Kira (₺)</label>
+                <input type="number" id="searchMaxPrice" data-i18n-placeholder="emlak_ph_price_unlim" placeholder="Sınır yok">
             </div>
             <button class="search-btn" onclick="applyFilters()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                Ara
+                <span data-i18n="emlak_search">Ara</span>
             </button>
         </div>
     </div>
@@ -440,91 +440,91 @@
     <aside class="sidebar">
         <div class="filter-card">
             <div class="filter-card-header">
-                <span>Filtreler</span>
-                <button onclick="resetFilters()" style="background:none;border:none;font-size:0.75rem;color:var(--primary);cursor:pointer;font-weight:600;">Temizle</button>
+                <span data-i18n="emlak_filters">Filtreler</span>
+                <button type="button" onclick="resetFilters()" data-i18n="emlak_clear" style="background:none;border:none;font-size:0.75rem;color:var(--primary);cursor:pointer;font-weight:600;">Temizle</button>
             </div>
             <div class="filter-card-body">
 
                 <div class="filter-group">
-                    <label>Kategoriler</label>
+                    <label data-i18n="emlak_cat_label">Kategoriler</label>
                     <select id="filterEmlakCategory">
-                        <option value="">Tümü</option>
-                        <option value="konut">Konut</option>
-                        <option value="is_yeri">İş Yeri</option>
-                        <option value="komple_bina">Komple Bina</option>
-                        <option value="toprak">Toprak</option>
+                        <option value="" data-i18n="emlak_rooms_all">Tümü</option>
+                        <option value="konut" data-i18n="emlak_cat_konut">Konut</option>
+                        <option value="is_yeri" data-i18n="emlak_cat_is_yeri">İş Yeri</option>
+                        <option value="komple_bina" data-i18n="emlak_cat_komple">Komple Bina</option>
+                        <option value="toprak" data-i18n="emlak_cat_toprak">Toprak</option>
                     </select>
                 </div>
 
                 <div class="filter-group">
-                    <label>Konut Tipi</label>
+                    <label data-i18n="emlak_prop_label">Konut Tipi</label>
                     <select id="filterPropertyType">
-                        <option value="">Tümü</option>
-                        <option value="daire">Daire</option>
-                        <option value="mustakil">Müstakil</option>
-                        <option value="villa">Villa</option>
-                        <option value="rezidans">Rezidans</option>
-                        <option value="stüdyo">Stüdyo</option>
-                        <option value="dubleks">Dubleks</option>
-                        <option value="tripleks">Tripleks</option>
+                        <option value="" data-i18n="emlak_rooms_all">Tümü</option>
+                        <option value="daire" data-i18n="emlak_prop_daire">Daire</option>
+                        <option value="mustakil" data-i18n="emlak_prop_mustakil">Müstakil</option>
+                        <option value="villa" data-i18n="emlak_prop_villa">Villa</option>
+                        <option value="rezidans" data-i18n="emlak_prop_rezidans">Rezidans</option>
+                        <option value="stüdyo" data-i18n="emlak_prop_studio">Stüdyo</option>
+                        <option value="dubleks" data-i18n="emlak_prop_dubleks">Dubleks</option>
+                        <option value="tripleks" data-i18n="emlak_prop_tripleks">Tripleks</option>
                     </select>
                 </div>
 
                 <div class="filter-group">
-                    <label>Oda Sayısı</label>
+                    <label data-i18n="emlak_rooms">Oda Sayısı</label>
                     <div class="checkbox-group" id="roomFilter">
-                        <div class="checkbox-item"><input type="checkbox" value="1+0" id="r0"><label for="r0">Stüdyo (1+0)</label></div>
+                        <div class="checkbox-item"><input type="checkbox" value="1+0" id="r0"><label for="r0" data-i18n="emlak_room_studio_cb">Stüdyo (1+0)</label></div>
                         <div class="checkbox-item"><input type="checkbox" value="1+1" id="r1"><label for="r1">1+1</label></div>
                         <div class="checkbox-item"><input type="checkbox" value="2+1" id="r2"><label for="r2">2+1</label></div>
                         <div class="checkbox-item"><input type="checkbox" value="3+1" id="r3"><label for="r3">3+1</label></div>
                         <div class="checkbox-item"><input type="checkbox" value="4+1" id="r4"><label for="r4">4+1</label></div>
-                        <div class="checkbox-item"><input type="checkbox" value="5+1" id="r5"><label for="r5">5+1 ve üzeri</label></div>
+                        <div class="checkbox-item"><input type="checkbox" value="5+1" id="r5"><label for="r5" data-i18n="emlak_room_5plus_cb">5+1 ve üzeri</label></div>
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <label id="sidebarPriceLabel">Kira Aralığı (₺)</label>
+                    <label id="sidebarPriceLabel" for="filterMinPrice">Kira Aralığı (₺)</label>
                     <div class="price-range">
-                        <input type="number" id="filterMinPrice" placeholder="Min">
+                        <input type="number" id="filterMinPrice" data-i18n-placeholder="emlak_ph_min" placeholder="Min">
                         <span>—</span>
-                        <input type="number" id="filterMaxPrice" placeholder="Max">
+                        <input type="number" id="filterMaxPrice" data-i18n-placeholder="emlak_ph_max" placeholder="Max">
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <label>Metrekare (m²)</label>
+                    <label data-i18n="emlak_m2_label">Metrekare (m²)</label>
                     <div class="price-range">
-                        <input type="number" id="filterMinArea" placeholder="Min">
+                        <input type="number" id="filterMinArea" data-i18n-placeholder="emlak_ph_min" placeholder="Min">
                         <span>—</span>
-                        <input type="number" id="filterMaxArea" placeholder="Max">
+                        <input type="number" id="filterMaxArea" data-i18n-placeholder="emlak_ph_max" placeholder="Max">
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <label>Bina Yaşı</label>
+                    <label data-i18n="emlak_building_age">Bina Yaşı</label>
                     <select id="filterBuildingAge">
-                        <option value="">Tümü</option>
-                        <option value="0-5">0-5 Yıl</option>
-                        <option value="5-10">5-10 Yıl</option>
-                        <option value="10-15">10-15 Yıl</option>
-                        <option value="15-20">15-20 Yıl</option>
-                        <option value="20+">20+ Yıl</option>
+                        <option value="" data-i18n="emlak_rooms_all">Tümü</option>
+                        <option value="0-5" data-i18n="emlak_age_0_5">0-5 Yıl</option>
+                        <option value="5-10" data-i18n="emlak_age_5_10">5-10 Yıl</option>
+                        <option value="10-15" data-i18n="emlak_age_10_15">10-15 Yıl</option>
+                        <option value="15-20" data-i18n="emlak_age_15_20">15-20 Yıl</option>
+                        <option value="20+" data-i18n="emlak_age_20p">20+ Yıl</option>
                     </select>
                 </div>
 
                 <div class="filter-group">
-                    <label>Özellikler</label>
+                    <label data-i18n="emlak_features">Özellikler</label>
                     <div class="checkbox-group">
-                        <div class="checkbox-item"><input type="checkbox" id="fElevator"><label for="fElevator">Asansör</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="fParking"><label for="fParking">Otopark</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="fFurnished"><label for="fFurnished">Eşyalı</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="fComplex"><label for="fComplex">Site İçinde</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="fPets"><label for="fPets">Evcil Hayvan</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="fElevator"><label for="fElevator" data-i18n="emlak_feat_elevator">Asansör</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="fParking"><label for="fParking" data-i18n="emlak_feat_parking">Otopark</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="fFurnished"><label for="fFurnished" data-i18n="emlak_feat_furnished">Eşyalı</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="fComplex"><label for="fComplex" data-i18n="emlak_feat_complex">Site İçinde</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="fPets"><label for="fPets" data-i18n="emlak_feat_pets">Evcil Hayvan</label></div>
                     </div>
                 </div>
 
-                <button class="btn-filter-apply" onclick="applyFilters()">Filtrele</button>
-                <button class="btn-filter-reset" onclick="resetFilters()">Filtreleri Temizle</button>
+                <button class="btn-filter-apply" onclick="applyFilters()" data-i18n="emlak_filter_apply">Filtrele</button>
+                <button class="btn-filter-reset" onclick="resetFilters()" data-i18n="emlak_clear_filters_btn">Filtreleri Temizle</button>
             </div>
         </div>
     </aside>
@@ -535,16 +535,16 @@
             <p class="results-count" id="resultsCount">Yükleniyor...</p>
             <div style="display:flex;gap:0.75rem;align-items:center;">
                 <select class="sort-select" id="sortSelect" onchange="applyFilters()">
-                    <option value="created_at_desc">En Yeni</option>
-                    <option value="price_asc">En Düşük Fiyat</option>
-                    <option value="price_desc">En Yüksek Fiyat</option>
-                    <option value="area_desc">En Büyük m²</option>
+                    <option value="created_at_desc" data-i18n="emlak_sort_new">En Yeni</option>
+                    <option value="price_asc" data-i18n="emlak_sort_price_low">En Düşük Fiyat</option>
+                    <option value="price_desc" data-i18n="emlak_sort_price_high">En Yüksek Fiyat</option>
+                    <option value="area_desc" data-i18n="emlak_sort_area">En Büyük m²</option>
                 </select>
                 <div class="view-toggle">
-                    <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid">
+                    <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" data-i18n-title="emlak_view_grid" title="Grid">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                     </button>
-                    <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="Liste">
+                    <button class="view-btn" id="listViewBtn" onclick="setView('list')" data-i18n-title="emlak_view_list" title="Liste">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                     </button>
                 </div>
@@ -561,11 +561,32 @@
 <script src="js/turkey-cities.js"></script>
 <script src="script.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/i18n.js?v=2"></script>
 <script>
     let currentType = 'kiralik';
     let currentView = 'grid';
     let currentPage = 1;
     const PAGE_SIZE = 12;
+
+    function i18nPriceLocale() {
+        const l = typeof window.__i18nGetLang === 'function' ? window.__i18nGetLang() : 'tr';
+        if (l === 'de') return 'de-DE';
+        if (l === 'en') return 'en-US';
+        return 'tr-TR';
+    }
+
+    function updatePriceLabelsOnly() {
+        const T = typeof window.__i18nT === 'function' ? window.__i18nT : function (k) { return k; };
+        const pl = document.getElementById('priceLabel');
+        const sl = document.getElementById('sidebarPriceLabel');
+        if (pl) pl.textContent = currentType === 'kiralik' ? T('emlak_max_rent') : T('emlak_max_price');
+        if (sl) sl.textContent = currentType === 'kiralik' ? T('emlak_sidebar_rent') : T('emlak_sidebar_price');
+    }
+
+    window.__i18nRefreshEmlakDynamic = function () {
+        updatePriceLabelsOnly();
+        if (typeof loadListings === 'function') loadListings();
+    };
 
     function toggleMobileMenu() {
         document.querySelector('.nav-menu').classList.toggle('active');
@@ -577,13 +598,15 @@
     // ---- Init ----
     document.addEventListener('DOMContentLoaded', async () => {
         await checkAuth();
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('type') === 'satilik') setType('satilik');
-
-        // Searchable dropdown'ları başlat
         initSearchableDropdowns();
-
-        applyFilters();
+        const params = new URLSearchParams(window.location.search);
+        const rc = document.getElementById('resultsCount');
+        if (rc && window.__i18nT) rc.textContent = window.__i18nT('emlak_loading');
+        if (params.get('type') === 'satilik') setType('satilik');
+        else {
+            updatePriceLabelsOnly();
+            applyFilters();
+        }
     });
 
     // ---- Searchable City/District Dropdowns ----
@@ -622,11 +645,12 @@
         const list = document.getElementById('cityOptionsList');
         const q = query.toLowerCase().trim();
         const filtered = q ? allCities.filter(c => c.toLowerCase().includes(q)) : allCities;
+        const emptyMsg = (window.__i18nT && window.__i18nT('emlak_no_results')) || 'Sonuç bulunamadı';
         if (filtered.length === 0) {
-            list.innerHTML = '<div class="search-dropdown-empty">Sonuç bulunamadı</div>';
+            list.innerHTML = '<div class="search-dropdown-empty">' + emptyMsg + '</div>';
         } else {
             list.innerHTML = filtered.map(c =>
-                `<div class="search-dropdown-item" onclick="selectCity('${c}')">${c}</div>`
+                `<div class="search-dropdown-item" onclick="selectCity('${c.replace(/'/g, "\\'")}')">${c}</div>`
             ).join('');
         }
     }
@@ -637,7 +661,7 @@
         // İlçe dropdown'unu aç
         allDistricts = (TURKEY_CITIES[city] || []).sort();
         document.getElementById('searchDistrictInput').disabled = false;
-        document.getElementById('searchDistrictInput').placeholder = 'İlçe seçin veya yazın...';
+        document.getElementById('searchDistrictInput').placeholder = (window.__i18nT && window.__i18nT('emlak_ph_district_active')) || 'İlçe seçin veya yazın...';
         document.getElementById('searchDistrictInput').value = '';
         document.getElementById('searchDistrict').value = '';
         applyFiltersDebounced();
@@ -664,11 +688,12 @@
         const list = document.getElementById('districtOptionsList');
         const q = query.toLowerCase().trim();
         const filtered = q ? allDistricts.filter(d => d.toLowerCase().includes(q)) : allDistricts;
+        const emptyMsgD = (window.__i18nT && window.__i18nT('emlak_no_results')) || 'Sonuç bulunamadı';
         if (filtered.length === 0) {
-            list.innerHTML = '<div class="search-dropdown-empty">Sonuç bulunamadı</div>';
+            list.innerHTML = '<div class="search-dropdown-empty">' + emptyMsgD + '</div>';
         } else {
             list.innerHTML = filtered.map(d =>
-                `<div class="search-dropdown-item" onclick="selectDistrict('${d}')">${d}</div>`
+                `<div class="search-dropdown-item" onclick="selectDistrict('${d.replace(/'/g, "\\'")}')">${d}</div>`
             ).join('');
         }
     }
@@ -682,7 +707,7 @@
         allDistricts = [];
         document.getElementById('searchDistrictInput').value = '';
         document.getElementById('searchDistrictInput').disabled = true;
-        document.getElementById('searchDistrictInput').placeholder = 'Önce şehir seçin...';
+        document.getElementById('searchDistrictInput').placeholder = (window.__i18nT && window.__i18nT('emlak_ph_district')) || 'Önce şehir seçin...';
         document.getElementById('searchDistrict').value = '';
     }
 
@@ -696,10 +721,7 @@
         document.getElementById('tabKiralik').classList.toggle('active', type === 'kiralik');
         document.getElementById('tabSatilik').classList.toggle('active', type === 'satilik');
 
-        const label = type === 'kiralik' ? 'Maks. Kira (₺)' : 'Maks. Fiyat (₺)';
-        const sidebarLabel = type === 'kiralik' ? 'Kira Aralığı (₺)' : 'Fiyat Aralığı (₺)';
-        document.getElementById('priceLabel').textContent = label;
-        document.getElementById('sidebarPriceLabel').textContent = sidebarLabel;
+        updatePriceLabelsOnly();
 
         history.replaceState(null, '', `?type=${type}`);
         applyFilters();
@@ -759,6 +781,8 @@
 
     async function loadListings() {
         const grid = document.getElementById('listingGrid');
+        const rcLoad = document.getElementById('resultsCount');
+        if (rcLoad && window.__i18nT) rcLoad.textContent = window.__i18nT('emlak_loading');
         grid.innerHTML = '<div class="state-msg"><div class="skeleton" style="width:100%;height:200px;border-radius:12px;"></div></div>';
 
         try {
@@ -839,43 +863,68 @@
             renderListings(listings, totalCount);
         } catch(e) {
             console.error(e);
+            const errMsg = (window.__i18nT && window.__i18nT('emlak_load_error')) || 'İlanlar yüklenirken hata oluştu.';
             grid.innerHTML = `<div class="state-msg">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <p>İlanlar yüklenirken hata oluştu.</p>
+                <p>${errMsg}</p>
             </div>`;
         }
     }
 
     function renderListings(listings, count) {
         const grid = document.getElementById('listingGrid');
-        const typeLabel = currentType === 'kiralik' ? 'Kiralık' : 'Satılık';
-        document.getElementById('resultsCount').innerHTML = `<strong>${count}</strong> ${typeLabel} ilan bulundu`;
+        const T = typeof window.__i18nT === 'function' ? window.__i18nT : function (k) { return k; };
+        const tmpl = currentType === 'kiralik' ? T('emlak_results_rent') : T('emlak_results_sale');
+        document.getElementById('resultsCount').innerHTML = tmpl.replace(/\{\{count\}\}/g, String(count));
 
         if (listings.length === 0) {
+            const noMatch = T('emlak_no_match');
+            const clearBtn = T('emlak_clear_filters_btn');
             grid.innerHTML = `<div class="state-msg" style="grid-column:1/-1;">
                 <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <p>Bu kriterlere uygun ilan bulunamadı.</p>
-                <button onclick="resetFilters()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;cursor:pointer;font-weight:600;">Filtreleri Temizle</button>
+                <p>${noMatch}</p>
+                <button type="button" onclick="resetFilters()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;cursor:pointer;font-weight:600;">${clearBtn}</button>
             </div>`;
             renderPagination(count);
             return;
         }
 
+        const loc = i18nPriceLocale();
+        const rentLabel = T('emlak_rent');
+        const saleLabel = T('emlak_sale');
+        const badgeOffice = T('emlak_badge_office');
+        const badgeBuilding = T('emlak_badge_building');
+        const badgeLand = T('emlak_badge_land');
+        const featuredLabel = T('emlak_featured');
+        const perMonth = T('emlak_per_month');
+        const furnShort = T('emlak_furnished_short');
+
         grid.innerHTML = listings.map(l => {
-            const price = Number(l.price).toLocaleString('tr-TR');
-            const priceSuffix = currentType === 'kiralik' ? '/ay' : '';
+            const price = Number(l.price).toLocaleString(loc);
+            const priceSuffix = currentType === 'kiralik' ? perMonth : '';
+            const typeBadge = currentType === 'kiralik' ? rentLabel : saleLabel;
             const location = [l.district_name, l.city_name].filter(Boolean).join(', ') || [l.district?.name, l.city?.name].filter(Boolean).join(', ');
             const img = l.cover_image
-                ? `<img class="card-img" src="${l.cover_image}" alt="${l.title}" loading="lazy">`
+                ? `<img class="card-img" src="${l.cover_image}" alt="${(l.title || '').replace(/"/g, '&quot;')}" loading="lazy">`
                 : `<div class="card-img-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>`;
+
+            let catBadge = '';
+            if (l.emlak_category === 'is_yeri') catBadge = `<span class="badge badge-rooms">${badgeOffice}</span>`;
+            else if (l.emlak_category === 'komple_bina') catBadge = `<span class="badge badge-rooms">${badgeBuilding}</span>`;
+            else if (l.emlak_category === 'toprak') catBadge = `<span class="badge badge-rooms">${badgeLand}</span>`;
+            else if (l.room_count) catBadge = `<span class="badge badge-rooms">${l.room_count}</span>`;
+
+            const floorStr = (l.floor_number !== null && l.floor_number !== undefined)
+                ? T('emlak_floor').replace(/\{\{n\}\}/g, String(l.floor_number))
+                : '';
 
             return `<a href="emlak-detail.html?id=${l.id}" class="listing-card">
                 <div class="card-img-wrapper">
                     ${img}
                     <div class="card-badge-row">
-                        <span class="badge badge-${currentType}">${currentType === 'kiralik' ? 'Kiralık' : 'Satılık'}</span>
-                        ${l.emlak_category === 'is_yeri' ? '<span class="badge badge-rooms">İş Yeri</span>' : l.emlak_category === 'komple_bina' ? '<span class="badge badge-rooms">Komple Bina</span>' : l.emlak_category === 'toprak' ? '<span class="badge badge-rooms">Toprak</span>' : (l.room_count ? `<span class="badge badge-rooms">${l.room_count}</span>` : '')}
-                        ${l.is_featured ? `<span class="badge badge-featured">Öne Çıkan</span>` : ''}
+                        <span class="badge badge-${currentType}">${typeBadge}</span>
+                        ${catBadge}
+                        ${l.is_featured ? `<span class="badge badge-featured">${featuredLabel}</span>` : ''}
                     </div>
                 </div>
                 <div class="card-body">
@@ -885,8 +934,8 @@
                     <div class="card-specs">
                         ${(l.area_net || l.area_gross) ? `<span class="card-spec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 3H3v18h18V3z"/><path d="M3 9h18M9 21V9"/></svg> ${l.area_net || l.area_gross} m²</span>` : ''}
                         ${l.room_count ? `<span class="card-spec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> ${l.room_count}</span>` : ''}
-                        ${l.floor_number !== null && l.floor_number !== undefined ? `<span class="card-spec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg> ${l.floor_number}. Kat</span>` : ''}
-                        ${l.is_furnished ? `<span class="card-spec">🛋️ Eşyalı</span>` : ''}
+                        ${floorStr ? `<span class="card-spec"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg> ${floorStr}</span>` : ''}
+                        ${l.is_furnished ? `<span class="card-spec">🛋️ ${furnShort}</span>` : ''}
                     </div>
                 </div>
             </a>`;

@@ -19,6 +19,12 @@ const SUPABASE_CONFIG = {
 // Override global supabase with our client instance
 supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
 
+// Diğer sayfalar (login vb.) için — doğrudan fetch ile şifre sıfırlama kullanılır
+window.__DEVRETIN_SUPABASE__ = {
+    url: SUPABASE_CONFIG.url,
+    anonKey: SUPABASE_CONFIG.anonKey
+}
+
 // ============================================
 // AUTH FUNCTIONS - Session Management
 // ============================================
@@ -97,21 +103,53 @@ async function loginUser(email, password) {
             saveToCache(data.user, profile)
         }
 
+        // Navbar (js/auth.js) anında güncellensin — yönlendirmeden önce
+        var uName = data.user.email ? data.user.email.split('@')[0] : 'Kullanıcı'
+        var inits = uName.slice(0, 2).toUpperCase()
+        if (profile && profile.full_name) {
+            uName = profile.full_name
+            inits = uName.split(' ').map(function (n) { return n[0] }).join('').toUpperCase().slice(0, 2)
+        }
+        try {
+            localStorage.setItem('devredin_user', JSON.stringify({ initials: inits, name: uName }))
+        } catch (e) {}
+
         console.log('Login successful:', data)
         return { success: true, data }
     } catch (error) {
         console.error('Login error:', error.message)
+        const msg = (error.message || '').toLowerCase()
+        const code = error.code || error.name || ''
+        if (
+            msg.includes('email not confirmed') ||
+            msg.includes('not confirmed') ||
+            code === 'email_not_confirmed'
+        ) {
+            return {
+                success: false,
+                code: 'EMAIL_NOT_CONFIRMED',
+                error:
+                    'E-posta adresiniz henüz doğrulanmadı. Kayıt olduğunuz adrese gelen 6 haneli kodu girin veya e-postadaki doğrulama bağlantısına tıklayın.'
+            }
+        }
         return { success: false, error: error.message }
     }
 }
 
-// Kullanıcı kaydı
+// Kayıt sonrası yönlendirme (e-posta doğrulama linki + Supabase şablonundaki {{ .Token }} OTP)
+function getSignupEmailRedirectUrl() {
+    if (typeof window === 'undefined') return undefined
+    return window.location.origin + '/login.html?verified=true'
+}
+
+// Kullanıcı kaydı — e-posta onayı açıksa session gelmez; kullanıcı OTP veya link ile doğrular
 async function registerUser(email, password, fullName, phone) {
     try {
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email,
             password,
             options: {
+                emailRedirectTo: getSignupEmailRedirectUrl(),
                 data: {
                     full_name: fullName,
                     phone: phone
@@ -121,15 +159,177 @@ async function registerUser(email, password, fullName, phone) {
 
         if (authError) throw authError
 
-        // Cache new user
         if (authData.user) {
-            saveToCache(authData.user, { full_name: fullName, phone })
+            try {
+                await supabase.from('users').upsert({
+                    id: authData.user.id,
+                    email: email,
+                    full_name: fullName,
+                    phone: phone || null
+                })
+            } catch (upsertErr) {
+                console.warn('users upsert (kayıt):', upsertErr)
+            }
+            // Onay bekleniyorsa oturum açmış sayma
+            if (authData.session) {
+                saveToCache(authData.user, { full_name: fullName, phone })
+            } else {
+                clearCache()
+            }
         }
 
-        console.log('✅ Registration successful:', authData)
-        return { success: true, data: authData }
+        const needsEmailVerification =
+            !!(authData.user && !authData.user.email_confirmed_at && !authData.session)
+
+        console.log('✅ Registration successful:', authData, 'needsEmailVerification:', needsEmailVerification)
+        return { success: true, data: authData, needsEmailVerification }
     } catch (error) {
         console.error('❌ Registration error:', error.message)
+        return { success: false, error: error.message }
+    }
+}
+
+/** Kayıt doğrulama: e-postadaki 6 haneli kod (Supabase şablonunda {{ .Token }}) */
+async function verifySignupWithOtp(email, token) {
+    try {
+        const clean = String(token || '').replace(/\s/g, '')
+        if (!clean) throw new Error('Lütfen doğrulama kodunu girin.')
+
+        const { data, error } = await supabase.auth.verifyOtp({
+            email: String(email || '').trim(),
+            token: clean,
+            type: 'signup'
+        })
+
+        if (error) throw error
+
+        if (data.user) {
+            saveToCache(data.user, null)
+            const profile = await fetchUserProfile(data.user.id)
+            if (profile) saveToCache(data.user, profile)
+        }
+
+        console.log('✅ E-posta doğrulandı (OTP)')
+        return { success: true, data }
+    } catch (error) {
+        console.error('❌ OTP doğrulama:', error.message)
+        return { success: false, error: error.message }
+    }
+}
+
+/** Kayıt doğrulama e-postasını tekrar gönder */
+async function resendSignupVerificationEmail(email) {
+    try {
+        const { error } = await supabase.auth.resend({
+            type: 'signup',
+            email: String(email || '').trim(),
+            options: {
+                emailRedirectTo: getSignupEmailRedirectUrl()
+            }
+        })
+        if (error) throw error
+        return { success: true }
+    } catch (error) {
+        console.error('❌ Doğrulama e-postası tekrar:', error.message)
+        return { success: false, error: error.message }
+    }
+}
+
+/**
+ * Şifre sıfırlama — doğrudan GoTrue /recover.
+ * Supabase SMTP (Outlook) takılınca sunucu yanıt vermez; tarayıcıda istek "pending" kalır.
+ * Promise.race ile süre dolunca arayüz mutlaka kurtulur (AbortController tek başına her zaman yetmez).
+ */
+async function sendPasswordResetEmail(email, redirectTo) {
+    const target = redirectTo || (typeof window !== 'undefined'
+        ? window.location.origin + '/reset-password.html'
+        : '')
+    const base = SUPABASE_CONFIG.url.replace(/\/$/, '')
+    const url = base + '/auth/v1/recover?redirect_to=' + encodeURIComponent(target)
+
+    const ctrl = new AbortController()
+    const timeoutMs = 15000
+    var timeoutId
+
+    var timeoutPromise = new Promise(function (_, reject) {
+        timeoutId = setTimeout(function () {
+            try { ctrl.abort() } catch (e) {}
+            reject({ __passwordResetTimeout: true })
+        }, timeoutMs)
+    })
+
+    var fetchPromise = (async function () {
+        var res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_CONFIG.anonKey,
+                'Authorization': 'Bearer ' + SUPABASE_CONFIG.anonKey
+            },
+            body: JSON.stringify({ email: (email || '').trim() }),
+            signal: ctrl.signal
+        })
+        var text = await res.text()
+        return { res: res, text: text }
+    })()
+
+    try {
+        var out = await Promise.race([fetchPromise, timeoutPromise])
+        clearTimeout(timeoutId)
+
+        var res = out.res
+        var text = out.text
+        var body = {}
+        try {
+            body = text ? JSON.parse(text) : {}
+        } catch (e) { /* metin JSON değilse */ }
+
+        if (!res.ok) {
+            var errMsg = body.error_description || body.msg || body.message || body.error || text || ('HTTP ' + res.status)
+            console.error('❌ Şifre sıfırlama API:', res.status, body)
+            return { success: false, error: String(errMsg) }
+        }
+
+        console.log('✅ Şifre sıfırlama isteği gönderildi:', email)
+        return { success: true }
+    } catch (err) {
+        if (timeoutId) clearTimeout(timeoutId)
+        if (err && err.__passwordResetTimeout === true) {
+            return {
+                success: false,
+                error: 'Sunucu ' + (timeoutMs / 1000) + ' sn içinde yanıt vermedi. Çoğunlukla Supabase → Authentication → Email (SMTP) Outlook bağlantısında takılma olur. Port 587 + uygulama şifresi deneyin; veya geçici olarak "Custom SMTP" kapatıp varsayılan göndericiyle test edin.'
+            }
+        }
+        if (err && err.name === 'AbortError') {
+            return {
+                success: false,
+                error: 'İstek iptal edildi (zaman aşımı). SMTP / Outlook ayarlarını Supabase panelinde kontrol edin.'
+            }
+        }
+        console.error('❌ Şifre sıfırlama ağı:', err)
+        return { success: false, error: (err && err.message) ? err.message : String(err) }
+    }
+}
+
+// Şifre sıfırlama e-postası gönder (fetch tabanlı)
+async function resetPassword(email) {
+    const r = await sendPasswordResetEmail(email)
+    return r
+}
+
+// Yeni şifre belirle
+async function updatePassword(newPassword) {
+    try {
+        const { error } = await supabase.auth.updateUser({
+            password: newPassword
+        })
+        
+        if (error) throw error
+        
+        console.log('✅ Şifre başarıyla güncellendi')
+        return { success: true }
+    } catch (error) {
+        console.error('❌ Şifre güncelleme hatası:', error.message)
         return { success: false, error: error.message }
     }
 }

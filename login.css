@@ -225,6 +225,40 @@
     font-size: 1rem;
 }
 
+/* E-posta OTP (6 hane) */
+.otp-input-wrap {
+    margin-bottom: 1rem;
+}
+.otp-input-wrap label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--secondary-color, #1e293b);
+    margin-bottom: 0.5rem;
+}
+.otp-input {
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    padding: 0.85rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-variant-numeric: tabular-nums;
+}
+.otp-input:focus {
+    outline: none;
+    border-color: var(--primary-color, #dc2626);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+.otp-expiry-hint {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 0.35rem;
+    line-height: 1.4;
+}
+
 /* Loading State */
 .btn:disabled {
     opacity: 0.6;

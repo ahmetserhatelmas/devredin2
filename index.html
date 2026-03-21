@@ -26,12 +26,12 @@
                 </div>
                 
                 <ul class="nav-menu">
-                    <li><a href="listings.html" class="nav-link">İşletme Devral</a></li>
-                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
-                    <li><a href="emlak.html" class="nav-link">Emlak</a></li>
-                    <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link">Panel</a></li>
-                    <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="add-listing.html" class="create-listing-mobile">Ücretsiz İlan Oluştur</a></li>
+                    <li><a href="listings.html" class="nav-link" data-i18n="nav_buy">İşletme Devral</a></li>
+                    <li><a href="add-listing.html" class="nav-link" data-i18n="nav_sell">İşletmeni Devret</a></li>
+                    <li><a href="emlak.html" class="nav-link" data-i18n="nav_estate">Emlak</a></li>
+                    <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link" data-i18n="nav_panel">Panel</a></li>
+                    <li><a href="blog.html" class="nav-link" data-i18n="nav_blog">Blog</a></li>
+                    <li><a href="add-listing.html" class="create-listing-mobile" data-i18n="nav_free_mobile">Ücretsiz İlan Oluştur</a></li>
                 </ul>
                 
                 <div class="nav-actions">
@@ -60,7 +60,7 @@
                                         <polyline points="10 17 15 12 10 7"></polyline>
                                         <line x1="15" y1="12" x2="3" y2="12"></line>
                                     </svg>
-                                    Giriş Yap
+                                    <span data-i18n="nav_login">Giriş Yap</span>
                                 </a>
                                 <a href="login.html?register=true" class="dropdown-item">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -69,7 +69,7 @@
                                         <line x1="20" y1="8" x2="20" y2="14"></line>
                                         <line x1="23" y1="11" x2="17" y2="11"></line>
                                     </svg>
-                                    Üye Ol
+                                    <span data-i18n="nav_register">Üye Ol</span>
                                 </a>
                             </div>
                             <!-- Logged in -->
@@ -83,7 +83,7 @@
                                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                         <circle cx="12" cy="7" r="4"></circle>
                                     </svg>
-                                    Profil
+                                    <span data-i18n="nav_profile">Profil</span>
                                 </a>
                                 <a href="panel/" class="dropdown-item">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -92,14 +92,14 @@
                                         <rect x="14" y="14" width="7" height="7"></rect>
                                         <rect x="3" y="14" width="7" height="7"></rect>
                                     </svg>
-                                    Panel
+                                    <span data-i18n="nav_panel">Panel</span>
                                 </a>
                                 <a href="settings.html" class="dropdown-item">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
                                         <circle cx="12" cy="12" r="3"></circle>
                                     </svg>
-                                    Ayarlar
+                                    <span data-i18n="nav_settings">Ayarlar</span>
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <button onclick="logout()" class="dropdown-item logout">
@@ -108,7 +108,7 @@
                                         <polyline points="16 17 21 12 16 7"></polyline>
                                         <line x1="21" y1="12" x2="9" y2="12"></line>
                                     </svg>
-                                    Çıkış Yap
+                                    <span data-i18n="nav_logout">Çıkış Yap</span>
                                 </button>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                     </div>
                     </div>
                     
-                    <a href="add-listing.html" class="btn btn-primary-nav" id="ctaNavBtn">Ücretsiz İlan Oluştur</a>
+                    <a href="add-listing.html" class="btn btn-primary-nav" id="ctaNavBtn" data-i18n="nav_cta">Ücretsiz İlan Oluştur</a>
                 </div>
                 
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
@@ -151,13 +151,13 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-bg">
-            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1280&q=70&auto=format" alt="İşletme" decoding="async" fetchpriority="high" loading="eager" />
+            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1280&q=70&auto=format" alt="İşletme" data-i18n-alt="hero_img_alt" decoding="async" fetchpriority="high" loading="eager" />
             <div class="hero-overlay"></div>
         </div>
         <div class="container">
                 <div class="hero-content">
-                <span class="hero-subtitle">FIRSATLARIN YENİ ADRESİ</span>
-                <h1>Türkiye'nin En Güvenilir İşletme<br><span class="highlight">Pazaryeri</span></h1>
+                <span class="hero-subtitle" data-i18n="hero_subtitle">FIRSATLARIN YENİ ADRESİ</span>
+                <h1 data-i18n-html="hero_title_html">Türkiye'nin En Güvenilir İşletme<br><span class="highlight">Pazaryeri</span></h1>
                 
                 <div class="hero-search">
                     <div class="search-field">
@@ -173,7 +173,7 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.35-4.35"></path>
                         </svg>
-                        İşletme Ara
+                        <span data-i18n="btn_search">İşletme Ara</span>
                     </button>
                 </div>
             </div>
@@ -185,10 +185,10 @@
         <div class="container">
             <div class="section-header">
                 <div>
-                    <span class="section-subtitle">Hayalinizdeki işletmeyi bulun</span>
-                    <h2 class="section-title">Öne Çıkan İlanlar</h2>
+                    <span class="section-subtitle" data-i18n="featured_sub">Hayalinizdeki işletmeyi bulun</span>
+                    <h2 class="section-title" data-i18n="featured_title">Öne Çıkan İlanlar</h2>
                 </div>
-                <a href="listings.html?featured=true" class="view-all-link">Tümünü Gör <span>→</span></a>
+                <a href="listings.html?featured=true" class="view-all-link" data-i18n="view_all">Tümünü Gör →</a>
             </div>
             
             <div class="listings-slider" id="featuredListings">
@@ -210,22 +210,22 @@
         <div class="container">
             <div class="section-header">
                 <div>
-                    <span class="section-subtitle">Pazaryerinin nabzı: gerçek zamanlı veriler</span>
-                    <h2 class="section-title">Devret Link'den güncel istatistikler</h2>
+                    <span class="section-subtitle" data-i18n="stats_sub">Pazaryerinin nabzı: gerçek zamanlı veriler</span>
+                    <h2 class="section-title" data-i18n="stats_title">Devret Link'den güncel istatistikler</h2>
                 </div>
             </div>
             
             <div class="stats-grid">
                 <div class="stat-card">
-                        <span class="stat-label">Toplam İlan Sayısı</span>
+                        <span class="stat-label" data-i18n="stat_listings">Toplam İlan Sayısı</span>
                     <span class="stat-value" id="totalListings">...</span>
                     </div>
                 <div class="stat-card">
-                        <span class="stat-label">Toplam İlan Değeri</span>
+                        <span class="stat-label" data-i18n="stat_value">Toplam İlan Değeri</span>
                     <span class="stat-value" id="totalValue">...</span>
                     </div>
                 <div class="stat-card">
-                        <span class="stat-label">Ortalama İşletme Değeri</span>
+                        <span class="stat-label" data-i18n="stat_avg">Ortalama İşletme Değeri</span>
                     <span class="stat-value" id="avgValue">...</span>
                 </div>
             </div>
@@ -237,10 +237,10 @@
         <div class="container">
             <div class="section-header">
                 <div>
-                    <span class="section-subtitle">Güncel fırsatlara göz atın</span>
-                    <h2 class="section-title">Son Yayınlanan İlanlar</h2>
+                    <span class="section-subtitle" data-i18n="recent_sub">Güncel fırsatlara göz atın</span>
+                    <h2 class="section-title" data-i18n="recent_title">Son Yayınlanan İlanlar</h2>
                 </div>
-                <a href="listings.html" class="view-all-link">Tümünü Gör <span>→</span></a>
+                <a href="listings.html" class="view-all-link" data-i18n="view_all">Tümünü Gör →</a>
             </div>
             
             <div class="listings-slider" id="recentListings">
@@ -257,14 +257,14 @@
     <section class="section filter-section">
         <div class="container">
             <div class="section-header center">
-                <span class="section-subtitle">Arama kriterlerinizi daraltın</span>
-                <h2 class="section-title">Sonuca daha hızlı ulaşın</h2>
+                <span class="section-subtitle" data-i18n="filter_sub">Arama kriterlerinizi daraltın</span>
+                <h2 class="section-title" data-i18n="filter_title">Sonuca daha hızlı ulaşın</h2>
             </div>
             
             <div class="filter-tabs">
-                <button class="filter-tab active" data-tab="sector">Sektör</button>
-                <button class="filter-tab" data-tab="location">Lokasyon</button>
-                <button class="filter-tab" data-tab="investment">Yatırım Aralığı</button>
+                <button class="filter-tab active" data-tab="sector" data-i18n="tab_sector">Sektör</button>
+                <button class="filter-tab" data-tab="location" data-i18n="tab_location">Lokasyon</button>
+                <button class="filter-tab" data-tab="investment" data-i18n="tab_investment">Yatırım Aralığı</button>
             </div>
             
             <div class="filter-content" id="filterContent">
@@ -319,10 +319,10 @@
         <div class="container">
             <div class="section-header">
                 <div>
-                    <span class="section-subtitle">Stratejik yatırım fırsatlarını keşfedin</span>
-                    <h2 class="section-title">Franchise ilanları</h2>
+                    <span class="section-subtitle" data-i18n="franchise_sub">Stratejik yatırım fırsatlarını keşfedin</span>
+                    <h2 class="section-title" data-i18n="franchise_title">Franchise ilanları</h2>
                 </div>
-                <a href="franchise.html" class="view-all-link">Tümünü Gör <span>→</span></a>
+                <a href="franchise.html" class="view-all-link" data-i18n="view_all">Tümünü Gör →</a>
             </div>
             
             <div class="listings-slider" id="franchiseListings">
@@ -339,44 +339,44 @@
     <section class="section contact-section">
         <div class="container">
             <div class="section-header center">
-                <span class="section-subtitle">Bize Ulaşın</span>
-                <h2 class="section-title">En kısa sürede geri dönüş yapacağız</h2>
+                <span class="section-subtitle" data-i18n="contact_sub">Bize Ulaşın</span>
+                <h2 class="section-title" data-i18n="contact_title">En kısa sürede geri dönüş yapacağız</h2>
             </div>
             
             <div class="contact-form-wrapper">
                 <form class="contact-form" onsubmit="handleContactSubmit(event)">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Ad</label>
-                            <input type="text" name="firstName" placeholder="Adınızı yazın" required>
+                            <label data-i18n="lbl_first">Ad</label>
+                            <input type="text" name="firstName" data-i18n-placeholder="ph_first" placeholder="Adınızı yazın" required>
                         </div>
                         <div class="form-group">
-                            <label>Soyad</label>
-                            <input type="text" name="lastName" placeholder="Soyadınızı yazın" required>
+                            <label data-i18n="lbl_last">Soyad</label>
+                            <input type="text" name="lastName" data-i18n-placeholder="ph_last" placeholder="Soyadınızı yazın" required>
                         </div>
                         <div class="form-group form-group-large">
-                            <label>Mesaj</label>
-                            <textarea name="message" placeholder="Mesajınızı yazın" rows="4" required></textarea>
+                            <label data-i18n="lbl_msg">Mesaj</label>
+                            <textarea name="message" data-i18n-placeholder="ph_msg" placeholder="Mesajınızı yazın" rows="4" required></textarea>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Telefon Numarası</label>
+                            <label data-i18n="lbl_phone">Telefon Numarası</label>
                             <div class="phone-input">
                                 <div class="phone-prefix">
                                     <span class="flag">🇹🇷</span>
                                     <span>+90</span>
                                 </div>
-                                <input type="tel" name="phone" placeholder="5XX XXX XX XX" required>
+                                <input type="tel" name="phone" data-i18n-placeholder="ph_phone" placeholder="5XX XXX XX XX" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>E-posta Adresi</label>
-                            <input type="email" name="email" placeholder="E-posta adresinizi yazın" required>
+                            <label data-i18n="lbl_email">E-posta Adresi</label>
+                            <input type="email" name="email" data-i18n-placeholder="ph_email" placeholder="E-posta adresinizi yazın" required>
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-submit">Gönder</button>
+                        <button type="submit" class="btn btn-submit" data-i18n="btn_send">Gönder</button>
                     </div>
                 </form>
             </div>
@@ -387,9 +387,9 @@
     <section class="section cta-section">
         <div class="container">
             <div class="cta-content">
-                <span class="cta-subtitle">Kolay kullanım, hızlı sonuç, tam destek</span>
-                <h2 class="cta-title">İşletmenizi Devret Link'le Satın</h2>
-                <a href="add-listing.html" class="btn btn-cta">Devret Link ile Sat</a>
+                <span class="cta-subtitle" data-i18n="cta_sub">Kolay kullanım, hızlı sonuç, tam destek</span>
+                <h2 class="cta-title" data-i18n="cta_title">İşletmenizi Devret Link'le Satın</h2>
+                <a href="add-listing.html" class="btn btn-cta" data-i18n="cta_btn">Devret Link ile Sat</a>
             </div>
         </div>
     </section>
@@ -398,11 +398,11 @@
     <section class="newsletter-section">
         <div class="container">
             <div class="newsletter-content">
-                <span class="newsletter-subtitle">Öne çıkan veriler ve ilanlar</span>
-                <h2 class="newsletter-title">Devret Link bültenine abone olun</h2>
+                <span class="newsletter-subtitle" data-i18n="news_sub">Öne çıkan veriler ve ilanlar</span>
+                <h2 class="newsletter-title" data-i18n="news_title">Devret Link bültenine abone olun</h2>
                 <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
-                    <input type="email" placeholder="E-posta adresinizi yazın..." required>
-                    <button type="submit" class="btn btn-newsletter">Abone Ol</button>
+                    <input type="email" data-i18n-placeholder="ph_news" placeholder="E-posta adresinizi yazın..." required>
+                    <button type="submit" class="btn btn-newsletter" data-i18n="btn_news">Abone Ol</button>
                 </form>
             </div>
         </div>
@@ -414,7 +414,7 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="index.html" class="footer-logo">d.</a>
-                    <p class="footer-copyright">
+                    <p class="footer-copyright" data-i18n-html="footer_copy_html">
                         Copyright © 2025<br>
                         Devret Link Bilgi Teknolojileri<br>
                         Yazılım ve Ticaret A.Ş.<br>
@@ -434,50 +434,50 @@
                 </div>
                 
                 <div class="footer-links">
-                    <h4>Devret Link</h4>
+                    <h4 data-i18n="fh_brand">Devret Link</h4>
                     <ul>
-                        <li><a href="#">Hakkımızda</a></li>
-                        <li><a href="#">Bize Ulaşın</a></li>
-                        <li><a href="politikalar.html#islem-rehberi">İşlem Rehberi</a></li>
-                        <li><a href="politikalar.html#sss">Sıkça Sorulan Sorular</a></li>
-                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="#" data-i18n="fl_about">Hakkımızda</a></li>
+                        <li><a href="#" data-i18n="fl_contact">Bize Ulaşın</a></li>
+                        <li><a href="politikalar.html#islem-rehberi" data-i18n="fl_guide">İşlem Rehberi</a></li>
+                        <li><a href="politikalar.html#sss" data-i18n="fl_faq">Sıkça Sorulan Sorular</a></li>
+                        <li><a href="blog.html" data-i18n="fl_blog">Blog</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-links">
-                    <h4>İşletme Devral</h4>
+                    <h4 data-i18n="fh_acquire">İşletme Devral</h4>
                     <ul>
-                        <li><a href="listings.html">Devren Kiralık İlanlar</a></li>
-                        <li><a href="franchise.html">Franchise Bul</a></li>
-                        <li><a href="politikalar.html#ilan-verme-kurallari">İlan Verme Kuralları</a></li>
+                        <li><a href="listings.html" data-i18n="fl_listings">Devren Kiralık İlanlar</a></li>
+                        <li><a href="franchise.html" data-i18n="fl_franchise">Franchise Bul</a></li>
+                        <li><a href="politikalar.html#ilan-verme-kurallari" data-i18n="fl_rules">İlan Verme Kuralları</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-links">
-                    <h4>Diğer</h4>
+                    <h4 data-i18n="fh_other">Diğer</h4>
                     <ul>
-                        <li><a href="politikalar.html#kullanim-kosullari">Kullanım Koşulları</a></li>
-                        <li><a href="politikalar.html#aydinlatma-metni">Aydınlatma Metni</a></li>
-                        <li><a href="politikalar.html#kvkk">KVKK</a></li>
-                        <li><a href="politikalar.html#gizlilik-sozlesmesi">Gizlilik Sözleşmesi</a></li>
-                        <li><a href="politikalar.html#kisisel-verilerin-islenmesi">Gizlilik ve Kişisel Verilerin İşlenmesi</a></li>
-                        <li><a href="politikalar.html#veri-sahibi-basvuru">Veri Sahibi Başvuru Formu</a></li>
+                        <li><a href="politikalar.html#kullanim-kosullari" data-i18n="fo_terms">Kullanım Koşulları</a></li>
+                        <li><a href="politikalar.html#aydinlatma-metni" data-i18n="fo_privacy1">Aydınlatma Metni</a></li>
+                        <li><a href="politikalar.html#kvkk" data-i18n="fo_kvkk">KVKK</a></li>
+                        <li><a href="politikalar.html#gizlilik-sozlesmesi" data-i18n="fo_privacy2">Gizlilik Sözleşmesi</a></li>
+                        <li><a href="politikalar.html#kisisel-verilerin-islenmesi" data-i18n="fo_data">Gizlilik ve Kişisel Verilerin İşlenmesi</a></li>
+                        <li><a href="politikalar.html#veri-sahibi-basvuru" data-i18n="fo_request">Veri Sahibi Başvuru Formu</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-links">
                     <h4>&nbsp;</h4>
                     <ul>
-                        <li><a href="politikalar.html#cerez-politikasi">Gizlilik ve Çerez Politikası</a></li>
-                        <li><a href="politikalar.html#basvuru-formu-eki">Başvuru Formu Eki</a></li>
-                        <li><a href="politikalar.html#uyelik-sozlesmesi">Üyelik Sözleşmesi</a></li>
-                        <li><a href="politikalar.html#acik-riza-metni">Açık Rıza Metni</a></li>
+                        <li><a href="politikalar.html#cerez-politikasi" data-i18n="fo_cookie">Gizlilik ve Çerez Politikası</a></li>
+                        <li><a href="politikalar.html#basvuru-formu-eki" data-i18n="fo_appendix">Başvuru Formu Eki</a></li>
+                        <li><a href="politikalar.html#uyelik-sozlesmesi" data-i18n="fo_membership">Üyelik Sözleşmesi</a></li>
+                        <li><a href="politikalar.html#acik-riza-metni" data-i18n="fo_consent">Açık Rıza Metni</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>Devret Link.com, işletme devri ve yatırım ilanlarının güvenli şekilde paylaşılmasını amaçlayan bir platformdur.</p>
+                <p data-i18n="footer_tagline">Devret Link.com, işletme devri ve yatırım ilanlarının güvenli şekilde paylaşılmasını amaçlayan bir platformdur.</p>
             </div>
         </div>
     </footer>
@@ -486,6 +486,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="backend/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/i18n.js?v=1"></script>
     <script src="script.js"></script>
     
     <script>
@@ -520,46 +521,7 @@
             window.location.href = 'listings.html';
         }
 
-        // Language selector
-        function toggleLangDropdown(event) {
-            event.stopPropagation();
-            const dropdown = document.getElementById('langDropdown');
-            dropdown.classList.toggle('active');
-        }
-
-        function changeLang(event, lang) {
-            event.stopPropagation();
-            
-            const flags = {
-                'tr': '🇹🇷',
-                'en': '🇺🇸',
-                'de': '🇩🇪'
-            };
-            
-            const names = {
-                'tr': 'TR',
-                'en': 'EN',
-                'de': 'DE'
-            };
-            
-            document.getElementById('currentFlag').textContent = flags[lang];
-            document.getElementById('currentLang').textContent = names[lang];
-            document.getElementById('langDropdown').classList.remove('active');
-            
-            // Store language preference
-            localStorage.setItem('language', lang);
-            
-            // Here you can add translation logic or page redirect if needed
-            console.log('Language changed to:', lang);
-        }
-
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(event) {
-            const langDropdown = document.getElementById('langDropdown');
-            if (langDropdown && !event.target.closest('.lang-selector')) {
-                langDropdown.classList.remove('active');
-            }
-        });
+        // Dil: js/i18n.js (changeLang, toggleLangDropdown)
 
         // --- Performance helpers ---
         function withTimeout(promise, ms) {
@@ -621,9 +583,11 @@
                 }
                 const select = document.getElementById('heroSector');
                 if (data) {
-                    select.innerHTML = '<option value="">Sektör Seçiniz</option>' + 
+                    var emptyLabel = (typeof window.__i18nT === 'function') ? window.__i18nT('sector_select') : 'Sektör Seçiniz';
+                    select.innerHTML = '<option value="">' + emptyLabel + '</option>' +
                         data.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
                 }
+                if (typeof window.__i18nRefreshDynamic === 'function') window.__i18nRefreshDynamic();
             } catch (e) { console.error(e); }
         }
 

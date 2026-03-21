@@ -438,6 +438,8 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="backend/api.js"></script>
+    <script src="js/maps-config.js"></script>
+    <script src="js/google-maps-loader.js"></script>
     <script>
         // Global flag for Google Maps API readiness
         window.googleMapsLoaded = false;
@@ -451,7 +453,9 @@
             }
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC4r_aAIPvRAEGPqARc-Y9s-UstldmSqk&libraries=places&language=tr&callback=initGoogleMaps" async defer></script>
+    <script>
+        loadGoogleMaps({ libraries: 'places', callback: 'initGoogleMaps', language: 'tr' });
+    </script>
     <script>
         let currentStep = 1;
         const totalSteps = 4;

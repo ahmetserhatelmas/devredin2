@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş Yap - Devret Link</title>
     <link rel="stylesheet" href="styles.css?v=11">
-    <link rel="stylesheet" href="login.css?v=3">
+    <link rel="stylesheet" href="login.css?v=4">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
 </head>
@@ -143,7 +143,7 @@
                             <input type="checkbox" name="remember">
                             <span>Beni hatırla</span>
                         </label>
-                        <a href="#" class="forgot-password">Şifrenizi mi unuttunuz?</a>
+                        <a href="#" class="forgot-password" onclick="showForgotPassword(); return false;">Şifrenizi mi unuttunuz?</a>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Giriş Yapın</button>
@@ -164,25 +164,56 @@
                 </button>
             </div>
 
-            <!-- Email Verification Box -->
+            <!-- Forgot Password Box -->
+            <div class="login-box" id="forgotPasswordBox" style="display: none;">
+                <div class="login-header">
+                    <h1>Şifre Sıfırlama</h1>
+                    <p>E-posta adresinize şifre sıfırlama bağlantısı göndereceğiz.</p>
+                </div>
+
+                <form class="login-form" id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label>E-posta Adresiniz</label>
+                        <input type="email" name="email" id="forgotPasswordEmail" placeholder="ornek@email.com" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Şifre Sıfırlama Bağlantısı Gönder</button>
+                </form>
+
+                <div style="margin-top: 1rem; text-align: center;">
+                    <a href="#" onclick="showLoginForm(); return false;" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">← Giriş sayfasına dön</a>
+                </div>
+            </div>
+
+            <!-- Email Verification Box (kayıt OTP + link) -->
             <div class="login-box" id="verificationBox" style="display: none;">
                 <div class="login-header">
                     <div class="verification-icon">📧</div>
-                    <h1>E-posta Doğrulama</h1>
-                    <p id="verificationEmail">E-posta adresinize gönderilen bağlantıya tıklayarak hesabınızı doğrulayın.</p>
+                    <h1>E-postanızı doğrulayın</h1>
+                    <p id="verificationEmail">Adresinize 6 haneli kod ve doğrulama bağlantısı gönderildi.</p>
                 </div>
 
                 <div class="verification-info">
-                    <p>✉️ Doğrulama e-postası gönderildi!</p>
-                    <p class="verification-hint">E-postanızı kontrol edin ve gelen bağlantıya tıklayın. Spam klasörünü de kontrol etmeyi unutmayın.</p>
+                    <p>✉️ E-postanızdaki <strong>6 haneli kodu</strong> aşağıya girin (veya e-postadaki bağlantıya tıklayın).</p>
+                    <p class="verification-hint">Spam / Gereksiz klasörünü kontrol etmeyi unutmayın.</p>
                 </div>
 
+                <div class="otp-input-wrap">
+                    <label for="signupOtpInput">Doğrulama kodu</label>
+                    <input type="text" id="signupOtpInput" class="otp-input" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="••••••">
+                    <p class="otp-expiry-hint" id="otpExpiryHint">Kodun geçerlilik süresi Supabase proje ayarlarındadır (çoğu kurulumda yaklaşık 1 saat).</p>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-large" style="width: 100%; margin-bottom: 0.75rem;" id="verifyOtpBtn" onclick="submitSignupOtp()">
+                    Kodu doğrula ve giriş yap
+                </button>
+
                 <button type="button" class="btn btn-outline btn-large" style="width: 100%; margin-bottom: 1rem;" onclick="resendVerification()">
-                    Tekrar Gönder
+                    Kodu tekrar gönder
                 </button>
                 
-                <button type="button" class="btn btn-primary btn-large" style="width: 100%;" onclick="showLoginForm()">
-                    Giriş Sayfasına Dön
+                <button type="button" class="btn btn-outline btn-large" style="width: 100%;" onclick="showLoginForm()">
+                    Giriş sayfasına dön
                 </button>
             </div>
 
@@ -255,7 +286,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- Backend API -->
-    <script src="backend/api.js"></script>
+    <script src="backend/api.js?v=4"></script>
     
     <!-- Ana Script -->
     <script src="script.js"></script>
@@ -315,6 +346,16 @@
             if (result.success) {
                 console.log('✅ Giriş başarılı:', result.data);
                 window.location.href = 'index.html';
+            } else if (result.code === 'EMAIL_NOT_CONFIRMED') {
+                pendingVerificationEmail = email;
+                document.getElementById('verificationEmail').innerHTML =
+                    '<strong>' + email + '</strong> henüz doğrulanmadı. Aşağıya e-postadaki <strong>6 haneli kodu</strong> yazın veya gelen <strong>doğrulama bağlantısına</strong> tıklayın.';
+                var otpEl = document.getElementById('signupOtpInput');
+                if (otpEl) otpEl.value = '';
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('registerBox').style.display = 'none';
+                document.getElementById('forgotPasswordBox').style.display = 'none';
+                document.getElementById('verificationBox').style.display = 'block';
             } else {
                 alert('❌ Giriş hatası: ' + result.error);
                 console.error('❌ Giriş hatası:', result.error);
@@ -340,41 +381,33 @@
             console.log('📝 Kayıt yapılıyor...');
             
             try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: fullName,
-                            phone: phone
-                        },
-                        emailRedirectTo: window.location.origin + '/login.html?verified=true'
-                    }
-                });
-                
-                if (error) throw error;
-                
-                // Kullanıcıyı users tablosuna ekle
-                if (data.user) {
-                    await supabase.from('users').upsert({
-                        id: data.user.id,
-                        email: email,
-                        full_name: fullName,
-                        phone: phone || null
-                    });
+                if (typeof registerUser !== 'function') {
+                    throw new Error('registerUser yüklenemedi (backend/api.js).');
                 }
-                
-                console.log('✅ Kayıt başarılı, doğrulama emaili gönderildi');
-                
-                // Email doğrulama ekranını göster
+                const reg = await registerUser(email, password, fullName, phone);
+                if (!reg.success) {
+                    alert('Kayıt hatası: ' + (reg.error || 'Bilinmeyen hata'));
+                    return;
+                }
+
+                console.log('✅ Kayıt tamamlandı, doğrulama e-postası gönderildi (gerekliyse).');
+
                 pendingVerificationEmail = email;
-                document.getElementById('verificationEmail').innerHTML = 
-                    `<strong>${email}</strong> adresine doğrulama bağlantısı gönderildi.`;
-                
+                document.getElementById('verificationEmail').innerHTML =
+                    '<strong>' + email + '</strong> adresine <strong>6 haneli kod</strong> ve doğrulama bağlantısı gönderildi.';
+
+                var otpIn = document.getElementById('signupOtpInput');
+                if (otpIn) otpIn.value = '';
+
+                // Oturum zaten açıksa (projede e-posta onayı kapalıysa) doğrudan yönlendir
+                if (!reg.needsEmailVerification && reg.data && reg.data.session) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('registerBox').style.display = 'none';
                 document.getElementById('verificationBox').style.display = 'block';
-                
             } catch (error) {
                 console.error('❌ Kayıt hatası:', error);
                 alert('Kayıt hatası: ' + error.message);
@@ -404,29 +437,78 @@
             }
         }
         
-        // Doğrulama emaili tekrar gönder
+        // Doğrulama e-postasını tekrar gönder
         async function resendVerification() {
             if (!pendingVerificationEmail) {
-                alert('Lütfen önce kayıt olun.');
+                alert('Önce kayıt olun veya giriş yaparken doğrulanmamış hesap uyarısını kullanın.');
                 return;
             }
-            
             try {
-                const { error } = await supabase.auth.resend({
-                    type: 'signup',
-                    email: pendingVerificationEmail,
-                    options: {
-                        emailRedirectTo: window.location.origin + '/login.html?verified=true'
-                    }
-                });
-                
-                if (error) throw error;
-                
-                alert('Doğrulama emaili tekrar gönderildi!');
+                if (typeof resendSignupVerificationEmail !== 'function') {
+                    throw new Error('resendSignupVerificationEmail yok (api.js güncel mi?)');
+                }
+                const r = await resendSignupVerificationEmail(pendingVerificationEmail);
+                if (!r.success) {
+                    alert('Gönderilemedi: ' + (r.error || 'Bilinmeyen hata'));
+                    return;
+                }
+                alert('Doğrulama e-postası tekrar gönderildi.');
             } catch (error) {
-                console.error('❌ Email gönderme hatası:', error);
-                alert('Email gönderilemedi: ' + error.message);
+                console.error('❌ E-posta gönderme:', error);
+                alert('E-posta gönderilemedi: ' + error.message);
             }
+        }
+
+        // Kayıt OTP doğrulama
+        async function submitSignupOtp() {
+            var email = pendingVerificationEmail;
+            var code = document.getElementById('signupOtpInput') && document.getElementById('signupOtpInput').value;
+            if (!email) {
+                alert('E-posta bilgisi yok. Kayıt olun veya giriş deneyin.');
+                return;
+            }
+            var digits = String(code).replace(/\s/g, '');
+            if (!digits || digits.length < 6) {
+                alert('Lütfen e-postadaki doğrulama kodunu girin (en az 6 karakter).');
+                return;
+            }
+            var btn = document.getElementById('verifyOtpBtn');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Doğrulanıyor...';
+            }
+            try {
+                if (typeof verifySignupWithOtp !== 'function') {
+                    throw new Error('verifySignupWithOtp yok (backend/api.js v4+).');
+                }
+                var vr = await verifySignupWithOtp(email, code);
+                if (!vr.success) {
+                    var em = vr.error || '';
+                    if (/expired|invalid|token/i.test(em)) {
+                        alert('Kod geçersiz veya süresi dolmuş. Yeni kod için "Kodu tekrar gönder"e basın veya e-postadaki bağlantıyı kullanın.');
+                    } else {
+                        alert('Doğrulama başarısız: ' + em);
+                    }
+                    return;
+                }
+                alert('Hesabınız doğrulandı. Yönlendiriliyorsunuz...');
+                window.location.href = 'index.html';
+            } catch (e) {
+                alert('Hata: ' + e.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Kodu doğrula ve giriş yap';
+                }
+            }
+        }
+        
+        // Şifre sıfırlama formunu göster
+        function showForgotPassword() {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('registerBox').style.display = 'none';
+            document.getElementById('verificationBox').style.display = 'none';
+            document.getElementById('forgotPasswordBox').style.display = 'block';
         }
         
         // Giriş formunu göster
@@ -434,7 +516,79 @@
             document.getElementById('loginBox').style.display = 'block';
             document.getElementById('registerBox').style.display = 'none';
             document.getElementById('verificationBox').style.display = 'none';
+            document.getElementById('forgotPasswordBox').style.display = 'none';
         }
+        
+        function getAuthErrorMessage(error) {
+            if (error == null) return 'Bilinmeyen bir hata oluştu.';
+            if (typeof error === 'string') return error;
+            var msg = error.message || error.msg || error.error_description || error.error;
+            if (msg) return String(msg);
+            if (error.status && error.name) return error.name + ' (' + error.status + ')';
+            try {
+                var s = JSON.stringify(error);
+                if (s && s !== '{}') return s;
+            } catch (e) {}
+            return 'E-posta gönderilemedi. Supabase: Authentication → URL Configuration içinde şu adresi Redirect URLs’e ekleyin: ' +
+                window.location.origin + '/reset-password.html — Ayrıca SMTP (Email) ayarlarını kontrol edin.';
+        }
+
+        // Şifre sıfırlama formu gönderimi (sendPasswordResetEmail: api.js — doğrudan /auth/v1/recover + zaman aşımı)
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('forgotPasswordEmail').value.trim();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            let success = false;
+            
+            if (!email) {
+                alert('Lütfen e-posta adresinizi girin.');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Gönderiliyor...';
+            
+            try {
+                if (typeof sendPasswordResetEmail !== 'function') {
+                    throw new Error('sendPasswordResetEmail yüklenemedi. Sayfayı yenileyin (backend/api.js).');
+                }
+                const redirectTo = window.location.origin + '/reset-password.html';
+                const result = await sendPasswordResetEmail(email, redirectTo);
+                
+                if (!result.success) {
+                    alert('Hata: ' + (result.error || 'Bilinmeyen hata'));
+                    return;
+                }
+                success = true;
+                
+                // Başarı mesajı göster
+                document.getElementById('forgotPasswordBox').innerHTML = `
+                    <div class="login-header">
+                        <div class="verification-icon">📧</div>
+                        <h1>E-posta Gönderildi</h1>
+                        <p>Şifre sıfırlama bağlantısı <strong>${email}</strong> adresine gönderildi.</p>
+                    </div>
+                    <div class="verification-info">
+                        <p>✉️ E-postanızı kontrol edin ve gelen bağlantıya tıklayın.</p>
+                        <p class="verification-hint">Spam klasörünü de kontrol etmeyi unutmayın.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-large" style="width: 100%;" onclick="showLoginForm()">
+                        Giriş Sayfasına Dön
+                    </button>
+                `;
+                
+            } catch (error) {
+                console.error('❌ Şifre sıfırlama hatası:', error);
+                alert('Hata: ' + getAuthErrorMessage(error));
+            } finally {
+                if (!success && submitBtn && submitBtn.parentNode) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
         
         // Sayfa yüklendiğinde kontroller
         document.addEventListener('DOMContentLoaded', async () => {

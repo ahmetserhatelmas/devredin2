@@ -4,6 +4,9 @@ node_modules/
 .env
 .DS_Store
 
+# Google Maps — gerçek anahtar burada; örnek: maps-config.example.js
+js/maps-config.js
+
 # Logs
 logs
 *.log

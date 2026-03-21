@@ -378,11 +378,11 @@
                 </div>
             </div>
             <div class="step-nav step-nav-mobile-full">
-                <div></div>
-                <button class="btn-next" onclick="goStep(2)">
-                    Devam Et
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
-                </button>
+            <div></div>
+            <button class="btn-next" onclick="goStep(2)">
+                Devam Et
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
             </div>
         </div>
     </div>
@@ -909,8 +909,8 @@
                         <label class="check-option"><input type="checkbox" name="toprak_manzara" value="gol"><label>Göl</label></label>
                     </div>
                 </div>
+                </div>
             </div>
-        </div>
         </div>
 
         <div class="step-nav">
@@ -1052,6 +1052,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="backend/api.js"></script>
+<script src="js/maps-config.js"></script>
+<script src="js/google-maps-loader.js"></script>
 <script>
 let currentStep = 1;
 let selectedType = 'kiralik';
@@ -1348,15 +1350,15 @@ function validateStep(step) {
     }
     if (step === 2) {
         if (emlakCategory === 'konut') {
-            const area = document.getElementById('areaGross').value;
-            if (!area || parseInt(area) <= 0) {
-                document.getElementById('areaGross').classList.add('error');
-                alert('Lütfen brüt metrekare girin.');
-                return false;
-            }
-            if (!selectedRoom) {
-                alert('Lütfen oda sayısı seçin.');
-                return false;
+        const area = document.getElementById('areaGross').value;
+        if (!area || parseInt(area) <= 0) {
+            document.getElementById('areaGross').classList.add('error');
+            alert('Lütfen brüt metrekare girin.');
+            return false;
+        }
+        if (!selectedRoom) {
+            alert('Lütfen oda sayısı seçin.');
+            return false;
             }
         } else if (emlakCategory === 'is_yeri') {
             const a = document.getElementById('isyeriArea').value;
@@ -1631,7 +1633,9 @@ document.head.appendChild(style);
         if (window.initEmlakMapWhenReady) window.initEmlakMapWhenReady();
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC4r_aAIPvRAEGPqARc-Y9s-UstldmSqk&libraries=places&language=tr&callback=initEmlakMaps" async defer></script>
+<script>
+    loadGoogleMaps({ libraries: 'places', callback: 'initEmlakMaps', language: 'tr' });
+</script>
 <script>
 // ===== GOOGLE MAPS INTEGRATION FOR EMLAK =====
 let emlakMap = null;

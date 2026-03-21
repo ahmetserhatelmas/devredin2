@@ -328,65 +328,6 @@ body {
     color: var(--gray-900);
 }
 
-/* Chart Section */
-.chart-section {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.chart-header h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--gray-900);
-    margin-bottom: 0.25rem;
-}
-
-.chart-header p {
-    font-size: 0.85rem;
-    color: var(--gray-500);
-    margin-bottom: 1rem;
-}
-
-.chart-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.chart-tab {
-    padding: 0.5rem 1rem;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 0.85rem;
-    color: var(--gray-700);
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.chart-tab:hover {
-    border-color: var(--gray-300);
-}
-
-.chart-tab.active {
-    background: var(--gray-900);
-    color: var(--white);
-    border-color: var(--gray-900);
-}
-
-.chart-placeholder {
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-500);
-    border: 1px dashed var(--border);
-    border-radius: 8px;
-}
-
 /* Table Section */
 .table-section {
     background: var(--white);

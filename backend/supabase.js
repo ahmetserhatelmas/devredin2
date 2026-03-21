@@ -4,9 +4,18 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase credentials - .env dosyasından alın
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://higrbnrjpwjnypzeodpm.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ3JibnJqcHdqbnlwemVvZHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyNzg5NjUsImV4cCI6MjA4MDg1NDk2NX0.Zg9wGmcwmc3P1PsDMwQtApycxK6unjsdl-u6_msC5Jg'
+// Node / bundler: .env — NEXT_PUBLIC_* veya SUPABASE_URL / SUPABASE_ANON_KEY
+const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.SUPABASE_URL ||
+    ''
+const supabaseAnonKey =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    ''
+if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn('[backend/supabase.js] SUPABASE_URL / SUPABASE_ANON_KEY tanımlı değil.')
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 

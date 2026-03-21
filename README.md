@@ -48,13 +48,40 @@ devredin/
 
 ## 🔧 Kullanım
 
-### Kurulum
+### Kurulum (`.env` + `npm run build`)
+
+Tarayıcı `.env` okuyamaz; tüm anahtarlar **ortam değişkeninden** build sırasında `js/runtime-config.js` dosyasına yazılır.
 
 1. Projeyi indirin
-2. **Google Maps:** `js/maps-config.example.js` dosyasını `js/maps-config.js` olarak kopyalayın ve içine `GOOGLE_MAPS_API_KEY` değerinizi yazın. `maps-config.js` `.gitignore` içindedir; anahtar GitHub’a gitmez.
-3. Tarayıcınızda `index.html` dosyasını açın
+2. ```bash
+   cp .env.example .env
+   ```
+3. `.env` içini doldurun:
+   - `SUPABASE_URL` — Supabase proje URL’i  
+   - `SUPABASE_ANON_KEY` — Supabase **anon (public)** key  
+   - `GOOGLE_MAPS_API_KEY` — Google Maps JavaScript API key  
+4. ```bash
+   npm run build
+   ```
+   → `js/runtime-config.js` oluşur (`.gitignore`, GitHub’a gitmez).
 
-> **Not:** Anahtar daha önce repoda commitlendiyse Git geçmişinde kalır; Google Cloud Console’da anahtarı döndürüp (rotate) yenisini yalnızca `maps-config.js` içinde kullanın. Canlı sitede anahtar yine tarayıcıda görünür; koruma için Cloud Console’da **HTTP referrer** kısıtı kullanın.
+5. Siteyi yerel sunucudan açın: `python -m http.server 8000` veya `npm run dev`
+
+> **Not:** `service_role` gibi gizli anahtarları **asla** buraya koymayın; sadece tarayıcıda kullanılanlar. Maps / anon key yine istemcide görünür — Google’da **referrer kısıtı**, Supabase’de **RLS** şart.
+
+### Vercel
+
+**Settings → Environment Variables** içine `.env` ile **aynı isimlerle** üç değişkeni ekleyin:
+
+| Name | Açıklama |
+|------|-----------|
+| `SUPABASE_URL` | `https://xxxx.supabase.co` |
+| `SUPABASE_ANON_KEY` | Supabase anon key |
+| `GOOGLE_MAPS_API_KEY` | Maps API key |
+
+Deploy’da `npm run build` → `scripts/generate-env.js` → `js/runtime-config.js` üretilir.
+
+Google Cloud referrer: `https://proje.vercel.app/*` ve kendi domain’iniz.
 
 ### Geliştirme
 

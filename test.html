@@ -190,6 +190,7 @@ Console açık. F12 ile tarayıcı console'unu da açabilirsiniz.
 
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/runtime-config.js"></script>
     
     <!-- Backend API -->
     <script src="backend/api.js"></script>
@@ -396,7 +397,8 @@ Console açık. F12 ile tarayıcı console'unu da açabilirsiniz.
             if (connected) {
                 status.textContent = '✅ Bağlı'
                 status.className = 'status connected'
-                result.textContent = 'Supabase bağlantısı aktif\nURL: https://higrbnrjpwjnypzeodpm.supabase.co'
+                var u = (window.__DEVRETIN_ENV__ && window.__DEVRETIN_ENV__.SUPABASE_URL) || '(runtime-config yok)'
+                result.textContent = 'Supabase bağlantısı aktif\nURL: ' + u
                 result.className = 'result success'
             } else {
                 status.textContent = '❌ Bağlantı Yok'
@@ -409,7 +411,7 @@ Console açık. F12 ile tarayıcı console'unu da açabilirsiniz.
         // Auto test on load
         window.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 Test sayfası yüklendi')
-            console.log('📡 Supabase URL:', SUPABASE_CONFIG.url)
+            console.log('📡 Supabase URL:', (window.__DEVRETIN_ENV__ && window.__DEVRETIN_ENV__.SUPABASE_URL) || '?')
             testConnection()
         })
     </script>

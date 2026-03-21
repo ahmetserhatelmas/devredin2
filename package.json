@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "npx live-server --port=8000 --no-browser",
-    "dev": "npx live-server --port=8000 --no-browser"
+    "dev": "npx live-server --port=8000 --no-browser",
+    "build": "node scripts/generate-env.js",
+    "vercel-build": "node scripts/generate-env.js"
   }
 }

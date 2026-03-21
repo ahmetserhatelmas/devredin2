@@ -6,18 +6,31 @@
 // <script src="backend/api.js"></script>
 
 // ============================================
-// CONFIGURATION
+// CONFIGURATION (js/runtime-config.js — .env + npm run build)
 // ============================================
 
-// Supabase credentials - production'da environment variables kullanın
-const SUPABASE_CONFIG = {
-    url: 'https://higrbnrjpwjnypzeodpm.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ3JibnJqcHdqbnlwemVvZHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyNzg5NjUsImV4cCI6MjA4MDg1NDk2NX0.Zg9wGmcwmc3P1PsDMwQtApycxK6unjsdl-u6_msC5Jg'
+function readDevretinEnv() {
+    var e = (typeof window !== 'undefined' && window.__DEVRETIN_ENV__) || {}
+    return {
+        url: String(e.SUPABASE_URL || '').trim(),
+        anonKey: String(e.SUPABASE_ANON_KEY || '').trim()
+    }
 }
 
-// Initialize Supabase
-// Override global supabase with our client instance
-supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
+const SUPABASE_CONFIG = readDevretinEnv()
+
+if (!SUPABASE_CONFIG.url || !SUPABASE_CONFIG.anonKey) {
+    console.error(
+        '[Devret Link] SUPABASE_URL / SUPABASE_ANON_KEY yok. ' +
+            'Kökte .env oluştur (.env.example) → npm run build → js/runtime-config.js. Vercel: Environment Variables.'
+    )
+}
+
+// Initialize Supabase (boşsa istekler hata verir — build şart)
+supabase = window.supabase.createClient(
+    SUPABASE_CONFIG.url || 'https://invalid.local',
+    SUPABASE_CONFIG.anonKey || 'invalid'
+)
 
 // Diğer sayfalar (login vb.) için — doğrudan fetch ile şifre sıfırlama kullanılır
 window.__DEVRETIN_SUPABASE__ = {

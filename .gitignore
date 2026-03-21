@@ -4,7 +4,9 @@ node_modules/
 .env
 .DS_Store
 
-# Google Maps — gerçek anahtar burada; örnek: maps-config.example.js
+# Build ile üretilen tarayıcı config (.env / Vercel’den)
+js/runtime-config.js
+# Eski yöntem (elle maps-config kullananlar için)
 js/maps-config.js
 
 # Logs

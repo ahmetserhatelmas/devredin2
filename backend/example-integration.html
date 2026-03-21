@@ -63,25 +63,11 @@ Bu dosya, mevcut HTML'lerinize backend nasıl entegre edileceğini gösterir
         </div>
     </section>
 
-    <!-- Supabase Config -->
-    <script>
-        // ============================================
-        // SUPABASE CONFIGURATION
-        // ============================================
-        const SUPABASE_CONFIG = {
-            url: 'https://higrbnrjpwjnypzeodpm.supabase.co',
-            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZ3JibnJqcHdqbnlwemVvZHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyNzg5NjUsImV4cCI6MjA4MDg1NDk2NX0.Zg9wGmcwmc3P1PsDMwQtApycxK6unjsdl-u6_msC5Jg'
-        }
+    <!-- Kökte: cp .env.example .env && npm run build → js/runtime-config.js -->
+    <script src="../js/runtime-config.js"></script>
 
-        // Initialize Supabase
-        const supabase = window.supabase.createClient(
-            SUPABASE_CONFIG.url, 
-            SUPABASE_CONFIG.anonKey
-        )
-    </script>
-
-    <!-- Backend API -->
-    <script src="backend/api.js"></script>
+    <!-- Backend API (proje kökünden sun: /backend/example-integration.html) -->
+    <script src="api.js"></script>
 
     <!-- Page Specific JS -->
     <script>

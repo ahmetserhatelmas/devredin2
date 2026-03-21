@@ -2,7 +2,7 @@
   "trailingSlash": false,
   "cleanUrls": true,
   "framework": null,
-  "buildCommand": "",
+  "buildCommand": "npm run build",
   "installCommand": "",
   "devCommand": "",
   "outputDirectory": "."

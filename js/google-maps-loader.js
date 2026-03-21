@@ -1,5 +1,5 @@
 /**
- * Google Maps JavaScript API — anahtar js/maps-config.js içinde (Git'e eklenmez).
+ * Google Maps — window.GOOGLE_MAPS_API_KEY (js/runtime-config.js, npm run build + .env)
  */
 (function () {
     'use strict';
@@ -8,8 +8,7 @@
         var k = typeof window.GOOGLE_MAPS_API_KEY === 'string' ? window.GOOGLE_MAPS_API_KEY.trim() : '';
         if (!k || k === 'YOUR_GOOGLE_MAPS_API_KEY_HERE') {
             console.warn(
-                '[Devret Link Maps] GOOGLE_MAPS_API_KEY tanımlı değil. ' +
-                    'js/maps-config.example.js dosyasını kopyalayıp js/maps-config.js yapın ve anahtarı yapıştırın.'
+                '[Devret Link Maps] GOOGLE_MAPS_API_KEY tanımlı değil. .env + npm run build veya Vercel Environment Variables.'
             );
             return null;
         }

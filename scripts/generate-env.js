@@ -35,6 +35,7 @@ loadEnvFile(path.join(root, '.env'));
 const SUPABASE_URL = (process.env.SUPABASE_URL || '').trim();
 const SUPABASE_ANON_KEY = (process.env.SUPABASE_ANON_KEY || '').trim();
 const GOOGLE_MAPS_API_KEY = (process.env.GOOGLE_MAPS_API_KEY || '').trim();
+const SITE_URL = (process.env.SITE_URL || '').trim().replace(/\/$/, '');
 
 const outDir = path.join(root, 'js');
 const outFile = path.join(outDir, 'runtime-config.js');
@@ -42,7 +43,8 @@ const outFile = path.join(outDir, 'runtime-config.js');
 const payload = {
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
-    GOOGLE_MAPS_API_KEY
+    GOOGLE_MAPS_API_KEY,
+    SITE_URL
 };
 
 const json = JSON.stringify(payload);

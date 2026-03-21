@@ -6,7 +6,8 @@
     window.__DEVRETIN_ENV__ = {
         SUPABASE_URL: '',
         SUPABASE_ANON_KEY: '',
-        GOOGLE_MAPS_API_KEY: ''
+        GOOGLE_MAPS_API_KEY: '',
+        SITE_URL: '' // örn. https://devretlink.com — boşsa window.location.origin
     };
     window.GOOGLE_MAPS_API_KEY = window.__DEVRETIN_ENV__.GOOGLE_MAPS_API_KEY || '';
 })();

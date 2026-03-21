@@ -38,6 +38,22 @@ window.__DEVRETIN_SUPABASE__ = {
     anonKey: SUPABASE_CONFIG.anonKey
 }
 
+/**
+ * Auth e-posta linkleri (şifre sıfırlama, kayıt doğrulama) için site kökü.
+ * SITE_URL runtime-config’ta (Vercel env) → canlıda https://devretlink.com
+ * Boşsa window.location.origin (localhost geliştirme).
+ */
+function getDevretinSiteOrigin() {
+    var e = (typeof window !== 'undefined' && window.__DEVRETIN_ENV__) || {}
+    var site = String(e.SITE_URL || '').trim().replace(/\/$/, '')
+    if (site) return site
+    if (typeof window !== 'undefined' && window.location && window.location.origin) {
+        return String(window.location.origin).replace(/\/$/, '')
+    }
+    return ''
+}
+window.getDevretinSiteOrigin = getDevretinSiteOrigin
+
 // ============================================
 // AUTH FUNCTIONS - Session Management
 // ============================================
@@ -152,7 +168,7 @@ async function loginUser(email, password) {
 // Kayıt sonrası yönlendirme (e-posta doğrulama linki + Supabase şablonundaki {{ .Token }} OTP)
 function getSignupEmailRedirectUrl() {
     if (typeof window === 'undefined') return undefined
-    return window.location.origin + '/login.html?verified=true'
+    return getDevretinSiteOrigin() + '/login.html?verified=true'
 }
 
 // Kullanıcı kaydı — e-posta onayı açıksa session gelmez; kullanıcı OTP veya link ile doğrular
@@ -172,10 +188,15 @@ async function registerUser(email, password, fullName, phone) {
 
         if (authError) throw authError
 
-        if (authData.user) {
+        const u = authData.user
+        const emailConfirmed = !!(u && u.email_confirmed_at)
+        // E-posta doğrulanmadıysa kayıt “tamamlanmış” sayılmaz (Supabase panelde Confirm email açık olmalı)
+        const needsEmailVerification = !!(u && !emailConfirmed)
+
+        if (u) {
             try {
                 await supabase.from('users').upsert({
-                    id: authData.user.id,
+                    id: u.id,
                     email: email,
                     full_name: fullName,
                     phone: phone || null
@@ -183,16 +204,27 @@ async function registerUser(email, password, fullName, phone) {
             } catch (upsertErr) {
                 console.warn('users upsert (kayıt):', upsertErr)
             }
-            // Onay bekleniyorsa oturum açmış sayma
-            if (authData.session) {
-                saveToCache(authData.user, { full_name: fullName, phone })
-            } else {
-                clearCache()
-            }
         }
 
-        const needsEmailVerification =
-            !!(authData.user && !authData.user.email_confirmed_at && !authData.session)
+        // Confirm email kapalıyken Supabase bazen yine session verir — yine de doğrulama akışına sokmak için kapat
+        if (needsEmailVerification && authData.session) {
+            try {
+                await supabase.auth.signOut()
+            } catch (so) {
+                console.warn('signOut after signup:', so)
+            }
+            clearCache()
+        } else if (!needsEmailVerification && authData.session) {
+            saveToCache(authData.user, { full_name: fullName, phone })
+        } else {
+            clearCache()
+        }
+
+        if (needsEmailVerification && !emailConfirmed) {
+            console.log(
+                '✅ Kayıt oluşturuldu — e-posta doğrulaması bekleniyor. Supabase’de Authentication → Providers → Email → Confirm email açık olmalı; aksi halde posta gitmez.'
+            )
+        }
 
         console.log('✅ Registration successful:', authData, 'needsEmailVerification:', needsEmailVerification)
         return { success: true, data: authData, needsEmailVerification }
@@ -255,7 +287,7 @@ async function resendSignupVerificationEmail(email) {
  */
 async function sendPasswordResetEmail(email, redirectTo) {
     const target = redirectTo || (typeof window !== 'undefined'
-        ? window.location.origin + '/reset-password.html'
+        ? getDevretinSiteOrigin() + '/reset-password.html'
         : '')
     const base = SUPABASE_CONFIG.url.replace(/\/$/, '')
     const url = base + '/auth/v1/recover?redirect_to=' + encodeURIComponent(target)

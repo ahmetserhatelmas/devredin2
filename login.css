@@ -252,12 +252,6 @@
     border-color: var(--primary-color, #dc2626);
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
 }
-.otp-expiry-hint {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-top: 0.35rem;
-    line-height: 1.4;
-}
 
 /* Loading State */
 .btn:disabled {

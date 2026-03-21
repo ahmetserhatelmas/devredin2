@@ -60,6 +60,7 @@ Tarayıcı `.env` okuyamaz; tüm anahtarlar **ortam değişkeninden** build sır
    - `SUPABASE_URL` — Supabase proje URL’i  
    - `SUPABASE_ANON_KEY` — Supabase **anon (public)** key  
    - `GOOGLE_MAPS_API_KEY` — Google Maps JavaScript API key  
+   - `SITE_URL` — Canlı site kökü, **sonda `/` yok** (örn. `https://devretlink.com`). Şifre sıfırlama ve kayıt doğrulama e-postalarındaki linkler buna gider. Boş bırakırsan `localhost` üzerinden açtığın origin kullanılır.
 4. ```bash
    npm run build
    ```
@@ -71,15 +72,19 @@ Tarayıcı `.env` okuyamaz; tüm anahtarlar **ortam değişkeninden** build sır
 
 ### Vercel
 
-**Settings → Environment Variables** içine `.env` ile **aynı isimlerle** üç değişkeni ekleyin:
+**Settings → Environment Variables** içine `.env` ile **aynı isimlerle** değişkenleri ekleyin:
 
 | Name | Açıklama |
 |------|-----------|
 | `SUPABASE_URL` | `https://xxxx.supabase.co` |
 | `SUPABASE_ANON_KEY` | Supabase anon key |
 | `GOOGLE_MAPS_API_KEY` | Maps API key |
+| `SITE_URL` | **`https://devretlink.com`** (veya www). Şifre sıfırlama / e-posta doğrulama linkleri için şart. |
 
 Deploy’da `npm run build` → `scripts/generate-env.js` → `js/runtime-config.js` üretilir.
+
+**Supabase:** Authentication → URL Configuration → **Redirect URLs** içine ekle:  
+`https://devretlink.com/reset-password.html`, `https://devretlink.com/login.html` (ve `www` varsa aynıları).
 
 Google Cloud referrer: `https://proje.vercel.app/*` ve kendi domain’iniz.
 

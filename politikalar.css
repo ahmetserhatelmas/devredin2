@@ -139,6 +139,26 @@
     text-decoration: underline;
 }
 
+.policy-application-form {
+    margin-top: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    background: #f9fafb;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+.policy-application-form h3 {
+    margin-top: 0;
+}
+
+.application-fields {
+    margin-bottom: 0;
+}
+
+.application-fields li {
+    margin-bottom: 0.65rem;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .policies-layout {

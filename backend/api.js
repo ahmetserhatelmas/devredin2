@@ -158,17 +158,25 @@ async function loginUser(email, password) {
                 success: false,
                 code: 'EMAIL_NOT_CONFIRMED',
                 error:
-                    'E-posta adresiniz henüz doğrulanmadı. Kayıt olduğunuz adrese gelen 6 haneli kodu girin veya e-postadaki doğrulama bağlantısına tıklayın.'
+                    'E-posta adresiniz henüz doğrulanmadı. Kayıt e-postanızdaki doğrulama bağlantısına tıklayın; ardından giriş yapın. (E-postada kod satırı varsa sitedeki kod alanını da kullanabilirsiniz.)'
             }
         }
         return { success: false, error: error.message }
     }
 }
 
-// Kayıt sonrası yönlendirme (e-posta doğrulama linki + Supabase şablonundaki {{ .Token }} OTP)
+/** localhost’ta /login.html; canlıda (Vercel cleanUrls) /login */
+function getLoginPagePath() {
+    var o = getDevretinSiteOrigin()
+    if (!o) return '/login.html'
+    if (/localhost|127\.0\.0\.1/i.test(o)) return '/login.html'
+    return '/login'
+}
+
+// Kayıt sonrası yönlendirme (e-posta doğrulama linki; isteğe bağlı {{ .Token }} kodu şablonda)
 function getSignupEmailRedirectUrl() {
     if (typeof window === 'undefined') return undefined
-    return getDevretinSiteOrigin() + '/login.html?verified=true'
+    return getDevretinSiteOrigin() + getLoginPagePath() + '?verified=true'
 }
 
 // Kullanıcı kaydı — e-posta onayı açıksa session gelmez; kullanıcı OTP veya link ile doğrular
@@ -234,7 +242,7 @@ async function registerUser(email, password, fullName, phone) {
     }
 }
 
-/** Kayıt doğrulama: e-postadaki 6 haneli kod (Supabase şablonunda {{ .Token }}) */
+/** Kayıt doğrulama: e-postadaki kod (şablona {{ .Token }} eklendiyse); çoğu kullanıcı sadece bağlantı kullanır */
 async function verifySignupWithOtp(email, token) {
     try {
         const clean = String(token || '').replace(/\s/g, '')

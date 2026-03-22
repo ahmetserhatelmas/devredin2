@@ -176,25 +176,26 @@
                 <div class="login-header">
                     <div class="verification-icon">📧</div>
                     <h1>E-postanızı doğrulayın</h1>
-                    <p id="verificationEmail">Adresinize 6 haneli kod ve doğrulama bağlantısı gönderildi.</p>
+                    <p id="verificationEmail">E-postanıza bir doğrulama mesajı gönderildi.</p>
                 </div>
 
                 <div class="verification-info">
-                    <p>✉️ E-postanızdaki <strong>6 haneli kodu</strong> aşağıya girin (veya e-postadaki bağlantıya tıklayın).</p>
-                    <p class="verification-hint">Spam / Gereksiz klasörünü kontrol etmeyi unutmayın.</p>
+                    <p>✉️ <strong>Önce</strong> e-postanızdaki <strong>doğrulama bağlantısına</strong> tıklayın (ör. “Confirm your mail” / “Hesabımı doğrula”). Bağlantı hesabınızı onaylar; ardından aşağıdan <strong>Giriş sayfasına dön</strong> deyip e-posta ve şifrenizle giriş yapın.</p>
+                    <p class="verification-hint">E-postada <strong>sayısal kod</strong> satırı yoksa normaldir — sadece bağlantıyı kullanın. Spam / Gereksiz klasörünü kontrol etmeyi unutmayın.</p>
+                    <p class="verification-hint" style="margin-top:0.75rem;">Kod satırı varsa (ör. 6 hane), alternatif olarak aşağıya yazıp doğrulayabilirsiniz.</p>
                 </div>
 
                 <div class="otp-input-wrap">
-                    <label for="signupOtpInput">Doğrulama kodu</label>
-                    <input type="text" id="signupOtpInput" class="otp-input" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="••••••">
+                    <label for="signupOtpInput">Doğrulama kodu <span style="font-weight:400;color:#6b7280;">(e-postada kod varsa)</span></label>
+                    <input type="text" id="signupOtpInput" class="otp-input" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="İsteğe bağlı">
                 </div>
 
                 <button type="button" class="btn btn-primary btn-large" style="width: 100%; margin-bottom: 0.75rem;" id="verifyOtpBtn" onclick="submitSignupOtp()">
-                    Kodu doğrula ve giriş yap
+                    Kod ile doğrula ve giriş yap
                 </button>
 
                 <button type="button" class="btn btn-outline btn-large" style="width: 100%; margin-bottom: 1rem;" onclick="resendVerification()">
-                    Kodu tekrar gönder
+                    Doğrulama e-postasını tekrar gönder
                 </button>
                 
                 <button type="button" class="btn btn-outline btn-large" style="width: 100%;" onclick="showLoginForm()">
@@ -321,7 +322,7 @@
             } else if (result.code === 'EMAIL_NOT_CONFIRMED') {
                 pendingVerificationEmail = email;
                 document.getElementById('verificationEmail').innerHTML =
-                    '<strong>' + email + '</strong> henüz doğrulanmadı. Aşağıya e-postadaki <strong>6 haneli kodu</strong> yazın veya gelen <strong>doğrulama bağlantısına</strong> tıklayın.';
+                    '<strong>' + email + '</strong> henüz doğrulanmamış. E-postadaki <strong>doğrulama bağlantısına</strong> tıklayın; ardından buradan giriş yapın. E-postada kod satırı varsa aşağıya yazabilirsiniz.';
                 var otpEl = document.getElementById('signupOtpInput');
                 if (otpEl) otpEl.value = '';
                 document.getElementById('loginBox').style.display = 'none';
@@ -366,7 +367,7 @@
 
                 pendingVerificationEmail = email;
                 document.getElementById('verificationEmail').innerHTML =
-                    '<strong>' + email + '</strong> adresine <strong>6 haneli kod</strong> ve doğrulama bağlantısı gönderildi.';
+                    '<strong>' + email + '</strong> adresine doğrulama e-postası gönderildi. Çoğu şablonda yalnızca <strong>bağlantı</strong> bulunur — önce linke tıklayın.';
 
                 var otpIn = document.getElementById('signupOtpInput');
                 if (otpIn) otpIn.value = '';
@@ -422,7 +423,7 @@
             }
             var digits = String(code).replace(/\s/g, '');
             if (!digits || digits.length < 6) {
-                alert('Lütfen e-postadaki doğrulama kodunu girin (en az 6 karakter).');
+                alert('E-postanızda sadece doğrulama bağlantısı varsa kod girmeniz gerekmez.\n\n1) E-postadaki "Confirm your mail" (veya benzeri) bağlantısına tıklayın.\n2) Bu sayfada "Giriş sayfasına dön" deyip e-posta ve şifrenizle giriş yapın.\n\nKod satırı eklemek için Supabase → Authentication → Email Templates → Confirm signup şablonuna {{ .Token }} ekleyin (docs/supabase-email-verification.md).');
                 return;
             }
             var btn = document.getElementById('verifyOtpBtn');
@@ -451,7 +452,7 @@
             } finally {
                 if (btn) {
                     btn.disabled = false;
-                    btn.textContent = 'Kodu doğrula ve giriş yap';
+                    btn.textContent = 'Kod ile doğrula ve giriş yap';
                 }
             }
         }

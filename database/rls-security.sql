@@ -154,9 +154,15 @@ FOR SELECT USING (
     status = 'active' OR
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -169,9 +175,15 @@ CREATE POLICY "listings_update_policy" ON listings
 FOR UPDATE USING (
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -180,9 +192,15 @@ CREATE POLICY "listings_delete_policy" ON listings
 FOR DELETE USING (
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -212,9 +230,15 @@ FOR DELETE USING (
         WHERE id = listing_id AND (
             user_id = auth.uid() OR
             auth.jwt() ->> 'email' IN (
+                'admin@admin.com',
+                'admin@devretlink.com',
+                'admin@devretlinkplatform.com',
+                'admin@devredin.com',
+                'admin@devredinplatform.com',
                 'ahmetserhatelmas@gmail.com',
                 'ahmetserhatelmas@hotmail.com',
-                'ahmetserhatelmas@hotmaail.com'
+                'ahmetserhatelmas@hotmaail.com',
+                'devretlink@hotmail.com'
             )
         )
     )
@@ -231,9 +255,15 @@ FOR SELECT USING (
     status = 'active' OR
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -246,9 +276,15 @@ CREATE POLICY "franchises_update" ON franchises
 FOR UPDATE USING (
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -257,9 +293,15 @@ CREATE POLICY "franchises_delete" ON franchises
 FOR DELETE USING (
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -509,9 +551,15 @@ FOR SELECT USING (
     status = 'active' OR
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -524,9 +572,15 @@ CREATE POLICY "emlak_update_own" ON emlak_listings
 FOR UPDATE USING (
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -535,9 +589,15 @@ CREATE POLICY "emlak_delete_own" ON emlak_listings
 FOR DELETE USING (
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@gmail.com',
         'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
+        'ahmetserhatelmas@hotmaail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -567,9 +627,15 @@ FOR DELETE USING (
         WHERE id = listing_id AND (
             user_id = auth.uid() OR
             auth.jwt() ->> 'email' IN (
+                'admin@admin.com',
+                'admin@devretlink.com',
+                'admin@devretlinkplatform.com',
+                'admin@devredin.com',
+                'admin@devredinplatform.com',
                 'ahmetserhatelmas@gmail.com',
                 'ahmetserhatelmas@hotmail.com',
-                'ahmetserhatelmas@hotmaail.com'
+                'ahmetserhatelmas@hotmaail.com',
+                'devretlink@hotmail.com'
             )
         )
     )

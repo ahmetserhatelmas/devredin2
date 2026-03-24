@@ -107,9 +107,15 @@ FOR SELECT USING (
     status = 'active' OR
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@hotmail.com',
         'ahmetserhatelmas@hotmaail.com',
-        'ahmetserhatelmas@gmail.com'
+        'ahmetserhatelmas@gmail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -124,9 +130,15 @@ CREATE POLICY "emlak_update_own" ON emlak_listings
 FOR UPDATE USING (
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@hotmail.com',
         'ahmetserhatelmas@hotmaail.com',
-        'ahmetserhatelmas@gmail.com'
+        'ahmetserhatelmas@gmail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -136,9 +148,15 @@ CREATE POLICY "emlak_delete_own" ON emlak_listings
 FOR DELETE USING (
     auth.uid() = user_id OR
     auth.jwt() ->> 'email' IN (
+        'admin@admin.com',
+        'admin@devretlink.com',
+        'admin@devretlinkplatform.com',
+        'admin@devredin.com',
+        'admin@devredinplatform.com',
         'ahmetserhatelmas@hotmail.com',
         'ahmetserhatelmas@hotmaail.com',
-        'ahmetserhatelmas@gmail.com'
+        'ahmetserhatelmas@gmail.com',
+        'devretlink@hotmail.com'
     )
 );
 
@@ -156,7 +174,23 @@ FOR INSERT WITH CHECK (
 DROP POLICY IF EXISTS "emlak_images_delete" ON emlak_images;
 CREATE POLICY "emlak_images_delete" ON emlak_images
 FOR DELETE USING (
-    EXISTS (SELECT 1 FROM emlak_listings WHERE id = listing_id AND user_id = auth.uid())
+    EXISTS (
+        SELECT 1 FROM emlak_listings el
+        WHERE el.id = listing_id AND (
+            el.user_id = auth.uid() OR
+            auth.jwt() ->> 'email' IN (
+                'admin@admin.com',
+                'admin@devretlink.com',
+                'admin@devretlinkplatform.com',
+                'admin@devredin.com',
+                'admin@devredinplatform.com',
+                'ahmetserhatelmas@hotmail.com',
+                'ahmetserhatelmas@hotmaail.com',
+                'ahmetserhatelmas@gmail.com',
+                'devretlink@hotmail.com'
+            )
+        )
+    )
 );
 
 -- Supabase Storage: Mevcut "listing-images" bucket'ı kullanılır (zaten public).

@@ -463,7 +463,7 @@
         let rejectingId = null;
         let rejectingType = null;
 
-        const adminEmails = ['admin@devretlink.com', 'admin@devretlinkplatform.com', 'admin@admin.com', 'ahmetserhatelmas@hotmail.com', 'ahmetserhatelmas@hotmaail.com', 'ahmetserhatelmas@gmail.com'];
+        const adminEmails = ['admin@devretlink.com', 'admin@devretlinkplatform.com', 'admin@admin.com', 'devretlink@hotmail.com', 'ahmetserhatelmas@hotmail.com', 'ahmetserhatelmas@hotmaail.com', 'ahmetserhatelmas@gmail.com'];
 
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAdminAccess();
@@ -1080,12 +1080,27 @@
             if (!confirm('İlanı silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) return;
             
             try {
-                await supabase.from('listings').delete().eq('id', id);
+                const { error: imgErr } = await supabase.from('listing_images').delete().eq('listing_id', id);
+                if (imgErr) console.warn('listing_images silme:', imgErr);
+
+                const { data: deletedRows, error } = await supabase
+                    .from('listings')
+                    .delete()
+                    .eq('id', id)
+                    .select('id');
+
+                if (error) throw error;
+                if (!deletedRows || deletedRows.length === 0) {
+                    alert('İlan silinemedi. Oturumunuzda silme izni yok olabilir (RLS). database/fix-admin-rls.sql dosyasını Supabase SQL Editor’de çalıştırın.');
+                    loadListings();
+                    return;
+                }
                 alert('İlan silindi!');
                 loadListings();
                 loadDashboard();
             } catch (e) {
-                alert('Hata: ' + e.message);
+                console.error('deleteListing:', e);
+                alert('Hata: ' + (e.message || e));
             }
         }
 
@@ -1115,11 +1130,24 @@
             if (!confirm('Franchise\'ı silmek istediğinize emin misiniz?')) return;
             
             try {
-                await supabase.from('franchises').delete().eq('id', id);
+                const { data: deletedRows, error } = await supabase
+                    .from('franchises')
+                    .delete()
+                    .eq('id', id)
+                    .select('id');
+
+                if (error) throw error;
+                if (!deletedRows || deletedRows.length === 0) {
+                    alert('Franchise silinemedi. Oturumunuzda silme izni yok olabilir (RLS). database/fix-admin-rls.sql dosyasını Supabase SQL Editor’de çalıştırın.');
+                    loadFranchises();
+                    return;
+                }
                 alert('Franchise silindi!');
                 loadFranchises();
+                loadDashboard();
             } catch (e) {
-                alert('Hata: ' + e.message);
+                console.error('deleteFranchise:', e);
+                alert('Hata: ' + (e.message || e));
             }
         }
 
@@ -1225,6 +1253,16 @@
 
                 if (!listings || listings.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="8" class="empty">İlan bulunamadı</td></tr>';
+                    try {
+                        const { count, error: cErr } = await supabase
+                            .from('emlak_listings')
+                            .select('*', { count: 'exact', head: true })
+                            .eq('status', 'pending');
+                        const badge = document.getElementById('emlakBadge');
+                        if (badge && !cErr && count !== null) badge.textContent = count;
+                    } catch (badgeErr) {
+                        console.warn('emlakBadge:', badgeErr);
+                    }
                     return;
                 }
 
@@ -1258,10 +1296,16 @@
                         </tr>`;
                 }).join('');
 
-                // Update badge
-                const pendingCount = listings.filter(l => l.status === 'pending').length;
-                if (currentEmlakFilter === 'pending') {
-                    document.getElementById('emlakBadge').textContent = pendingCount;
+                // Bekleyen ilan rozeti (filtre ne olursa olsun doğru sayı)
+                try {
+                    const { count, error: cErr } = await supabase
+                        .from('emlak_listings')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('status', 'pending');
+                    const badge = document.getElementById('emlakBadge');
+                    if (badge && !cErr && count !== null) badge.textContent = count;
+                } catch (badgeErr) {
+                    console.warn('emlakBadge:', badgeErr);
                 }
 
             } catch(e) {
@@ -1315,14 +1359,28 @@
         async function deleteEmlak(id) {
             if (!confirm('Bu emlak ilanını silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) return;
             try {
-                // Delete images first
-                await supabase.from('emlak_images').delete().eq('listing_id', id);
-                const { error } = await supabase.from('emlak_listings').delete().eq('id', id);
+                const { error: imgErr } = await supabase.from('emlak_images').delete().eq('listing_id', id);
+                if (imgErr) console.warn('emlak_images silme:', imgErr);
+
+                const { data: deletedRows, error } = await supabase
+                    .from('emlak_listings')
+                    .delete()
+                    .eq('id', id)
+                    .select('id');
+
                 if (error) throw error;
+                if (!deletedRows || deletedRows.length === 0) {
+                    alert('İlan silinemedi. Row Level Security (RLS) oturumunuzda silme izni yok olabilir.\n\nSupabase’de emlak politikalarına kullandığınız admin e-postasını ekleyin (database/fix-admin-rls.sql içindeki EMLAK bölümü veya emlak-schema.sql).');
+                    loadEmlakListings();
+                    return;
+                }
                 alert('Emlak ilanı silindi!');
                 loadEmlakListings();
                 loadDashboard();
-            } catch(e) { alert('Hata: ' + e.message); }
+            } catch (e) {
+                console.error('deleteEmlak:', e);
+                alert('Hata: ' + (e.message || e));
+            }
         }
         // ===== EMLAK YÖNETİMİ BİTİŞ =====
 

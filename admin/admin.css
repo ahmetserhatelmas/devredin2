@@ -140,6 +140,114 @@ body {
     margin-left: 260px;
     padding: 2rem;
     max-width: calc(100vw - 260px);
+    min-width: 0;
+}
+
+/* Top bar (başlık + mobil menü) */
+.top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: nowrap;
+}
+
+.top-header-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.header-actions {
+    flex-shrink: 0;
+}
+
+.admin-user {
+    font-size: 0.8125rem;
+    color: #6b7280;
+    max-width: min(200px, 40vw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Mobil menü — masaüstünde gizli */
+.admin-menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.admin-menu-toggle:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.admin-menu-bars,
+.admin-menu-bars::before,
+.admin-menu-bars::after {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #374151;
+    border-radius: 1px;
+    position: relative;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.admin-menu-bars::before,
+.admin-menu-bars::after {
+    content: '';
+    position: absolute;
+    left: 0;
+}
+
+.admin-menu-bars::before {
+    top: -7px;
+}
+
+.admin-menu-bars::after {
+    top: 7px;
+}
+
+.admin-menu-toggle.is-open .admin-menu-bars {
+    background: transparent;
+}
+
+.admin-menu-toggle.is-open .admin-menu-bars::before {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.admin-menu-toggle.is-open .admin-menu-bars::after {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobil: menü arkası karartma */
+.admin-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.5);
+    z-index: 1040;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.admin-sidebar-overlay.active {
+    display: block;
 }
 
 .content-section {
@@ -877,27 +985,147 @@ tbody tr:hover {
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
-        transition: transform 0.3s;
+        transition: transform 0.28s ease;
+        width: min(288px, 88vw);
+        box-shadow: 8px 0 32px rgba(0, 0, 0, 0.12);
+        z-index: 1050;
     }
-    
+
     .sidebar.active {
         transform: translateX(0);
     }
-    
+
     .main-content {
         margin-left: 0;
+        max-width: 100%;
+        width: 100%;
+        padding: 1rem;
+        padding-bottom: 2rem;
     }
-    
+
+    .admin-menu-toggle {
+        display: flex;
+    }
+
+    .top-header {
+        position: sticky;
+        top: 0;
+        z-index: 900;
+        margin: -1rem -1rem 1.25rem;
+        padding: 0.75rem 1rem;
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .top-header-title {
+        font-size: 1.15rem;
+    }
+
+    .admin-user {
+        max-width: min(160px, 35vw);
+        font-size: 0.7rem;
+    }
+
     .stats-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
-    
+
+    .stat-card {
+        padding: 1.1rem;
+    }
+
+    .recent-section h3 {
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .filter-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        gap: 0.35rem;
+        padding-bottom: 0.15rem;
+        scrollbar-width: thin;
+    }
+
+    .filter-btn {
+        flex-shrink: 0;
+        padding: 0.55rem 0.85rem;
+        font-size: 0.8125rem;
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+
     .filters {
         flex-direction: column;
     }
-    
+
+    .search-box {
+        width: 100%;
+    }
+
     .search-box input {
         width: 100%;
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 10px;
+    }
+
+    .data-table {
+        min-width: 720px;
+    }
+
+    .data-table thead th,
+    .data-table tbody td {
+        padding: 0.75rem 0.65rem;
+        font-size: 0.8125rem;
+    }
+
+    .action-btn {
+        min-height: 44px;
+        padding: 0.5rem 0.75rem;
+        touch-action: manipulation;
+    }
+
+    .btn {
+        min-height: 44px;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .section-header .btn {
+        width: auto;
+    }
+
+    .nav-item {
+        min-height: 48px;
+        padding: 0.75rem 1.25rem;
+        touch-action: manipulation;
+    }
+
+    .modal-content {
+        width: calc(100% - 2rem);
+        max-height: min(90vh, 640px);
+        overflow-y: auto;
+        margin: 1rem;
+    }
+
+    .modal-overlay .modal {
+        max-width: calc(100vw - 1.5rem);
+        margin: 0.75rem;
     }
 }
 

@@ -45,15 +45,15 @@ async function loadListingDetail(listingId) {
                 images:listing_images(image_url, is_primary)
             `)
             .eq('id', listingId)
-            .single()
-        
+            .maybeSingle()
+
         if (error) {
             console.error('Supabase hatası:', error)
             throw error
         }
-        
+
         if (!data) {
-            showError('İlan bulunamadı!')
+            showError('Bu ilan bulunamadı veya yayından kaldırılmış olabilir.')
             return
         }
         
@@ -68,7 +68,12 @@ async function loadListingDetail(listingId) {
         
     } catch (error) {
         console.error('❌ İlan yükleme hatası:', error)
-        showError('İlan yüklenirken bir hata oluştu: ' + (error.message || error))
+        const msg = (error && error.message) || String(error)
+        if (/JSON object|single\(\)|PGRST116/i.test(msg)) {
+            showError('Bu ilan bulunamadı veya yayından kaldırılmış olabilir.')
+        } else {
+            showError('İlan yüklenirken bir hata oluştu: ' + msg)
+        }
     }
 }
 

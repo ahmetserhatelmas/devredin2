@@ -40,11 +40,11 @@ async function loadFranchiseDetail(franchiseId) {
                 city:cities!hq_city_id(name)
             `)
             .eq('id', franchiseId)
-            .single()
-        
+            .maybeSingle()
+
         if (error) throw error
         if (!data) {
-            showError('Franchise bulunamadı!')
+            showError('Bu franchise bulunamadı veya yayından kaldırılmış olabilir.')
             return
         }
         
@@ -59,7 +59,12 @@ async function loadFranchiseDetail(franchiseId) {
         
     } catch (error) {
         console.error('❌ Franchise yükleme hatası:', error)
-        showError('Franchise yüklenirken hata oluştu: ' + error.message)
+        const msg = (error && error.message) || String(error)
+        if (/JSON object|single\(\)|PGRST116/i.test(msg)) {
+            showError('Bu franchise bulunamadı veya yayından kaldırılmış olabilir.')
+        } else {
+            showError('Franchise yüklenirken hata oluştu: ' + msg)
+        }
     }
 }
 

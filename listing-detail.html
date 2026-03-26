@@ -593,7 +593,7 @@
                     query = query.eq('slug', slug);
                 }
                 
-                const { data, error } = await query.single();
+                const { data, error } = await query.maybeSingle();
 
                 console.log('📊 Supabase sonucu:', { data, error });
 
@@ -602,9 +602,9 @@
                     showError('İlan yüklenirken hata oluştu: ' + error.message);
                     return;
                 }
-                
+
                 if (!data) {
-                    showError('Bu ilan bulunamadı veya kaldırılmış olabilir.');
+                    showError('Bu ilan bulunamadı veya yayından kaldırılmış olabilir.');
                     return;
                 }
                 
@@ -615,7 +615,7 @@
                             .from('profiles')
                             .select('full_name, phone')
                             .eq('id', data.user_id)
-                            .single();
+                            .maybeSingle();
                         
                         if (!ownerError && ownerData) {
                             data.owner = ownerData;
@@ -638,7 +638,12 @@
 
             } catch (e) {
                 console.error('Load error:', e);
-                showError('İlan yüklenirken beklenmeyen bir hata oluştu.');
+                const msg = (e && e.message) || String(e);
+                if (/JSON object|single\(\)|PGRST116/i.test(msg)) {
+                    showError('Bu ilan bulunamadı veya yayından kaldırılmış olabilir.');
+                } else {
+                    showError('İlan yüklenirken beklenmeyen bir hata oluştu.');
+                }
             }
         }
         

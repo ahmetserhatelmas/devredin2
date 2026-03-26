@@ -531,13 +531,15 @@
             ]);
         }
 
-        const CACHE_TTL = 5 * 60 * 1000; // 5 min
-        function cacheGet(key) {
+        const CACHE_TTL = 5 * 60 * 1000; // 5 min (genel)
+        const HOME_LISTINGS_TTL = 45 * 1000; // ilan/franchise slider — admin silince daha çabuk yenilensin
+        function cacheGet(key, customTtlMs) {
             try {
                 const raw = sessionStorage.getItem(key);
                 if (!raw) return null;
                 const { data, ts } = JSON.parse(raw);
-                if (Date.now() - ts > CACHE_TTL) { sessionStorage.removeItem(key); return null; }
+                const ttl = customTtlMs !== undefined ? customTtlMs : CACHE_TTL;
+                if (Date.now() - ts > ttl) { sessionStorage.removeItem(key); return null; }
                 return data;
             } catch { return null; }
         }
@@ -599,7 +601,7 @@
 
         async function loadFeaturedListings() {
             try {
-                let data = cacheGet('featured_listings');
+                let data = cacheGet('featured_listings_v2', HOME_LISTINGS_TTL);
                 if (!data) {
                     const res = await supabase
                         .from('listings')
@@ -609,7 +611,7 @@
                         .order('created_at', { ascending: false })
                         .limit(8);
                     data = res.data;
-                    if (data) cacheSet('featured_listings', data);
+                    if (data) cacheSet('featured_listings_v2', data);
                 }
                 const track = document.querySelector('#featuredListings .slider-track');
                 if (data && data.length > 0) {
@@ -622,7 +624,7 @@
 
         async function loadRecentListings() {
             try {
-                let data = cacheGet('recent_listings');
+                let data = cacheGet('recent_listings_v2', HOME_LISTINGS_TTL);
                 if (!data) {
                     const res = await supabase
                         .from('listings')
@@ -631,7 +633,7 @@
                         .order('created_at', { ascending: false })
                         .limit(8);
                     data = res.data;
-                    if (data) cacheSet('recent_listings', data);
+                    if (data) cacheSet('recent_listings_v2', data);
                 }
                 const track = document.querySelector('#recentListings .slider-track');
                 if (data && data.length > 0) {
@@ -644,7 +646,7 @@
 
         async function loadFranchiseListings() {
             try {
-                let data = cacheGet('franchise_listings');
+                let data = cacheGet('franchise_listings_v2', HOME_LISTINGS_TTL);
                 if (!data) {
                     const res = await supabase
                         .from('franchises')
@@ -653,7 +655,7 @@
                         .order('created_at', { ascending: false })
                         .limit(8);
                     data = res.data;
-                    if (data) cacheSet('franchise_listings', data);
+                    if (data) cacheSet('franchise_listings_v2', data);
                 }
                 const track = document.querySelector('#franchiseListings .slider-track');
                 if (data && data.length > 0) {

@@ -47,12 +47,12 @@ Güncellenen dosyalar:
 
 Tarayıcınızda açın:
 ```bash
-file:///Users/ase/Desktop/devredin/test.html
+file:///path/to/proje/test.html
 ```
 
 Veya:
 ```bash
-cd /Users/ase/Desktop/devredin
+cd /path/to/proje
 python3 -m http.server 8000
 # Sonra http://localhost:8000/test.html
 ```
@@ -272,7 +272,7 @@ SELECT * FROM categories;
 ### Test sayfası açılmıyor:
 ➡️ Dosya yolunu kontrol edin veya server başlatın:
 ```bash
-cd /Users/ase/Desktop/devredin
+cd /path/to/proje
 python3 -m http.server 8000
 ```
 

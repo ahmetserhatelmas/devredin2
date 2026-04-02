@@ -5,7 +5,7 @@
 1. [Supabase Dashboard](https://app.supabase.com) adresine gidin
 2. "New Project" butonuna tıklayın
 3. Proje bilgilerini girin:
-   - Project name: `devredin-platform`
+   - Project name: `devretlink` (veya tercih ettiğiniz ad)
    - Database Password: Güçlü bir şifre oluşturun (kaydedin!)
    - Region: Europe (Frankfurt) veya yakınınız
 4. "Create new project" tıklayın (2-3 dakika sürer)
@@ -84,7 +84,7 @@ USING (
 ### NPM Paketlerini Kurun
 
 ```bash
-cd /Users/ase/Desktop/devredin
+cd /path/to/proje
 npm init -y
 npm install @supabase/supabase-js
 ```
@@ -186,7 +186,7 @@ Host: smtp.gmail.com
 Port: 587
 Username: your-email@gmail.com
 Password: your-app-password
-Sender email: noreply@devredinplatform.com
+Sender email: kendi domain noreply adresiniz (ör. noreply@devretlink.com)
 ```
 
 ## 🎯 Adım 10: Test Verisi Ekleyin

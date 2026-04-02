@@ -82,7 +82,7 @@
                     </div>
                     
                     <script>
-                        var _u = localStorage.getItem('devredin_user');
+                        var _u = localStorage.getItem('devretlink_user') || localStorage.getItem('devredin_user');
                         document.write(_u 
                             ? '<a href="add-franchise.html" class="btn btn-primary-nav">İlan Oluştur</a>'
                             : '<a href="login.html" class="btn btn-primary-nav">Üye Ol</a>'
@@ -307,7 +307,10 @@
         // Auth functions
         async function checkAuth() {
             try {
-                const cached = localStorage.getItem('devredin_user');
+                if (typeof window.devretlinkMigrateUserStorageKey === 'function') {
+                    window.devretlinkMigrateUserStorageKey();
+                }
+                const cached = localStorage.getItem('devretlink_user');
                 if (cached) {
                     const user = JSON.parse(cached);
                     updateAuthUI(user);
@@ -322,10 +325,12 @@
                         .single();
                     
                     if (profile) {
-                        localStorage.setItem('devredin_user', JSON.stringify(profile));
+                        localStorage.removeItem('devredin_user');
+                        localStorage.setItem('devretlink_user', JSON.stringify(profile));
                         updateAuthUI(profile);
                     }
                 } else {
+                    localStorage.removeItem('devretlink_user');
                     localStorage.removeItem('devredin_user');
                     updateAuthUI(null);
                 }
@@ -379,6 +384,7 @@
 
         async function logout() {
             await supabase.auth.signOut();
+            localStorage.removeItem('devretlink_user');
             localStorage.removeItem('devredin_user');
             window.location.href = 'index.html';
         }

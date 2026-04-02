@@ -140,7 +140,10 @@ async function loginUser(email, password) {
             inits = uName.split(' ').map(function (n) { return n[0] }).join('').toUpperCase().slice(0, 2)
         }
         try {
-            localStorage.setItem('devredin_user', JSON.stringify({ initials: inits, name: uName }))
+            try {
+                localStorage.removeItem('devredin_user')
+            } catch (e) {}
+            localStorage.setItem('devretlink_user', JSON.stringify({ initials: inits, name: uName }))
         } catch (e) {}
 
         console.log('Login successful:', data)

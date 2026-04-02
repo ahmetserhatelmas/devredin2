@@ -6,7 +6,7 @@
 
 1. https://app.supabase.com adresine gidin
 2. "New Project" tıklayın
-3. Proje adı: `devredin-platform`
+3. Proje adı: `devretlink` (veya tercih ettiğiniz ad)
 4. Güçlü bir database şifresi oluşturun
 5. Region: Europe (Frankfurt)
 6. "Create new project" tıklayın
@@ -56,7 +56,7 @@ Mevcut HTML dosyalarınızın `<head>` bölümüne ekleyin:
 **Option B: NPM Kullanımı**
 
 ```bash
-cd /Users/ase/Desktop/devredin
+cd /path/to/proje
 npm install
 ```
 
@@ -131,7 +131,7 @@ npm install
 ## 📚 Dosya Yapısı
 
 ```
-devredin/
+proje-kökü/
 ├── 📄 index.html                  # Ana sayfa (backende bağlayın)
 ├── 📄 listings.html               # İlanlar sayfası
 ├── 📄 listing-detail.html         # İlan detay

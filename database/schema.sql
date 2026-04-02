@@ -1,5 +1,5 @@
 -- ============================================
--- DEVREDIN PLATFORM - SUPABASE DATABASE SCHEMA
+-- DEVRET LINK — SUPABASE DATABASE SCHEMA
 -- ============================================
 
 -- Enable necessary extensions

@@ -14,7 +14,7 @@
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <a href="index.html" class="logo-devredin">devret link</a>
+                    <a href="index.html" class="logo-site-brand">devret link</a>
                     <span class="logo-divider">|</span>
                     <a href="franchise.html" class="logo-fr">fr.</a>
                 </div>
@@ -117,7 +117,7 @@
                     
                     <script>
                         // Pre-render correct button based on cache
-                        var _u = localStorage.getItem('devredin_user');
+                        var _u = localStorage.getItem('devretlink_user') || localStorage.getItem('devredin_user');
                         document.write(_u 
                             ? '<a href="add-franchise.html" class="btn btn-primary-nav" id="ctaBtn">İlan Oluştur</a>'
                             : '<a href="login.html" class="btn btn-primary-nav" id="ctaBtn">Üye Ol</a>'
@@ -545,7 +545,7 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <div class="footer-logo">
-                        <a href="index.html" class="logo-devredin">devret link</a>
+                        <a href="index.html" class="logo-site-brand">devret link</a>
                         <span class="logo-divider">|</span>
                         <a href="franchise.html" class="logo-fr">fr.</a>
                     </div>
@@ -587,7 +587,7 @@
     </footer>
 
     <!-- Back to devret link button -->
-    <a href="index.html" class="back-to-devredin" title="Devret Link'e Dön">
+    <a href="index.html" class="back-to-site-home" title="Devret Link'e Dön">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="m15 18-6-6 6-6"/>
         </svg>

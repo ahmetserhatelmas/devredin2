@@ -1,6 +1,6 @@
-# DevredinPlatform - İşletme Devir Platformu
+# Devret Link — İşletme Devir Platformu
 
-Türkiye'nin en büyük işletme devir platformu. İşletmenizi devredin veya hayalinizdeki işletmeyi devralın.
+Türkiye'nin en büyük işletme devir platformu. İşletme devri yapın veya hayalinizdeki işletmeyi devralın.
 
 ## 🚀 Özellikler
 
@@ -21,7 +21,7 @@ Türkiye'nin en büyük işletme devir platformu. İşletmenizi devredin veya ha
 ## 📁 Dosya Yapısı
 
 ```
-devredin/
+proje-kökü/
 ├── index.html              # Ana sayfa
 ├── listings.html           # İlanlar listesi sayfası
 ├── listing-detail.html     # İlan detay sayfası
@@ -216,7 +216,7 @@ Bu proje eğitim amaçlı oluşturulmuştur.
 
 ## 📧 İletişim
 
-Sorularınız için: info@devredinplatform.com
+Sorularınız için: site üzerindeki iletişim bilgilerini kullanın.
 
 ## 🎉 Teşekkürler
 

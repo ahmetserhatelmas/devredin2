@@ -1,8 +1,24 @@
 // Shared Auth Functions for all pages
 
+const DEVRETLINK_USER_STORAGE_KEY = 'devretlink_user';
+/** Eski siteden kalan localStorage anahtarı (otomatik taşınır; taşıma tamamlandıktan sonra kaldırılabilir). */
+const LEGACY_USER_STORAGE_KEY = 'devredin_user';
+
+function migrateLegacyUserStorageKey() {
+    try {
+        const legacy = localStorage.getItem(LEGACY_USER_STORAGE_KEY);
+        if (!legacy) return;
+        if (!localStorage.getItem(DEVRETLINK_USER_STORAGE_KEY)) {
+            localStorage.setItem(DEVRETLINK_USER_STORAGE_KEY, legacy);
+        }
+        localStorage.removeItem(LEGACY_USER_STORAGE_KEY);
+    } catch (e) {}
+}
+
 // Quick auth check from localStorage (instant UI update)
 function quickAuthCheck() {
-    const cached = localStorage.getItem('devredin_user');
+    migrateLegacyUserStorageKey();
+    const cached = localStorage.getItem(DEVRETLINK_USER_STORAGE_KEY);
     if (cached) {
         try {
             const userData = JSON.parse(cached);
@@ -73,11 +89,13 @@ async function checkAuth() {
             } catch (e) {}
             
             // Cache user data
-            localStorage.setItem('devredin_user', JSON.stringify({ initials, name: userName }));
+            localStorage.removeItem(LEGACY_USER_STORAGE_KEY);
+            localStorage.setItem(DEVRETLINK_USER_STORAGE_KEY, JSON.stringify({ initials, name: userName }));
             applyAuthUI(true, initials, userName);
         } else {
             // Clear cache
-            localStorage.removeItem('devredin_user');
+            localStorage.removeItem(DEVRETLINK_USER_STORAGE_KEY);
+            localStorage.removeItem(LEGACY_USER_STORAGE_KEY);
             applyAuthUI(false);
         }
     } catch (e) {
@@ -93,7 +111,8 @@ function toggleAuthDropdown() {
 
 // Logout
 async function logout() {
-    localStorage.removeItem('devredin_user');
+    localStorage.removeItem(DEVRETLINK_USER_STORAGE_KEY);
+    localStorage.removeItem(LEGACY_USER_STORAGE_KEY);
     await supabase.auth.signOut();
     window.location.href = 'index.html';
 }
@@ -105,6 +124,10 @@ document.addEventListener('click', (e) => {
         if (dropdown) dropdown.classList.remove('active');
     }
 });
+
+if (typeof window !== 'undefined') {
+    window.devretlinkMigrateUserStorageKey = migrateLegacyUserStorageKey;
+}
 
 // Run quick check immediately when script loads
 quickAuthCheck();

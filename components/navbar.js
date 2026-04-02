@@ -3,7 +3,7 @@
 
 function createNavbar(options = {}) {
     const { theme = 'default', activePage = '' } = options;
-    const isDevredin = theme === 'default';
+    const useRootPaths = theme === 'default';
     const isFranchise = theme === 'franchise';
 
     return `
@@ -11,9 +11,9 @@ function createNavbar(options = {}) {
         <div class="container">
             <div class="nav-wrapper">
                 <div class="logo">
-                    <a href="${isDevredin ? 'index.html' : '../index.html'}" class="logo-main">devret link</a>
+                    <a href="${useRootPaths ? 'index.html' : '../index.html'}" class="logo-main">devret link</a>
                     <span class="logo-divider">|</span>
-                    <a href="${isDevredin ? 'franchise.html' : '../franchise.html'}" class="logo-sub">fr.</a>
+                    <a href="${useRootPaths ? 'franchise.html' : '../franchise.html'}" class="logo-sub">fr.</a>
                 </div>
                 
                 <ul class="nav-menu">

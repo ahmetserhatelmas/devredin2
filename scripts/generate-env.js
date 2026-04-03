@@ -77,3 +77,10 @@ if (missing.length) {
 } else {
     console.log('[generate-env] js/runtime-config.js yazıldı (tam).');
 }
+
+const sm = (process.env.SITE_MAINTENANCE || '').trim();
+if (sm === '1' || sm === 'true' || sm === 'yes') {
+    console.log(
+        '[generate-env] SITE_MAINTENANCE açık — Vercel middleware tüm sayfaları maintenance.html’e yönlendirir.'
+    );
+}

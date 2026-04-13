@@ -254,7 +254,7 @@ function renderListingDetail(listing) {
         docsHtml += `
             <div class="document-item">
                 <div class="document-icon">
-                    <span class="doc-logo">d.</span>
+                    <span class="doc-logo">devret link</span>
                 </div>
                 <div class="document-info">
                     <span class="document-title">Devret Link İlan Raporu</span>

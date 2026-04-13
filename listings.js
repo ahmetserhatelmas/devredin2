@@ -679,6 +679,17 @@ function parseURLParams() {
     if (search) {
         currentFilters.search = search
     }
+
+    const minP = params.get('min')
+    if (minP != null && minP !== '') {
+        const n = parseInt(minP, 10)
+        if (!Number.isNaN(n) && n >= 0) currentFilters.minPrice = n
+    }
+    const maxP = params.get('max')
+    if (maxP != null && maxP !== '') {
+        const n = parseInt(maxP, 10)
+        if (!Number.isNaN(n) && n >= 0) currentFilters.maxPrice = n
+    }
 }
 
 // Filtreleri UI'a uygula (senkron - hızlı)
@@ -689,6 +700,14 @@ function applyFiltersToUI() {
         if (searchInput) {
             searchInput.value = currentFilters.search
         }
+    }
+    if (currentFilters.minPrice != null) {
+        const minPriceInput = document.getElementById('minPriceInput')
+        if (minPriceInput) minPriceInput.value = currentFilters.minPrice
+    }
+    if (currentFilters.maxPrice != null) {
+        const maxPriceInput = document.getElementById('maxPriceInput')
+        if (maxPriceInput) maxPriceInput.value = currentFilters.maxPrice
     }
 }
 

@@ -98,6 +98,80 @@ body {
     color: #e55a2b;
 }
 
+/* Mobil: fr. → açılır menü (franchise / emlak); masaüstünde doğrudan link */
+.logo-channel {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.logo-sub-mobile-trigger {
+    display: none;
+    font: inherit;
+    font-family: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    text-align: inherit;
+}
+
+.logo-channel-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 6px;
+    min-width: 10.5rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 1002;
+    overflow: hidden;
+}
+
+.logo-channel-dropdown.active {
+    display: block;
+}
+
+.logo-channel-link {
+    display: block;
+    padding: 0.65rem 1rem;
+    color: var(--gray-900);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-style: normal;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo-channel-link:last-child {
+    border-bottom: none;
+}
+
+.logo-channel-link:hover {
+    background: var(--gray-100);
+    color: var(--primary);
+}
+
+@media (min-width: 1025px) {
+    .logo-channel-dropdown {
+        display: none !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .logo-sub-desktop {
+        display: none !important;
+    }
+
+    .logo-sub-mobile-trigger {
+        display: inline;
+    }
+}
+
 .nav-menu {
     display: flex;
     align-items: center;
@@ -1425,7 +1499,8 @@ body {
     }
 
     .logo-main,
-    .logo-sub {
+    .logo-sub,
+    .logo-sub-mobile-trigger {
         font-size: 1.2rem;
     }
 

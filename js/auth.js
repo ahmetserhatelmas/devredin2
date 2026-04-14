@@ -117,8 +117,39 @@ async function logout() {
     window.location.href = 'index.html';
 }
 
-// Close dropdown on outside click
+// Close dropdowns on outside click; mobil logo kanalı (fr. / Emlak)
 document.addEventListener('click', (e) => {
+    if (e.target.closest('.logo-channel-link')) {
+        document.querySelectorAll('.logo-channel-dropdown.active').forEach((m) => m.classList.remove('active'));
+        document.querySelectorAll('.logo-sub-mobile-trigger[aria-expanded="true"]').forEach((t) =>
+            t.setAttribute('aria-expanded', 'false')
+        );
+    }
+
+    const trigger = e.target.closest('.logo-sub-mobile-trigger');
+    if (trigger) {
+        e.preventDefault();
+        const channel = trigger.closest('.logo-channel');
+        const menu = channel && channel.querySelector('.logo-channel-dropdown');
+        const wasOpen = menu && menu.classList.contains('active');
+        document.querySelectorAll('.logo-channel-dropdown.active').forEach((m) => m.classList.remove('active'));
+        document.querySelectorAll('.logo-sub-mobile-trigger[aria-expanded="true"]').forEach((t) =>
+            t.setAttribute('aria-expanded', 'false')
+        );
+        if (menu && !wasOpen) {
+            menu.classList.add('active');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+        return;
+    }
+
+    if (!e.target.closest('.logo-channel')) {
+        document.querySelectorAll('.logo-channel-dropdown.active').forEach((m) => m.classList.remove('active'));
+        document.querySelectorAll('.logo-sub-mobile-trigger[aria-expanded="true"]').forEach((t) =>
+            t.setAttribute('aria-expanded', 'false')
+        );
+    }
+
     if (!e.target.closest('.auth-menu')) {
         const dropdown = document.getElementById('authDropdown');
         if (dropdown) dropdown.classList.remove('active');

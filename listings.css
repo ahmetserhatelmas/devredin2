@@ -99,6 +99,22 @@
     font-style: italic;
 }
 
+.sidebar-logo .logo-channel {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.sidebar-logo .logo-sub-mobile-trigger {
+    color: #000000;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.sidebar-logo .logo-channel-dropdown {
+    z-index: 1100;
+}
+
 .close-sidebar {
     width: 36px;
     height: 36px;

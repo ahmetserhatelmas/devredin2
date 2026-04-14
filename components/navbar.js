@@ -13,14 +13,7 @@ function createNavbar(options = {}) {
                 <div class="logo">
                     <a href="${useRootPaths ? 'index.html' : '../index.html'}" class="logo-main">devret link</a>
                     <span class="logo-divider">|</span>
-                    <div class="logo-channel">
-                        <a href="${useRootPaths ? 'franchise.html' : '../franchise.html'}" class="logo-sub logo-sub-desktop">fr.</a>
-                        <button type="button" class="logo-sub logo-sub-mobile-trigger" aria-expanded="false" aria-haspopup="true" aria-label="Franchise veya Emlak seçin">fr.</button>
-                        <div class="logo-channel-dropdown" role="menu">
-                            <a href="${useRootPaths ? 'franchise.html' : '../franchise.html'}" class="logo-channel-link" role="menuitem">fr.</a>
-                            <a href="${useRootPaths ? 'emlak.html' : '../emlak.html'}" class="logo-channel-link" role="menuitem">Emlak</a>
-                        </div>
-                    </div>
+                    <a href="${useRootPaths ? 'franchise.html' : '../franchise.html'}" class="logo-sub">fr.</a>
                 </div>
                 
                 <ul class="nav-menu">
@@ -36,6 +29,8 @@ function createNavbar(options = {}) {
                     <li><a href="blog.html" class="nav-link ${activePage === 'blog' ? 'active' : ''}">Blog</a></li>
                     ${!isFranchise ? `<li><a href="add-listing.html" class="create-listing-mobile" style="display:none;">Ücretsiz İlan Oluştur</a></li>` : ''}
                 </ul>
+                
+                <a href="${useRootPaths ? 'emlak.html' : '../emlak.html'}" class="nav-emlak-mobile" data-i18n="nav_estate">Emlak</a>
                 
                 <div class="nav-actions">
                     <button class="nav-icon-btn search-btn" onclick="toggleSearch()">

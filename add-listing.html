@@ -421,12 +421,6 @@
                 ← Geri Dön
             </button>
             <div class="footer-right">
-                <button class="btn btn-secondary" id="sellWithBtn" style="display:none;" onclick="sellWith()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                    </svg>
-                    Devret Link ile Sat
-                </button>
                 <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Devam Et</button>
             </div>
         </div>
@@ -460,21 +454,36 @@
         let currentStep = 1;
         const totalSteps = 4;
         let galleryImages = [];
+        let editingListingId = null;
+        let existingListingSlug = null;
+        let gallerySlotOffset = 0;
 
         document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const editId = params.get('edit');
+
+            const { data: { user } } = await supabase.auth.getUser();
+            if (editId && !user) {
+                window.location.href = 'login.html?redirect=' + encodeURIComponent(location.pathname + location.search);
+                return;
+            }
+
             await loadCategories();
             initGallerySlots();
+            if (editId) {
+                await loadListingForEdit(editId);
+            }
             updateDescription();
             setupValidationListeners();
             checkStepValidity();
-            
+
             // Setup map initialization function
             window.initMapWhenReady = function() {
                 if (typeof google !== 'undefined' && google.maps) {
                     initMap();
                 }
             };
-            
+
             // Try to init map if Google API is already loaded
             if (window.googleMapsLoaded) {
                 window.initMapWhenReady();
@@ -686,6 +695,29 @@
             });
             
             console.log('✅ Google Maps initialized with autocomplete');
+            applyPendingMapIfAny();
+        }
+
+        function applyPendingMapIfAny() {
+            const p = window.__pendingListingLocation;
+            if (!p || !map || !mapMarker) return;
+            const lat = Number(p.lat);
+            const lng = Number(p.lng);
+            if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+                delete window.__pendingListingLocation;
+                return;
+            }
+            const pos = { lat, lng };
+            map.setCenter(pos);
+            map.setZoom(15);
+            mapMarker.setPosition(pos);
+            document.getElementById('latitude').value = String(lat);
+            document.getElementById('longitude').value = String(lng);
+            if (p.address != null) document.getElementById('address').value = p.address;
+            if (p.city != null) document.getElementById('city').value = p.city;
+            if (p.district != null) document.getElementById('district').value = p.district;
+            delete window.__pendingListingLocation;
+            checkStepValidity();
         }
         
         // Reverse geocoding - get address from coordinates using Google Geocoder
@@ -781,25 +813,167 @@
 
         function handleGalleryUpload(input) {
             const files = Array.from(input.files);
-            files.forEach((file, i) => {
-                if (galleryImages.length < 8) {
-                    galleryImages.push(file);
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const slot = document.getElementById(`slot${galleryImages.length - 1}`);
-                        slot.innerHTML = `<img src="${e.target.result}" alt="Image">`;
+            files.forEach((file) => {
+                if (gallerySlotOffset + galleryImages.length >= 8) return;
+                galleryImages.push(file);
+                const slotIndex = gallerySlotOffset + galleryImages.length - 1;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const slot = document.getElementById(`slot${slotIndex}`);
+                    if (slot) {
+                        slot.innerHTML = `<img src="${e.target.result}" alt="Galeri">`;
                         slot.classList.add('filled');
-                    };
-                    reader.readAsDataURL(file);
-                }
+                    }
+                };
+                reader.readAsDataURL(file);
             });
+            input.value = '';
+        }
+
+        async function loadListingForEdit(id) {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+
+                const { data: listing, error } = await supabase
+                    .from('listings')
+                    .select(`
+                        *,
+                        images:listing_images(id, image_url, is_primary, display_order)
+                    `)
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+                if (!listing || listing.user_id !== user.id) {
+                    alert('Bu ilanı düzenleme yetkiniz yok veya ilan bulunamadı.');
+                    window.location.href = 'panel/index.html#ilanlar';
+                    return;
+                }
+
+                editingListingId = listing.id;
+                existingListingSlug = listing.slug;
+                galleryImages = [];
+                document.title = 'İlan Düzenle - Devret Link';
+
+                document.getElementById('title').value = listing.title || '';
+                const descEl = document.getElementById('description');
+                if (descEl) descEl.innerHTML = listing.description || '';
+                document.getElementById('charCount').textContent = (descEl?.textContent || '').length;
+
+                document.getElementById('price').value = listing.price != null ? listing.price : '';
+                document.getElementById('area').value = listing.area_sqm != null ? listing.area_sqm : '';
+                if (document.getElementById('establishedYear')) {
+                    document.getElementById('establishedYear').value = listing.establishment_year || '';
+                }
+
+                document.getElementById('categoryId').value = listing.category_id || '';
+                const subEl = document.getElementById('subcategoryId');
+                if (subEl) subEl.value = listing.subcategory_id || '';
+                const sectorLabel = listing.sector || '—';
+                document.getElementById('sectorValue').textContent = sectorLabel;
+
+                document.getElementById('address').value = listing.address || '';
+                const cityVal = typeof listing.city === 'string' ? listing.city : (listing.city || '');
+                const distVal = typeof listing.district === 'string' ? listing.district : (listing.district || '');
+                document.getElementById('city').value = cityVal;
+                document.getElementById('district').value = distVal;
+
+                if (listing.latitude != null && listing.longitude != null) {
+                    window.__pendingListingLocation = {
+                        lat: listing.latitude,
+                        lng: listing.longitude,
+                        address: listing.address || '',
+                        city: cityVal,
+                        district: distVal
+                    };
+                    if (window.map && window.mapMarker) applyPendingMapIfAny();
+                }
+
+                document.getElementById('monthlyRevenue').value = listing.monthly_revenue != null ? listing.monthly_revenue : '';
+                document.getElementById('monthlyProfit').value = listing.monthly_profit != null ? listing.monthly_profit : '';
+                document.getElementById('employeeCount').value = listing.employee_count != null ? listing.employee_count : '';
+                document.getElementById('monthlyRent').value = listing.monthly_rent != null ? listing.monthly_rent : '';
+                if (listing.transfer_reason) {
+                    document.getElementById('saleReason').value = listing.transfer_reason;
+                }
+                const saleTypeEl = document.getElementById('saleType');
+                if (saleTypeEl && listing.listing_type) {
+                    if (listing.listing_type === 'sale') saleTypeEl.value = 'sale';
+                    else if (listing.listing_type === 'rent') saleTypeEl.value = 'rent';
+                }
+                document.getElementById('trainingSupport').value = listing.includes_training ? 'yes' : 'no';
+                document.getElementById('isFranchise').value = listing.is_franchise ? 'yes' : 'no';
+                document.getElementById('inventoryValue').value = listing.inventory_value != null ? listing.inventory_value : '';
+                document.getElementById('equipmentValue').value = listing.equipment_value != null ? listing.equipment_value : '';
+
+                if (listing.lease_end_date) {
+                    document.getElementById('leaseEndDate').value = listing.lease_end_date;
+                    const d = new Date(listing.lease_end_date + 'T12:00:00');
+                    if (!isNaN(d.getTime())) {
+                        selectedYear = d.getFullYear();
+                        selectedMonth = d.getMonth();
+                        const monthNames = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+                            'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+                        document.getElementById('selectedDate').textContent = `${monthNames[selectedMonth]} ${selectedYear}`;
+                        document.getElementById('selectedDate').style.color = '#374151';
+                    }
+                }
+
+                const imgs = (listing.images || []).slice().sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+                let primary = imgs.find((i) => i.is_primary);
+                if (!primary && imgs.length) primary = imgs[0];
+                const galleryRows = primary ? imgs.filter((i) => i.id !== primary.id) : imgs.slice(1);
+
+                if (primary && primary.image_url) {
+                    document.getElementById('coverPreview').innerHTML =
+                        `<img src="${escapeAttr(primary.image_url)}" alt="Kapak">`;
+                }
+
+                gallerySlotOffset = 0;
+                initGallerySlots();
+                galleryRows.slice(0, 8).forEach((row, idx) => {
+                    const slot = document.getElementById(`slot${idx}`);
+                    if (slot && row.image_url) {
+                        slot.innerHTML = `<img src="${escapeAttr(row.image_url)}" alt="">`;
+                        slot.classList.add('filled');
+                        gallerySlotOffset = idx + 1;
+                    }
+                });
+
+                if (listing.document_url) {
+                    const preview = document.getElementById('docPreview');
+                    preview.innerHTML = `
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <span style="color: #10b981; font-weight: 500;">Mevcut döküman</span>
+                        <small style="color: #6b7280;"><a href="${escapeAttr(listing.document_url)}" target="_blank" rel="noopener">Görüntüle</a></small>
+                    `;
+                }
+
+                const ig = document.getElementById('instagramUrl');
+                if (ig && listing.instagram_url) ig.value = listing.instagram_url;
+                const gm = document.getElementById('googleMapsUrl');
+                if (gm && listing.google_maps_url) gm.value = listing.google_maps_url;
+                const ws = document.getElementById('websiteUrl');
+                if (ws && listing.website_url) ws.value = listing.website_url;
+
+                checkStepValidity();
+            } catch (e) {
+                console.error('loadListingForEdit:', e);
+                alert('İlan yüklenemedi: ' + (e.message || e));
+                window.location.href = 'panel/index.html#ilanlar';
+            }
         }
 
         function previewCover(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    document.getElementById('coverPreview').innerHTML = `<img src="${e.target.result}" alt="Cover">`;
+                    const dataUrl = e.target.result;
+                    document.getElementById('coverPreview').innerHTML = `<img src="${dataUrl}" alt="Kapak">`;
                 };
                 reader.readAsDataURL(input.files[0]);
             }
@@ -879,11 +1053,9 @@
             document.getElementById('progressFill').style.width = `${(currentStep / totalSteps) * 100}%`;
             
             if (currentStep === 4) {
-                document.getElementById('nextBtn').textContent = 'İlanı Yayınla';
-                document.getElementById('sellWithBtn').style.display = '';
+                document.getElementById('nextBtn').textContent = editingListingId ? 'Değişiklikleri Kaydet' : 'İlanı Yayınla';
             } else {
                 document.getElementById('nextBtn').textContent = 'Devam Et';
-                document.getElementById('sellWithBtn').style.display = 'none';
             }
             
             checkStepValidity();
@@ -924,11 +1096,15 @@
                 return saleReason && monthlyRent;
             }
             if (step === 3) {
-                const coverInput = document.getElementById('coverImage');
-                const cover = coverInput ? coverInput.files.length > 0 : false;
-                return cover;
+                return hasCoverImage();
             }
             return true;
+        }
+
+        function hasCoverImage() {
+            const files = document.getElementById('coverImage')?.files?.length > 0;
+            const previewImg = document.querySelector('#coverPreview img');
+            return !!(files || previewImg);
         }
 
         function validateStep(step) {
@@ -960,9 +1136,7 @@
             }
             
             if (step === 3) {
-                const coverInput = document.getElementById('coverImage');
-                const cover = coverInput ? coverInput.files.length > 0 : false;
-                if (!cover) errors.push('Kapak görseli');
+                if (!hasCoverImage()) errors.push('Kapak görseli');
             }
             
             if (errors.length > 0) {
@@ -1033,27 +1207,115 @@
             document.getElementById('coverImage').addEventListener('change', checkStepValidity);
         }
 
+        function escapeHtml(s) {
+            if (s == null || s === '') return '';
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function escapeAttr(s) {
+            if (s == null || s === '') return '';
+            return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+        }
+
+        function getListingPreviewData() {
+            const coverEl = document.getElementById('coverPreview');
+            const coverSrc = coverEl?.querySelector('img')?.src || '';
+
+            const title = document.getElementById('title')?.value?.trim() || 'İlan Başlığı';
+            const price = document.getElementById('price')?.value;
+            const saleTypeEl = document.getElementById('saleType');
+            const typeLabel = saleTypeEl?.options[saleTypeEl.selectedIndex]?.text?.trim() || 'Devren Kiralık';
+
+            let catLabel = document.getElementById('sectorValue')?.textContent?.trim() || 'Kategori';
+            if (catLabel === 'Lütfen seçim yapın') catLabel = 'Kategori';
+
+            const city = document.getElementById('city')?.value?.trim() || '';
+            const district = document.getElementById('district')?.value?.trim() || '';
+            const address = document.getElementById('address')?.value?.trim() || '';
+
+            let locationStr = 'Konum';
+            if (district && city) locationStr = `${district} / ${city}`;
+            else if (city) locationStr = city;
+            else if (district) locationStr = district;
+            else if (address) locationStr = address;
+
+            return { coverSrc, title, price, typeLabel, catLabel, locationStr };
+        }
+
         // Generate preview
         function generatePreview() {
-            const title = document.getElementById('title').value;
-            const price = document.getElementById('price').value;
-            
+            const d = getListingPreviewData();
+            const coverHtml = d.coverSrc
+                ? `<img src="${escapeAttr(d.coverSrc)}" alt="">`
+                : '';
+
             document.getElementById('previewCards').innerHTML = `
                 <div class="preview-card">
-                    <div class="preview-image"></div>
+                    <div class="preview-image">${coverHtml}</div>
                     <div class="preview-info">
-                        <span class="preview-type">Devren Kiralık</span>
-                        <span class="preview-category">Yeme - İçme</span>
+                        <span class="preview-type">${escapeHtml(d.typeLabel)}</span>
+                        <span class="preview-category">${escapeHtml(d.catLabel)}</span>
                     </div>
-                    <h4>${title || 'İlan Başlığı'}</h4>
-                    <p class="preview-location">Konum</p>
-                    <p class="preview-price">₺${parseInt(price || 0).toLocaleString('tr-TR')}</p>
+                    <h4>${escapeHtml(d.title)}</h4>
+                    <p class="preview-location">${escapeHtml(d.locationStr)}</p>
+                    <p class="preview-price">₺${parseInt(d.price || 0, 10).toLocaleString('tr-TR')}</p>
                 </div>
             `;
         }
 
         function openPreview() {
-            alert('Önizleme açılıyor...');
+            const d = getListingPreviewData();
+            const title = escapeHtml(d.title);
+            const typeLabel = escapeHtml(d.typeLabel);
+            const catLabel = escapeHtml(d.catLabel);
+            const locationStr = escapeHtml(d.locationStr);
+            const priceFormatted = parseInt(d.price || 0, 10).toLocaleString('tr-TR');
+
+            const coverBlock = d.coverSrc
+                ? `<div class="hero"><img src="${escapeAttr(d.coverSrc)}" alt=""></div>`
+                : `<div class="hero placeholder">Kapak görseli seçilmedi</div>`;
+
+            const html = `<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>İlan önizlemesi — ${title}</title>
+<style>
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: #f8fafc; color: #1f2937; }
+.wrap { max-width: 420px; margin: 1.5rem auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,.08); overflow: hidden; border: 1px solid #e5e7eb; }
+.hero { height: 220px; background: #e5e7eb; }
+.hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero.placeholder { display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 0.9rem; }
+.meta { display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 1rem 1rem 0; }
+.tag { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 4px; background: #f3f4f6; color: #6b7280; }
+h1 { font-size: 1.05rem; font-weight: 600; margin: 0.75rem 1rem 0.25rem; line-height: 1.35; }
+.loc { font-size: 0.85rem; color: #6b7280; margin: 0 1rem; }
+.price { font-size: 1.2rem; font-weight: 700; margin: 0.75rem 1rem 1.25rem; }
+.note { font-size: 0.75rem; color: #9ca3af; padding: 0 1rem 1rem; }
+` +
+                '<' + '/style></head><body>' +
+                `
+<div class="wrap">
+${coverBlock}
+<div class="meta"><span class="tag">${typeLabel}</span><span class="tag">${catLabel}</span></div>
+<h1>${title}</h1>
+<p class="loc">${locationStr}</p>
+<p class="price">₺${priceFormatted}</p>
+<p class="note">Bu sayfa yalnızca önizlemedir; ilan henüz yayınlanmadı.</p>
+</div>
+` +
+                '<' + '/body></html>';
+
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const w = window.open(url, '_blank', 'noopener,noreferrer');
+            if (w) {
+                w.focus();
+                setTimeout(function () { URL.revokeObjectURL(url); }, 120000);
+            } else {
+                alert('Önizleme penceresi açılamadı. Lütfen bu site için açılır pencere (pop-up) iznini verin.');
+                URL.revokeObjectURL(url);
+            }
         }
 
         function saveAndExit() {
@@ -1061,8 +1323,37 @@
             window.location.href = 'index.html';
         }
 
-        function sellWith() {
-            alert('Devret Link ile Sat seçeneği için bizimle iletişime geçin.');
+        function storagePathFromPublicUrl(url, bucket) {
+            if (!url || typeof url !== 'string') return null;
+            const marker = '/object/public/' + bucket + '/';
+            const i = url.indexOf(marker);
+            if (i === -1) return null;
+            return decodeURIComponent(url.slice(i + marker.length).split('?')[0]);
+        }
+
+        async function replacePrimaryCover(listingId, coverFile) {
+            const BUCKET = 'listing-images';
+            const { data: existing } = await supabase
+                .from('listing_images')
+                .select('id, image_url')
+                .eq('listing_id', listingId)
+                .eq('is_primary', true);
+            for (const row of existing || []) {
+                const path = storagePathFromPublicUrl(row.image_url, BUCKET);
+                if (path) await supabase.storage.from(BUCKET).remove([path]).catch(() => {});
+                await supabase.from('listing_images').delete().eq('id', row.id);
+            }
+            const fileExt = coverFile.name.split('.').pop();
+            const fileName = `${listingId}-cover-${Date.now()}.${fileExt}`;
+            const { error: uploadError } = await supabase.storage.from(BUCKET).upload(fileName, coverFile);
+            if (uploadError) throw uploadError;
+            const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(fileName);
+            await supabase.from('listing_images').insert({
+                listing_id: listingId,
+                image_url: publicUrl,
+                is_primary: true,
+                display_order: 0
+            });
         }
 
         async function submitListing() {
@@ -1074,28 +1365,26 @@
                     return;
                 }
 
-                // Get user profile for contact info - with fallback
                 let contactName = user.email.split('@')[0];
                 let contactPhone = '5000000000';
-                
+
                 try {
                     const { data: profile } = await supabase
                         .from('profiles')
                         .select('full_name, phone')
                         .eq('id', user.id)
                         .single();
-                    
+
                     if (profile?.full_name) contactName = profile.full_name;
                     if (profile?.phone) contactPhone = profile.phone;
                 } catch (e) {
-                    // Try users table
                     try {
                         const { data: userData } = await supabase
                             .from('users')
                             .select('full_name, phone')
                             .eq('id', user.id)
                             .single();
-                        
+
                         if (userData?.full_name) contactName = userData.full_name;
                         if (userData?.phone) contactPhone = userData.phone;
                     } catch (e2) {
@@ -1104,28 +1393,16 @@
                 }
 
                 const title = document.getElementById('title').value;
-                const slug = title.toLowerCase()
-                    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-                    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-                    .replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
-                    + '-' + Date.now();
-                
-                // Ensure contact info is never null
                 const finalContactName = contactName || user.email.split('@')[0] || 'Kullanıcı';
                 const finalContactPhone = contactPhone || '5000000000';
-                
-                console.log('Contact info:', { finalContactName, finalContactPhone, email: user.email });
-                
-                // Seçilen sektör adını al
+
                 const sectorName = document.getElementById('sectorValue')?.textContent;
-                const sectorValue = (sectorName && sectorName !== 'Lütfen seçim yapın') ? sectorName : null;
-                
-                const listingData = {
-                    user_id: user.id,
-                    title: title,
-                    slug: slug,
+                const sectorValue = (sectorName && sectorName !== 'Lütfen seçim yapın' && sectorName !== '—') ? sectorName : null;
+
+                const basePayload = {
+                    title,
                     description: document.getElementById('description')?.innerHTML || '',
-                    price: parseInt(document.getElementById('price')?.value) || 0,
+                    price: parseInt(document.getElementById('price')?.value, 10) || 0,
                     category_id: document.getElementById('categoryId')?.value || null,
                     sector: sectorValue,
                     city: document.getElementById('city')?.value || null,
@@ -1133,25 +1410,106 @@
                     address: document.getElementById('address')?.value || null,
                     latitude: parseFloat(document.getElementById('latitude')?.value) || null,
                     longitude: parseFloat(document.getElementById('longitude')?.value) || null,
-                    area_sqm: parseInt(document.getElementById('area')?.value) || null,
-                    monthly_rent: parseInt(document.getElementById('monthlyRent')?.value) || null,
-                    monthly_revenue: parseInt(document.getElementById('monthlyRevenue')?.value) || null,
-                    monthly_profit: parseInt(document.getElementById('monthlyProfit')?.value) || null,
-                    employee_count: parseInt(document.getElementById('employeeCount')?.value) || null,
-                    establishment_year: parseInt(document.getElementById('establishedYear')?.value) || null,
+                    area_sqm: parseInt(document.getElementById('area')?.value, 10) || null,
+                    monthly_rent: parseInt(document.getElementById('monthlyRent')?.value, 10) || null,
+                    monthly_revenue: parseInt(document.getElementById('monthlyRevenue')?.value, 10) || null,
+                    monthly_profit: parseInt(document.getElementById('monthlyProfit')?.value, 10) || null,
+                    employee_count: parseInt(document.getElementById('employeeCount')?.value, 10) || null,
+                    establishment_year: parseInt(document.getElementById('establishedYear')?.value, 10) || null,
                     is_franchise: document.getElementById('isFranchise')?.value === 'yes',
-                    inventory_value: parseInt(document.getElementById('inventoryValue')?.value) || null,
-                    equipment_value: parseInt(document.getElementById('equipmentValue')?.value) || null,
+                    inventory_value: parseInt(document.getElementById('inventoryValue')?.value, 10) || null,
+                    equipment_value: parseInt(document.getElementById('equipmentValue')?.value, 10) || null,
                     lease_end_date: document.getElementById('leaseEndDate')?.value || null,
                     includes_training: document.getElementById('trainingSupport')?.value === 'yes',
                     transfer_reason: document.getElementById('saleReason')?.value || null,
                     contact_name: finalContactName,
                     contact_phone: finalContactPhone,
-                    contact_email: user.email,
+                    contact_email: user.email
+                };
+
+                const subIdRaw = document.getElementById('subcategoryId')?.value?.trim();
+                if (subIdRaw) {
+                    const n = parseInt(subIdRaw, 10);
+                    if (!Number.isNaN(n)) basePayload.subcategory_id = n;
+                }
+
+                if (editingListingId) {
+                    const { error: upErr } = await supabase
+                        .from('listings')
+                        .update(basePayload)
+                        .eq('id', editingListingId)
+                        .eq('user_id', user.id);
+                    if (upErr) throw upErr;
+
+                    const coverFile = document.getElementById('coverImage').files[0];
+                    if (coverFile) {
+                        await replacePrimaryCover(editingListingId, coverFile);
+                    }
+
+                    const listingId = editingListingId;
+                    if (galleryImages.length > 0) {
+                        const { data: ordRows } = await supabase
+                            .from('listing_images')
+                            .select('display_order')
+                            .eq('listing_id', listingId);
+                        let maxOrder = 0;
+                        (ordRows || []).forEach((r) => {
+                            const o = r.display_order != null ? Number(r.display_order) : 0;
+                            if (o > maxOrder) maxOrder = o;
+                        });
+                        for (let i = 0; i < galleryImages.length; i++) {
+                            const file = galleryImages[i];
+                            const fileExt = file.name.split('.').pop();
+                            const fileName = `${listingId}-gallery-${i}-${Date.now()}.${fileExt}`;
+                            const { error: uploadError } = await supabase.storage
+                                .from('listing-images')
+                                .upload(fileName, file);
+                            if (!uploadError) {
+                                const { data: { publicUrl } } = supabase.storage
+                                    .from('listing-images')
+                                    .getPublicUrl(fileName);
+                                await supabase.from('listing_images').insert({
+                                    listing_id: listingId,
+                                    image_url: publicUrl,
+                                    is_primary: false,
+                                    display_order: maxOrder + 1 + i
+                                });
+                            }
+                        }
+                    }
+
+                    const documentFile = document.getElementById('document').files[0];
+                    if (documentFile) {
+                        const fileExt = documentFile.name.split('.').pop();
+                        const fileName = `${listingId}-document-${Date.now()}.${fileExt}`;
+                        const { error: uploadError } = await supabase.storage
+                            .from('listings')
+                            .upload(fileName, documentFile);
+                        if (!uploadError) {
+                            const { data: { publicUrl } } = supabase.storage
+                                .from('listings')
+                                .getPublicUrl(fileName);
+                            await supabase.from('listings').update({ document_url: publicUrl }).eq('id', listingId);
+                        }
+                    }
+
+                    alert('İlanınız güncellendi.');
+                    window.location.href = 'panel/index.html#ilanlar';
+                    return;
+                }
+
+                const slug = title.toLowerCase()
+                    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                    .replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+                    + '-' + Date.now();
+
+                const listingData = {
+                    ...basePayload,
+                    user_id: user.id,
+                    slug,
                     status: 'pending'
                 };
-                
-                console.log('Listing data:', listingData);
 
                 const { data, error } = await supabase
                     .from('listings')
@@ -1161,16 +1519,13 @@
 
                 if (error) throw error;
 
-                console.log('İlan oluşturuldu:', data);
-
-                // Upload cover image
                 const coverFile = document.getElementById('coverImage').files[0];
                 if (coverFile) {
                     try {
                         const fileExt = coverFile.name.split('.').pop();
                         const fileName = `${data.id}-cover-${Date.now()}.${fileExt}`;
-                        
-                        const { data: uploadData, error: uploadError } = await supabase.storage
+
+                        const { error: uploadError } = await supabase.storage
                             .from('listing-images')
                             .upload(fileName, coverFile);
 
@@ -1178,30 +1533,27 @@
                             const { data: { publicUrl } } = supabase.storage
                                 .from('listing-images')
                                 .getPublicUrl(fileName);
-                            
+
                             await supabase.from('listing_images').insert({
                                 listing_id: data.id,
                                 image_url: publicUrl,
                                 is_primary: true,
                                 display_order: 0
                             });
-                            
-                            console.log('Kapak resmi yüklendi');
                         }
                     } catch (e) {
                         console.error('Kapak resmi yükleme hatası:', e);
                     }
                 }
 
-                // Upload gallery images
                 if (galleryImages.length > 0) {
                     for (let i = 0; i < galleryImages.length; i++) {
                         try {
                             const file = galleryImages[i];
                             const fileExt = file.name.split('.').pop();
                             const fileName = `${data.id}-gallery-${i}-${Date.now()}.${fileExt}`;
-                            
-                            const { data: uploadData, error: uploadError } = await supabase.storage
+
+                            const { error: uploadError } = await supabase.storage
                                 .from('listing-images')
                                 .upload(fileName, file);
 
@@ -1209,7 +1561,7 @@
                                 const { data: { publicUrl } } = supabase.storage
                                     .from('listing-images')
                                     .getPublicUrl(fileName);
-                                
+
                                 await supabase.from('listing_images').insert({
                                     listing_id: data.id,
                                     image_url: publicUrl,
@@ -1221,17 +1573,15 @@
                             console.error('Galeri resmi yükleme hatası:', e);
                         }
                     }
-                    console.log(`${galleryImages.length} galeri resmi yüklendi`);
                 }
 
-                // Upload document (PDF)
                 const documentFile = document.getElementById('document').files[0];
                 if (documentFile) {
                     try {
                         const fileExt = documentFile.name.split('.').pop();
                         const fileName = `${data.id}-document-${Date.now()}.${fileExt}`;
-                        
-                        const { data: uploadData, error: uploadError } = await supabase.storage
+
+                        const { error: uploadError } = await supabase.storage
                             .from('listings')
                             .upload(fileName, documentFile);
 
@@ -1239,13 +1589,10 @@
                             const { data: { publicUrl } } = supabase.storage
                                 .from('listings')
                                 .getPublicUrl(fileName);
-                            
-                            // PDF URL'sini listings tablosuna kaydet (yeni bir column eklemek gerekebilir)
+
                             await supabase.from('listings').update({
                                 document_url: publicUrl
                             }).eq('id', data.id);
-                            
-                            console.log('Döküman yüklendi');
                         }
                     } catch (e) {
                         console.error('Döküman yükleme hatası:', e);
@@ -1254,7 +1601,6 @@
 
                 alert('İlanınız başarıyla oluşturuldu! Onay sürecinden sonra yayınlanacaktır.');
                 window.location.href = 'listings.html';
-
             } catch (e) {
                 console.error('Submit error:', e);
                 alert('Hata: ' + e.message);

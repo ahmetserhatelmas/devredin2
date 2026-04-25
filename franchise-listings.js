@@ -62,7 +62,7 @@ async function loadSectors() {
         const { data: franchises } = await supabase
             .from('franchises')
             .select('sector_id')
-            .in('status', ['active', 'pending'])
+            .eq('status', 'active')
         
         // Sayıları hesapla
         const counts = {}
@@ -232,7 +232,7 @@ async function loadFranchises() {
                 city:cities!hq_city_id(name),
                 created_at
             `, { count: 'exact' })
-            .in('status', ['active', 'pending'])
+            .eq('status', 'active')
         
         // Apply filters
         if (franchiseFilters.sector) {

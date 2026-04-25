@@ -602,8 +602,7 @@
                         category:categories!category_id(name, icon),
                         images:listing_images(image_url, is_primary)
                     `)
-                    .neq('status', 'deleted')
-                    .neq('status', 'rejected');
+                    .eq('status', 'active');
 
                 // Filtreleri uygula
                 if (categoryId) query = query.eq('category_id', categoryId);

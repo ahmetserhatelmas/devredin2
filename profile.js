@@ -314,8 +314,7 @@ document.getElementById('changePasswordForm').addEventListener('submit', async (
 
 // Edit listing
 function editListing(listingId) {
-    // İlan düzenleme sayfası (gelecekte eklenebilir)
-    alert('İlan düzenleme özelliği yakında eklenecek!\n\nİlan ID: ' + listingId)
+    window.location.href = 'add-listing.html?edit=' + encodeURIComponent(listingId)
 }
 
 // Delete listing

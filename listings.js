@@ -93,7 +93,7 @@ async function loadCategoriesOptimized() {
         const { data: listings } = await supabase
             .from('listings')
             .select('category_id')
-            .in('status', ['active', 'pending'])
+            .eq('status', 'active')
         
         // Sayıları hesapla
         const counts = {}
@@ -330,7 +330,7 @@ async function createPriceHistogramOptimized() {
         const { data, error } = await supabase
             .from('listings')
             .select('price')
-            .in('status', ['active', 'pending'])
+            .eq('status', 'active')
             .not('price', 'is', null)
             .gt('price', 0)
             .limit(500) // Performans için limit
@@ -790,7 +790,7 @@ async function loadListings() {
                 district:districts(name),
                 images:listing_images(image_url, is_primary)
             `, { count: 'exact' })
-            .in('status', ['active', 'pending'])
+            .eq('status', 'active')
         
         // Filtreler
         if (currentFilters.category.length > 0) {

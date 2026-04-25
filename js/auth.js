@@ -37,6 +37,14 @@ function applyAuthUI(isLoggedIn, initials = 'AE', userName = 'Kullanıcı') {
     const dropdownAvatar = document.getElementById('dropdownAvatar');
     const dropdownName = document.getElementById('dropdownName');
     
+    document.querySelectorAll('.nav-auth-link').forEach((el) => {
+        if (isLoggedIn) {
+            el.style.display = 'none';
+        } else {
+            el.style.removeProperty('display');
+        }
+    });
+
     if (isLoggedIn) {
         if (authButtons) authButtons.style.display = 'none';
         if (userMenu) userMenu.style.display = 'block';

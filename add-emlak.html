@@ -313,21 +313,21 @@
                     <label class="form-label" id="priceLabel">Kira Bedeli (₺) <span class="req">*</span></label>
                     <div class="input-prefix">
                         <span class="prefix">₺</span>
-                        <input type="number" class="form-input" id="price" placeholder="0">
+                        <input type="text" class="form-input" id="price" placeholder="Örn: 95.000" data-price-tr inputmode="numeric" autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group" id="depositGroup">
                     <label class="form-label">Depozito (₺)</label>
                     <div class="input-prefix">
                         <span class="prefix">₺</span>
-                        <input type="number" class="form-input" id="deposit" placeholder="0">
+                        <input type="text" class="form-input" id="deposit" placeholder="Örn: 50.000" data-price-tr inputmode="numeric" autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Aidat (₺/ay)</label>
                     <div class="input-prefix">
                         <span class="prefix">₺</span>
-                        <input type="number" class="form-input" id="dues" placeholder="0">
+                        <input type="text" class="form-input" id="dues" placeholder="Örn: 2.500" data-price-tr inputmode="numeric" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -562,7 +562,7 @@
                     <label class="form-label">Aidat (₺/ay)</label>
                     <div class="input-prefix">
                         <span class="prefix">₺</span>
-                        <input type="number" class="form-input" id="isyeriDues" placeholder="0">
+                        <input type="text" class="form-input" id="isyeriDues" placeholder="Örn: 2.500" data-price-tr inputmode="numeric" autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group">
@@ -754,7 +754,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">m² Fiyatı (₺)</label>
-                    <input type="number" class="form-input" id="toprakPricePerSqm" placeholder="m² başı fiyat">
+                    <input type="text" class="form-input" id="toprakPricePerSqm" placeholder="Örn: 15.000" data-price-tr inputmode="numeric" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label class="form-label">İmar Durumu <span class="req">*</span></label>
@@ -1054,6 +1054,7 @@
 <script src="js/runtime-config.js"></script>
 <script src="backend/api.js"></script>
 <script src="js/google-maps-loader.js"></script>
+<script src="js/price-format-tr.js"></script>
 <script>
 let currentStep = 1;
 let selectedType = 'kiralik';
@@ -1061,6 +1062,22 @@ let emlakCategory = 'konut'; // konut | is_yeri | komple_bina | toprak
 let toprakType = 'arsa';     // arsa | tarla | icar | kat_karsiligi (URL'den)
 let selectedRoom = '';
 let uploadedPhotos = []; // {file, dataUrl}
+
+function emlakPriceNum(id) {
+    const el = document.getElementById(id);
+    if (!el) return 0;
+    const n = typeof parsePriceTR === 'function' ? parsePriceTR(el.value) : NaN;
+    return !isNaN(n) && isFinite(n) ? n : 0;
+}
+
+function emlakPriceOrNull(id) {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    if (String(el.value).trim() === '') return null;
+    const n = typeof parsePriceTR === 'function' ? parsePriceTR(el.value) : NaN;
+    if (isNaN(n)) return null;
+    return n || null;
+}
 
 function applyCategoryVisibility() {
     var cat = emlakCategory;
@@ -1134,9 +1151,9 @@ async function loadEmlakForEdit(id) {
         selectType(data.listing_type || 'kiralik');
         document.getElementById('title').value = data.title || '';
         document.getElementById('description').value = data.description || '';
-        document.getElementById('price').value = data.price || '';
-        document.getElementById('deposit').value = data.deposit || '';
-        document.getElementById('dues').value = data.dues || '';
+        document.getElementById('price').value = data.price != null && typeof formatPriceTR === 'function' ? formatPriceTR(data.price) : (data.price != null ? String(data.price) : '');
+        document.getElementById('deposit').value = data.deposit != null && typeof formatPriceTR === 'function' ? formatPriceTR(data.deposit) : (data.deposit != null ? String(data.deposit) : '');
+        document.getElementById('dues').value = data.dues != null && typeof formatPriceTR === 'function' ? formatPriceTR(data.dues) : (data.dues != null ? String(data.dues) : '');
         document.getElementById('propertyType').value = data.property_type || '';
         document.getElementById('areaGross').value = data.area_gross || '';
         document.getElementById('areaNet').value = data.area_net || '';
@@ -1170,7 +1187,7 @@ async function loadEmlakForEdit(id) {
 
         if (emlakCategory === 'is_yeri') {
             document.getElementById('isyeriHeating').value = data.heating_type || '';
-            document.getElementById('isyeriDues').value = data.dues || '';
+            document.getElementById('isyeriDues').value = data.dues != null && typeof formatPriceTR === 'function' ? formatPriceTR(data.dues) : (data.dues != null ? String(data.dues) : '');
             document.getElementById('isyeriArea').value = data.area_gross || '';
             document.getElementById('isyeriBuildingAge').value = data.building_age || '';
             document.getElementById('isyeriBuildingCondition').value = data.building_condition || '';
@@ -1195,7 +1212,7 @@ async function loadEmlakForEdit(id) {
         if (emlakCategory === 'toprak') {
             toprakType = data.toprak_type || 'arsa';
             document.getElementById('toprakArea').value = data.area_gross || '';
-            document.getElementById('toprakPricePerSqm').value = data.price_per_sqm || '';
+            document.getElementById('toprakPricePerSqm').value = data.price_per_sqm != null && typeof formatPriceTR === 'function' ? formatPriceTR(data.price_per_sqm) : (data.price_per_sqm != null ? String(data.price_per_sqm) : '');
             document.getElementById('toprakImarDurumu').value = data.imar_durumu || '';
             document.getElementById('toprakAdaNo').value = data.ada_no || '';
             document.getElementById('toprakParselNo').value = data.parsel_no || '';
@@ -1330,7 +1347,8 @@ function updateProgressBar() {
 function validateStep(step) {
     if (step === 1) {
         const title = document.getElementById('title').value.trim();
-        const price = document.getElementById('price').value;
+        const priceRaw = document.getElementById('price').value;
+        const priceNum = emlakPriceNum('price');
         const address = document.getElementById('emlakAddress').value.trim();
 
         if (title.length < 10) {
@@ -1338,7 +1356,7 @@ function validateStep(step) {
             alert('Lütfen en az 10 karakter uzunluğunda bir başlık girin.');
             return false;
         }
-        if (!price || parseFloat(price) <= 0) {
+        if (!String(priceRaw).trim() || priceNum <= 0) {
             document.getElementById('price').classList.add('error');
             alert('Lütfen geçerli bir fiyat girin.');
             return false;
@@ -1423,7 +1441,7 @@ function buildSummary() {
     const typeLabel = selectedType === 'kiralik' ? 'Kiralık' : 'Satılık';
     const toprakTypeLabels = { arsa: 'Arsa', tarla: 'Tarla', icar: 'İcar (Kiralık)', kat_karsiligi: 'Kat Karşılığı' };
     const catLabel = emlakCategory === 'konut' ? 'Konut' : (emlakCategory === 'is_yeri' ? 'İş Yeri' : (emlakCategory === 'komple_bina' ? 'Komple Bina' : ('Toprak · ' + (toprakTypeLabels[toprakType] || toprakType))));
-    const price = Number(document.getElementById('price').value || 0).toLocaleString('tr-TR');
+    const price = emlakPriceNum('price').toLocaleString('tr-TR');
     const priceSuffix = selectedType === 'kiralik' ? '/ay' : '';
     const items = [
         ['Kategori', catLabel],
@@ -1507,9 +1525,9 @@ async function submitListing() {
             listing_type: selectedType,
             title: document.getElementById('title').value.trim(),
             description: document.getElementById('description').value.trim(),
-            price: parseFloat(document.getElementById('price').value) || 0,
-            deposit: parseFloat(document.getElementById('deposit').value) || null,
-            dues: parseFloat(document.getElementById('dues').value) || null,
+            price: emlakPriceNum('price'),
+            deposit: emlakPriceOrNull('deposit'),
+            dues: emlakPriceOrNull('dues'),
             city_id: null,
             district_id: null,
             city_name: document.getElementById('emlakCity').value.trim() || null,
@@ -1547,7 +1565,7 @@ async function submitListing() {
             status: 'pending',
         };
         if (isIsyeri) {
-            listingData.dues = parseFloat(document.getElementById('isyeriDues').value) || null;
+            listingData.dues = emlakPriceOrNull('isyeriDues');
             listingData.building_condition = document.getElementById('isyeriBuildingCondition').value || null;
             listingData.tenant_occupied = document.getElementById('isyeriTenantOccupied').value === 'true';
             listingData.credit_eligibility = document.getElementById('isyeriCreditEligibility').value || null;
@@ -1565,7 +1583,7 @@ async function submitListing() {
         if (isToprak) {
             listingData.toprak_type = toprakType;
             listingData.imar_durumu = document.getElementById('toprakImarDurumu').value || null;
-            listingData.price_per_sqm = parseFloat(document.getElementById('toprakPricePerSqm').value) || null;
+            listingData.price_per_sqm = emlakPriceOrNull('toprakPricePerSqm');
             listingData.ada_no = document.getElementById('toprakAdaNo').value.trim() || null;
             listingData.parsel_no = document.getElementById('toprakParselNo').value.trim() || null;
             listingData.pafta_no = document.getElementById('toprakPaftaNo').value.trim() || null;

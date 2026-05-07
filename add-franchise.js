@@ -1,5 +1,24 @@
 // Franchise Form JavaScript
 
+function franchisePriceFromForm(form, name) {
+    if (!form) return 0
+    const el = form.querySelector(`[name="${name}"]`)
+    if (!el) return 0
+    const n = typeof parsePriceTR === 'function' ? parsePriceTR(el.value) : NaN
+    return !isNaN(n) && isFinite(n) ? n : 0
+}
+
+/** Boş → null; geçersiz → null; 0 → null (eski parseFloat(x)||null ile uyumlu) */
+function franchisePriceNullFromForm(form, name) {
+    if (!form) return null
+    const el = form.querySelector(`[name="${name}"]`)
+    if (!el) return null
+    if (String(el.value).trim() === '') return null
+    const n = typeof parsePriceTR === 'function' ? parsePriceTR(el.value) : NaN
+    if (isNaN(n)) return null
+    return n || null
+}
+
 let currentStep = 1;
 const totalSteps = 7;
 let galleryImages = [];
@@ -384,8 +403,8 @@ function generatePreview() {
     
     const brandName = formData.get('brand_name') || 'Belirtilmedi'
     const sector = document.getElementById('sectorSelect')?.selectedOptions[0]?.text || 'Belirtilmedi'
-    const minInvestment = formData.get('min_investment') || '0'
-    const maxInvestment = formData.get('max_investment') || '0'
+    const minNum = franchisePriceFromForm(form, 'min_investment')
+    const maxNum = franchisePriceFromForm(form, 'max_investment')
     
     previewSummary.innerHTML = `
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
@@ -399,7 +418,7 @@ function generatePreview() {
             </div>
             <div style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
                 <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Yatırım Aralığı</h4>
-                <p style="font-size: 1.2rem; font-weight: 600;">₺${parseInt(minInvestment).toLocaleString('tr-TR')} - ₺${parseInt(maxInvestment).toLocaleString('tr-TR')}</p>
+                <p style="font-size: 1.2rem; font-weight: 600;">₺${minNum.toLocaleString('tr-TR')} - ₺${maxNum.toLocaleString('tr-TR')}</p>
             </div>
             <div style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
                 <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">İletişim</h4>
@@ -478,16 +497,16 @@ function setupFormSubmission() {
             website: formData.get('website'),
             description: formData.get('description'),
             
-            // Investment
-            min_investment: parseFloat(formData.get('min_investment')) || 0,
-            max_investment: parseFloat(formData.get('max_investment')) || 0,
+            // Investment (₺ alanları noktalı binlik: parsePriceTR)
+            min_investment: franchisePriceFromForm(form, 'min_investment'),
+            max_investment: franchisePriceFromForm(form, 'max_investment'),
             currency: formData.get('currency'),
-            setup_cost_per_sqm: parseFloat(formData.get('setup_cost_per_sqm')) || null,
+            setup_cost_per_sqm: franchisePriceNullFromForm(form, 'setup_cost_per_sqm'),
             profit_share: parseFloat(formData.get('profit_share')) || null,
             revenue_share: parseFloat(formData.get('revenue_share')) || null,
             roi_months: parseInt(formData.get('roi_months')) || null,
-            avg_monthly_revenue: parseFloat(formData.get('avg_monthly_revenue')) || null,
-            avg_monthly_profit: parseFloat(formData.get('avg_monthly_profit')) || null,
+            avg_monthly_revenue: franchisePriceNullFromForm(form, 'avg_monthly_revenue'),
+            avg_monthly_profit: franchisePriceNullFromForm(form, 'avg_monthly_profit'),
             
             // Operations
             total_locations: parseInt(formData.get('total_locations')) || 0,
@@ -498,7 +517,7 @@ function setupFormSubmission() {
             max_staff: parseInt(formData.get('max_staff')) || null,
             
             // Partner requirements
-            min_capital: parseFloat(formData.get('min_capital')) || 0,
+            min_capital: franchisePriceFromForm(form, 'min_capital'),
             experience_required: formData.get('experience_required'),
             ideal_candidate: formData.get('ideal_candidate'),
             

@@ -118,10 +118,10 @@
                     
                     <script>
                         // Pre-render correct button based on cache
-                        var _u = localStorage.getItem('devretlink_user') || localStorage.getItem('devredin_user');
-                        document.write(_u 
+                        var _u = localStorage.getItem('devredin_user');
+                        document.write(_u
                             ? '<a href="add-franchise.html" class="btn btn-primary-nav" id="ctaBtn">İlan Oluştur</a>'
-                            : '<a href="login.html" class="btn btn-primary-nav" id="ctaBtn">Üye Ol</a>'
+                            : '<a href="login.html?portal=franchise&amp;redirect=' + encodeURIComponent('add-franchise.html') + '" class="btn btn-primary-nav" id="ctaBtn">İlan Oluştur</a>'
                         );
                     </script>
                 </div>
@@ -600,6 +600,7 @@
     <script src="js/runtime-config.js"></script>
     <script src="backend/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/ilan-ver-guard.js"></script>
     <script>
         let franchiseSlideIndex = 0;
         let featuredSlideIndex = 0;

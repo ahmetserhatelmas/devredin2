@@ -83,7 +83,7 @@
                             <div class="form-group">
                                 <label>İstenen fiyat <span class="required">*</span></label>
                                 <div class="input-with-suffix">
-                                    <input type="number" id="price" placeholder="Fiyat yazın">
+                                    <input type="text" id="price" placeholder="Örn: 950.000" data-price-tr inputmode="numeric" autocomplete="off">
                                     <span class="suffix">₺</span>
                                 </div>
                                 </div>
@@ -165,14 +165,14 @@
                             <div class="form-group">
                                 <label>Aylık gelir</label>
                                 <div class="input-with-suffix">
-                                    <input type="number" id="monthlyRevenue" placeholder="Aylık geliri yazın">
+                                    <input type="text" id="monthlyRevenue" placeholder="Örn: 120.000" data-price-tr inputmode="numeric" autocomplete="off">
                                     <span class="suffix">₺</span>
                                     </div>
                                 </div>
                             <div class="form-group">
                                 <label>Aylık kar</label>
                                 <div class="input-with-suffix">
-                                    <input type="number" id="monthlyProfit" placeholder="Aylık karı yazın">
+                                    <input type="text" id="monthlyProfit" placeholder="Örn: 45.000" data-price-tr inputmode="numeric" autocomplete="off">
                                     <span class="suffix">₺</span>
                             </div>
                         </div>
@@ -209,7 +209,7 @@
                             <div class="form-group">
                                 <label>Aylık Kira <span class="required">*</span></label>
                                 <div class="input-with-suffix">
-                                    <input type="number" id="monthlyRent" placeholder="Aylık kirayı yazın">
+                                    <input type="text" id="monthlyRent" placeholder="Örn: 35.000" data-price-tr inputmode="numeric" autocomplete="off">
                                     <span class="suffix">₺</span>
                             </div>
                             </div>
@@ -284,14 +284,14 @@
                             <div class="form-group">
                                 <label>Envanter Değeri</label>
                                 <div class="input-with-suffix">
-                                    <input type="number" id="inventoryValue" placeholder="Envanter değerini yazın">
+                                    <input type="text" id="inventoryValue" placeholder="Örn: 200.000" data-price-tr inputmode="numeric" autocomplete="off">
                                     <span class="suffix">₺</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Ekipman Değeri</label>
                                 <div class="input-with-suffix">
-                                    <input type="number" id="equipmentValue" placeholder="Ekipman değerini yazın">
+                                    <input type="text" id="equipmentValue" placeholder="Örn: 150.000" data-price-tr inputmode="numeric" autocomplete="off">
                                     <span class="suffix">₺</span>
                             </div>
                             </div>
@@ -434,6 +434,7 @@
     <script src="js/runtime-config.js"></script>
     <script src="backend/api.js"></script>
     <script src="js/google-maps-loader.js"></script>
+    <script src="js/price-format-tr.js"></script>
     <script>
         // Global flag for Google Maps API readiness
         window.googleMapsLoaded = false;
@@ -457,6 +458,24 @@
         let editingListingId = null;
         let existingListingSlug = null;
         let gallerySlotOffset = 0;
+
+        function numFromPrice(id) {
+            const el = document.getElementById(id);
+            if (!el) return 0;
+            const n = typeof parsePriceTR === 'function' ? parsePriceTR(el.value) : NaN;
+            return Number.isFinite(n) && !isNaN(n) ? n : 0;
+        }
+
+        /** parseInt(x)||null davranışı (0 → null) — opsiyonel para alanları */
+        function intOrNullFromPrice(id) {
+            const el = document.getElementById(id);
+            if (!el) return null;
+            const raw = el.value;
+            if (raw == null || String(raw).trim() === '') return null;
+            const n = typeof parsePriceTR === 'function' ? parsePriceTR(raw) : NaN;
+            if (isNaN(n)) return null;
+            return n || null;
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
@@ -861,7 +880,7 @@
                 if (descEl) descEl.innerHTML = listing.description || '';
                 document.getElementById('charCount').textContent = (descEl?.textContent || '').length;
 
-                document.getElementById('price').value = listing.price != null ? listing.price : '';
+                document.getElementById('price').value = listing.price != null && typeof formatPriceTR === 'function' ? formatPriceTR(listing.price) : (listing.price != null ? String(listing.price) : '');
                 document.getElementById('area').value = listing.area_sqm != null ? listing.area_sqm : '';
                 if (document.getElementById('establishedYear')) {
                     document.getElementById('establishedYear').value = listing.establishment_year || '';
@@ -890,10 +909,10 @@
                     if (window.map && window.mapMarker) applyPendingMapIfAny();
                 }
 
-                document.getElementById('monthlyRevenue').value = listing.monthly_revenue != null ? listing.monthly_revenue : '';
-                document.getElementById('monthlyProfit').value = listing.monthly_profit != null ? listing.monthly_profit : '';
+                document.getElementById('monthlyRevenue').value = listing.monthly_revenue != null && typeof formatPriceTR === 'function' ? formatPriceTR(listing.monthly_revenue) : (listing.monthly_revenue != null ? String(listing.monthly_revenue) : '');
+                document.getElementById('monthlyProfit').value = listing.monthly_profit != null && typeof formatPriceTR === 'function' ? formatPriceTR(listing.monthly_profit) : (listing.monthly_profit != null ? String(listing.monthly_profit) : '');
                 document.getElementById('employeeCount').value = listing.employee_count != null ? listing.employee_count : '';
-                document.getElementById('monthlyRent').value = listing.monthly_rent != null ? listing.monthly_rent : '';
+                document.getElementById('monthlyRent').value = listing.monthly_rent != null && typeof formatPriceTR === 'function' ? formatPriceTR(listing.monthly_rent) : (listing.monthly_rent != null ? String(listing.monthly_rent) : '');
                 if (listing.transfer_reason) {
                     document.getElementById('saleReason').value = listing.transfer_reason;
                 }
@@ -904,8 +923,8 @@
                 }
                 document.getElementById('trainingSupport').value = listing.includes_training ? 'yes' : 'no';
                 document.getElementById('isFranchise').value = listing.is_franchise ? 'yes' : 'no';
-                document.getElementById('inventoryValue').value = listing.inventory_value != null ? listing.inventory_value : '';
-                document.getElementById('equipmentValue').value = listing.equipment_value != null ? listing.equipment_value : '';
+                document.getElementById('inventoryValue').value = listing.inventory_value != null && typeof formatPriceTR === 'function' ? formatPriceTR(listing.inventory_value) : (listing.inventory_value != null ? String(listing.inventory_value) : '');
+                document.getElementById('equipmentValue').value = listing.equipment_value != null && typeof formatPriceTR === 'function' ? formatPriceTR(listing.equipment_value) : (listing.equipment_value != null ? String(listing.equipment_value) : '');
 
                 if (listing.lease_end_date) {
                     document.getElementById('leaseEndDate').value = listing.lease_end_date;
@@ -1079,21 +1098,22 @@
                 const title = document.getElementById('title')?.value.trim();
                 const category = document.getElementById('categoryId')?.value;
                 const area = document.getElementById('area')?.value;
-                const price = document.getElementById('price')?.value;
+                const priceRaw = document.getElementById('price')?.value;
+                const priceNum = typeof parsePriceTR === 'function' ? parsePriceTR(priceRaw) : NaN;
                 const desc = document.getElementById('description')?.textContent.trim();
                 const city = document.getElementById('city')?.value; // Changed from cityId to city
                 const lat = document.getElementById('latitude')?.value;
                 const lng = document.getElementById('longitude')?.value;
                 
-                console.log('🔍 Step 1 validation:', { title, category, area, price, descLength: desc.length, city, lat, lng });
+                console.log('🔍 Step 1 validation:', { title, category, area, priceRaw, priceNum, descLength: desc.length, city, lat, lng });
                 
-                return title && title.length > 0 && category && area && price && city && lat && lng;
+                return title && title.length > 0 && category && area && priceRaw && !isNaN(priceNum) && priceNum >= 0 && city && lat && lng;
             }
             if (step === 2) {
                 const saleReason = document.getElementById('saleReason')?.value;
-                const monthlyRent = document.getElementById('monthlyRent')?.value;
-                
-                return saleReason && monthlyRent;
+                const rentRaw = document.getElementById('monthlyRent')?.value;
+                const rentNum = typeof parsePriceTR === 'function' ? parsePriceTR(rentRaw) : NaN;
+                return saleReason && rentRaw && !isNaN(rentNum) && rentNum >= 0;
             }
             if (step === 3) {
                 return hasCoverImage();
@@ -1114,7 +1134,8 @@
                 const title = document.getElementById('title')?.value.trim();
                 const category = document.getElementById('categoryId')?.value;
                 const area = document.getElementById('area')?.value;
-                const price = document.getElementById('price')?.value;
+                const priceRaw = document.getElementById('price')?.value;
+                const priceNum = typeof parsePriceTR === 'function' ? parsePriceTR(priceRaw) : NaN;
                 const desc = document.getElementById('description')?.textContent.trim();
                 const city = document.getElementById('city')?.value; // Changed from cityId
                 const lat = document.getElementById('latitude')?.value;
@@ -1123,16 +1144,16 @@
                 if (!title) errors.push('Listeleme başlığı');
                 if (!category) errors.push('Sektör');
                 if (!area) errors.push('Metrekare');
-                if (!price) errors.push('İstenen fiyat');
+                if (!priceRaw || isNaN(priceNum) || priceNum < 0) errors.push('İstenen fiyat');
                 if (!city || !lat || !lng) errors.push('Konum');
             }
             
             if (step === 2) {
                 const saleReason = document.getElementById('saleReason')?.value;
-                const monthlyRent = document.getElementById('monthlyRent')?.value;
-                
+                const rentRaw = document.getElementById('monthlyRent')?.value;
+                const rentNum = typeof parsePriceTR === 'function' ? parsePriceTR(rentRaw) : NaN;
                 if (!saleReason) errors.push('Satış nedeni');
-                if (!monthlyRent) errors.push('Aylık Kira');
+                if (!rentRaw || isNaN(rentNum) || rentNum < 0) errors.push('Aylık Kira');
             }
             
             if (step === 3) {
@@ -1262,7 +1283,7 @@
                     </div>
                     <h4>${escapeHtml(d.title)}</h4>
                     <p class="preview-location">${escapeHtml(d.locationStr)}</p>
-                    <p class="preview-price">₺${parseInt(d.price || 0, 10).toLocaleString('tr-TR')}</p>
+                    <p class="preview-price">₺${((typeof parsePriceTR === 'function' ? parsePriceTR(String(d.price || '')) : NaN) || 0).toLocaleString('tr-TR')}</p>
                 </div>
             `;
         }
@@ -1273,7 +1294,8 @@
             const typeLabel = escapeHtml(d.typeLabel);
             const catLabel = escapeHtml(d.catLabel);
             const locationStr = escapeHtml(d.locationStr);
-            const priceFormatted = parseInt(d.price || 0, 10).toLocaleString('tr-TR');
+            const priceNumPrev = typeof parsePriceTR === 'function' ? parsePriceTR(String(d.price || '')) : NaN;
+            const priceFormatted = ((isNaN(priceNumPrev) ? 0 : priceNumPrev)).toLocaleString('tr-TR');
 
             const coverBlock = d.coverSrc
                 ? `<div class="hero"><img src="${escapeAttr(d.coverSrc)}" alt=""></div>`
@@ -1402,7 +1424,7 @@ ${coverBlock}
                 const basePayload = {
                     title,
                     description: document.getElementById('description')?.innerHTML || '',
-                    price: parseInt(document.getElementById('price')?.value, 10) || 0,
+                    price: numFromPrice('price'),
                     category_id: document.getElementById('categoryId')?.value || null,
                     sector: sectorValue,
                     city: document.getElementById('city')?.value || null,
@@ -1411,14 +1433,14 @@ ${coverBlock}
                     latitude: parseFloat(document.getElementById('latitude')?.value) || null,
                     longitude: parseFloat(document.getElementById('longitude')?.value) || null,
                     area_sqm: parseInt(document.getElementById('area')?.value, 10) || null,
-                    monthly_rent: parseInt(document.getElementById('monthlyRent')?.value, 10) || null,
-                    monthly_revenue: parseInt(document.getElementById('monthlyRevenue')?.value, 10) || null,
-                    monthly_profit: parseInt(document.getElementById('monthlyProfit')?.value, 10) || null,
+                    monthly_rent: intOrNullFromPrice('monthlyRent'),
+                    monthly_revenue: intOrNullFromPrice('monthlyRevenue'),
+                    monthly_profit: intOrNullFromPrice('monthlyProfit'),
                     employee_count: parseInt(document.getElementById('employeeCount')?.value, 10) || null,
                     establishment_year: parseInt(document.getElementById('establishedYear')?.value, 10) || null,
                     is_franchise: document.getElementById('isFranchise')?.value === 'yes',
-                    inventory_value: parseInt(document.getElementById('inventoryValue')?.value, 10) || null,
-                    equipment_value: parseInt(document.getElementById('equipmentValue')?.value, 10) || null,
+                    inventory_value: intOrNullFromPrice('inventoryValue'),
+                    equipment_value: intOrNullFromPrice('equipmentValue'),
                     lease_end_date: document.getElementById('leaseEndDate')?.value || null,
                     includes_training: document.getElementById('trainingSupport')?.value === 'yes',
                     transfer_reason: document.getElementById('saleReason')?.value || null,

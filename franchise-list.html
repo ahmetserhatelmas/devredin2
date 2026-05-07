@@ -83,10 +83,10 @@
                     </div>
                     
                     <script>
-                        var _u = localStorage.getItem('devretlink_user') || localStorage.getItem('devredin_user');
+                        var _u = localStorage.getItem('devredin_user');
                         document.write(_u 
                             ? '<a href="add-franchise.html" class="btn btn-primary-nav">İlan Oluştur</a>'
-                            : '<a href="login.html" class="btn btn-primary-nav">Üye Ol</a>'
+                            : '<a href="login.html?portal=franchise&amp;redirect=' + encodeURIComponent('add-franchise.html') + '" class="btn btn-primary-nav">İlan Oluştur</a>'
                         );
                     </script>
                 </div>
@@ -291,6 +291,7 @@
     <script src="js/runtime-config.js"></script>
     <script src="backend/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/ilan-ver-guard.js"></script>
     <script>
         let allFranchises = [];
         let filteredFranchises = [];

@@ -42,11 +42,11 @@
                 
                 <ul class="nav-menu">
                     <li><a href="listings.html" class="nav-link active">İşletme Devral</a></li>
-                    <li><a href="add-listing.html" class="nav-link">İşletmeni Devret</a></li>
+                    <li><a href="add-listing.html" class="nav-link" data-ilan-ver="add-listing.html" data-ilan-portal="business">İşletmeni Devret</a></li>
                     <li><a href="emlak.html" class="nav-link">Emlak</a></li>
                     <li id="panelLink" style="display: none;"><a href="panel/" class="nav-link">Panel</a></li>
                     <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="add-listing.html" class="create-listing-mobile">Ücretsiz İlan Oluştur</a></li>
+                    <li><a href="add-listing.html" class="create-listing-mobile" data-ilan-ver="add-listing.html" data-ilan-portal="business">Ücretsiz İlan Oluştur</a></li>
                 </ul>
 
                 <a href="emlak.html" class="nav-emlak-mobile" data-i18n="nav_estate">Emlak</a>
@@ -130,7 +130,7 @@
                         </div>
                     </div>
                     
-                    <a href="add-listing.html" class="btn btn-primary-nav">Ücretsiz İlan Oluştur</a>
+                    <a href="add-listing.html" class="btn btn-primary-nav" data-ilan-ver="add-listing.html" data-ilan-portal="business">Ücretsiz İlan Oluştur</a>
                 </div>
 
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
@@ -370,6 +370,7 @@
     <script src="backend/api.js"></script>
     <script src="js/turkey-cities.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/ilan-ver-guard.js"></script>
     <script src="js/google-maps-loader.js"></script>
     <script>
         // Global callback for Google Maps API

@@ -116,8 +116,9 @@
         <div class="login-container">
             <div class="login-box" id="loginBox">
                 <div class="login-header">
-                    <h1>Üye Girişi</h1>
-                    <p>Hesabınız yok mu? <a href="#" id="showRegisterLink">Kayıt olun</a></p>
+                    <h1 id="loginPageHeading">Üye Girişi</h1>
+                    <p id="loginPortalHint" class="login-portal-hint" style="display:none;margin-top:0.35rem;color:#6b7280;font-size:0.95rem;line-height:1.45;"></p>
+                    <p style="margin-top:0.75rem;">Hesabınız yok mu? <a href="#" id="showRegisterLink">Kayıt olun</a></p>
                 </div>
 
                 <form class="login-form" id="loginForm">
@@ -267,6 +268,46 @@
     <script src="js/auth.js"></script>
 
     <script>
+        /** Giriş / kayıt sonrası güvenli yönlendirme (open redirect engeli) */
+        function getPostLoginRedirectUrl() {
+            try {
+                var params = new URLSearchParams(window.location.search);
+                var r = params.get('redirect');
+                if (!r || r.length > 512) return null;
+                r = decodeURIComponent(r);
+                if (/^https?:\/\//i.test(r) || r.startsWith('//')) return null;
+                var base = r.split('?')[0].split('/').pop() || '';
+                var allowed = ['add-listing.html', 'add-franchise.html', 'add-emlak.html', 'emlak-ilan-ver.html'];
+                if (allowed.indexOf(base) === -1) return null;
+                return r;
+            } catch (e) {
+                return null;
+            }
+        }
+        function redirectAfterAuth() {
+            var t = getPostLoginRedirectUrl();
+            window.location.href = t || 'index.html';
+        }
+        var LOGIN_PORTAL_HINTS = {
+            business: { title: 'İşletme ilanı için giriş', hint: 'İlan vermek üzere hesabınıza giriş yapın.' },
+            franchise: { title: 'Franchise ilanı için giriş', hint: 'Franchise ilanı oluşturmak için giriş yapın.' },
+            emlak: { title: 'Emlak ilanı için giriş', hint: 'Emlak ilanı vermek üzere giriş yapın.' }
+        };
+        function applyLoginPortalBranding() {
+            var params = new URLSearchParams(window.location.search);
+            var portal = params.get('portal');
+            if (!portal || !LOGIN_PORTAL_HINTS[portal]) return;
+            var cfg = LOGIN_PORTAL_HINTS[portal];
+            var h = document.getElementById('loginPageHeading');
+            var p = document.getElementById('loginPortalHint');
+            if (h) h.textContent = cfg.title;
+            if (p) {
+                p.textContent = cfg.hint;
+                p.style.display = 'block';
+            }
+            document.title = cfg.title + ' - Devret Link';
+        }
+
         // Toggle password visibility
         function togglePassword() {
             const passwordInput = document.getElementById('password');
@@ -319,7 +360,7 @@
             
             if (result.success) {
                 console.log('✅ Giriş başarılı:', result.data);
-                window.location.href = 'index.html';
+                redirectAfterAuth();
             } else if (result.code === 'EMAIL_NOT_CONFIRMED') {
                 pendingVerificationEmail = email;
                 document.getElementById('verificationEmail').innerHTML =
@@ -376,7 +417,7 @@
                 // Sadece e-posta Supabase tarafında doğrulanmışsa ana sayfaya (session + confirmed)
                 var ru = reg.data && reg.data.user
                 if (!reg.needsEmailVerification && reg.data && reg.data.session && ru && ru.email_confirmed_at) {
-                    window.location.href = 'index.html';
+                    redirectAfterAuth();
                     return;
                 }
 
@@ -447,7 +488,7 @@
                     return;
                 }
                 alert('Hesabınız doğrulandı. Yönlendiriliyorsunuz...');
-                window.location.href = 'index.html';
+                redirectAfterAuth();
             } catch (e) {
                 alert('Hata: ' + e.message);
             } finally {
@@ -549,7 +590,8 @@
         // Sayfa yüklendiğinde kontroller
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            
+            applyLoginPortalBranding();
+
             // Email doğrulandıysa mesaj göster
             if (urlParams.get('verified') === 'true') {
                 alert('✅ Email adresiniz doğrulandı! Şimdi giriş yapabilirsiniz.');

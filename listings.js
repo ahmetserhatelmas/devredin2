@@ -781,15 +781,12 @@ async function loadListings() {
     
     try {
         // ⚡ Sadece gerekli alanları çek (performans için)
+        const listingSelect = typeof LISTING_CARD_FIELDS !== 'undefined'
+            ? LISTING_CARD_FIELDS
+            : 'id, title, price, area_sqm, monthly_rent, establishment_year, created_at, city, district, sector, category_id, images:listing_images(image_url, is_primary)';
         let query = supabase
             .from('listings')
-            .select(`
-                id, title, price, area_sqm, monthly_rent, establishment_year, created_at,
-                category:categories!category_id(name),
-                city:cities(name),
-                district:districts(name),
-                images:listing_images(image_url, is_primary)
-            `, { count: 'exact' })
+            .select(listingSelect, { count: 'exact' })
             .eq('status', 'active')
         
         // Filtreler
@@ -903,7 +900,7 @@ function createListingCard(listing) {
         <a href="listing-detail.html?id=${listing.id}" class="listing-card">
             <div class="listing-image" style="${imageStyle}">
                 ${noImageIcon}
-                <span class="listing-badge">${listing.category?.name || 'Kategori'}</span>
+                <span class="listing-badge">${(typeof listingCategoryLabel === 'function' ? listingCategoryLabel(listing) : (listing.sector || listing.category?.name)) || 'Kategori'}</span>
                 <button class="favorite-btn" onclick="event.preventDefault(); toggleFav('${listing.id}')" style="width: 32px; height: 32px; border-radius: 50%; background: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                     ❤
                 </button>
@@ -911,7 +908,7 @@ function createListingCard(listing) {
             <div class="listing-content">
                 <h3>${listing.title}</h3>
                 <div class="listing-location">
-                    ${listing.district?.name || ''}, ${listing.city?.name || ''}
+                    ${(typeof listingLocationLabel === 'function' ? listingLocationLabel(listing) : [listing.district, listing.city].filter(Boolean).join(', '))}
                 </div>
                 <div class="listing-details">
                     <span>${listing.area_sqm || 0} m²</span>

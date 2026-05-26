@@ -371,6 +371,7 @@
     <script src="js/turkey-cities.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/ilan-ver-guard.js"></script>
+    <script src="js/listing-query-helpers.js"></script>
     <script src="js/google-maps-loader.js"></script>
     <script>
         // Global callback for Google Maps API
@@ -597,12 +598,7 @@
 
                 let query = supabase
                     .from('listings')
-                    .select(`
-                        id, title, slug, price, monthly_rent, created_at, area_sqm, city, district,
-                        latitude, longitude,
-                        category:categories!category_id(name, icon),
-                        images:listing_images(image_url, is_primary)
-                    `)
+                    .select(typeof LISTING_CARD_FIELDS !== 'undefined' ? LISTING_CARD_FIELDS : 'id, title, slug, price, monthly_rent, created_at, area_sqm, city, district, sector, category_id, latitude, longitude, images:listing_images(image_url, is_primary)')
                     .eq('status', 'active');
 
                 // Filtreleri uygula
@@ -706,7 +702,7 @@
             const imgUrl = img?.image_url || '';
             const location = listing.district && listing.city ?
                 `${listing.district} / ${listing.city}` : listing.city || '-';
-            const category = listing.category?.name || '';
+            const category = (typeof listingCategoryLabel === 'function' ? listingCategoryLabel(listing) : (listing.sector || listing.category?.name || ''));
 
             const detailUrl = listing.slug
                 ? `listing-detail.html?slug=${listing.slug}`

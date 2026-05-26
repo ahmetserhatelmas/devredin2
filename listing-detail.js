@@ -32,18 +32,12 @@ if (document.readyState === 'loading') {
 async function loadListingDetail(listingId) {
     try {
         // ⚡ Sadece gerekli alanları çek (performans için)
+        const detailSelect = typeof LISTING_DETAIL_FIELDS !== 'undefined'
+            ? LISTING_DETAIL_FIELDS
+            : 'id, title, price, description, address, area_sqm, monthly_rent, monthly_revenue, monthly_profit, employee_count, establishment_year, lease_end_date, transfer_reason, is_franchise, inventory_value, equipment_value, contact_name, contact_phone, sector, category_id, city, district, document_url, images:listing_images(image_url, is_primary)';
         const { data, error } = await supabase
             .from('listings')
-            .select(`
-                id, title, price, description, address, area_sqm, monthly_rent,
-                monthly_revenue, monthly_profit, employee_count, establishment_year,
-                lease_end_date, transfer_reason, is_franchise, inventory_value,
-                equipment_value, contact_name, contact_phone, sector, document_url,
-                category:categories!category_id(name, icon),
-                city:cities(name),
-                district:districts(name),
-                images:listing_images(image_url, is_primary)
-            `)
+            .select(detailSelect)
             .eq('id', listingId)
             .maybeSingle()
 
@@ -116,10 +110,12 @@ function renderListingDetail(listing) {
     const locationInfo = document.querySelector('.info-location')
     if (locationInfo) {
         locationInfo.innerHTML = '' // Skeleton temizle
-        const locText = listing.district?.name && listing.city?.name ? 
-            `${listing.district.name} / ${listing.city.name}` : 
-            listing.city?.name || 'Konum belirtilmemiş'
-        locationInfo.textContent = locText
+        const locText = typeof listingLocationLabel === 'function'
+            ? listingLocationLabel(listing)
+            : (listing.district && listing.city
+                ? `${listing.district} / ${listing.city}`
+                : listing.city || listing.district || '');
+        locationInfo.textContent = locText || 'Konum belirtilmemiş';
     }
     
     // ⚡ Ana görsel - hızlı yükleme

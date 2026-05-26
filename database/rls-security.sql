@@ -87,13 +87,7 @@ ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "categories_select_public" ON categories;
 CREATE POLICY "categories_select_public" ON categories
-FOR SELECT USING (is_active = true OR
-    auth.jwt() ->> 'email' IN (
-        'ahmetserhatelmas@gmail.com',
-        'ahmetserhatelmas@hotmail.com',
-        'ahmetserhatelmas@hotmaail.com'
-    )
-);
+FOR SELECT USING (COALESCE(is_active, true) = true);
 
 DROP POLICY IF EXISTS "categories_admin_all" ON categories;
 CREATE POLICY "categories_admin_all" ON categories

@@ -533,6 +533,7 @@
     <script src="js/runtime-config.js"></script>
     <script src="backend/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/listing-query-helpers.js"></script>
     <script src="js/google-maps-loader.js"></script>
     <script>
         window.initListingDetailMapsLoaded = function () {
@@ -578,13 +579,12 @@
         async function loadListing(id, slug) {
             try {
                 console.log('📡 loadListing başladı:', { id, slug });
+                const detailSelect = typeof LISTING_DETAIL_FIELDS !== 'undefined'
+                    ? LISTING_DETAIL_FIELDS
+                    : '*, sector, category_id, city, district, images:listing_images(image_url, is_primary)';
                 let query = supabase
                     .from('listings')
-                    .select(`
-                        *,
-                        category:categories!category_id(name, icon),
-                        images:listing_images(image_url, is_primary)
-                    `);
+                    .select(detailSelect);
                 
                 // Search by ID or slug
                 if (id) {

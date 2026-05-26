@@ -523,9 +523,7 @@ async function loadListings(filters = {}) {
             .from('listings')
             .select(`
                 *,
-                category:categories!category_id(name, slug, icon),
-                city:cities(name),
-                district:districts(name),
+                sector, category_id, city, district,
                 images:listing_images(image_url, thumbnail_url, is_primary)
             `)
             .eq('status', 'active')
@@ -582,9 +580,7 @@ async function loadListingDetail(listingId) {
             .from('listings')
             .select(`
                 *,
-                category:categories!category_id(name, slug, icon),
-                city:cities(name),
-                district:districts(name),
+                sector, category_id, city, district,
                 images:listing_images(*),
                 user:users(full_name, phone, email)
             `)
@@ -798,7 +794,7 @@ async function loadUserFavorites() {
                 *,
                 listing:listings(
                     *,
-                    category:categories!category_id(name),
+                    sector, category_id, city, district,
                     city:cities(name),
                     images:listing_images(image_url, is_primary)
                 )
